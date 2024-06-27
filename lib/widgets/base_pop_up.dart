@@ -8,7 +8,11 @@ class BasePopup extends StatelessWidget {
   final String text;
 
   const BasePopup(
-      {super.key, required this.child, this.arrow = true, required this.text});
+      {super.key,
+      required this.child,
+      this.arrow = true,
+      required this.text,
+      });
 
   @override
   Widget build(BuildContext context) {

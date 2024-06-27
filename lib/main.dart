@@ -1,4 +1,4 @@
-import 'package:cocktails/pages/auth/sing_in_page.dart';
+import 'package:cocktails/pages/auth/welcome_page.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
 import 'package:flutter/material.dart';
 import 'package:cocktails/theme/styles.dart';

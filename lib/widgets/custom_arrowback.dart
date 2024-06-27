@@ -9,7 +9,8 @@ class CustomArrowBack extends StatelessWidget {
   final String text;
   final bool arrow;
 
-  const CustomArrowBack({super.key, required this.text, this.arrow = true});
+  const CustomArrowBack(
+      {super.key, required this.text, this.arrow = true,});
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +37,7 @@ class CustomArrowBack extends StatelessWidget {
               ),
               iconSize: 30.0,
               onPressed: () {
-                Navigator.of(context).pop();
-              },
+    Navigator.of(context).pop();},
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
               splashRadius: 24.0,

@@ -1,9 +1,11 @@
+import 'package:cocktails/pages/auth/popups/forgot_pass_pop_up1.dart';
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:cocktails/widgets/auth/custom_registration_button.dart';
 import 'package:cocktails/widgets/auth/text_with_line.dart';
 import 'package:cocktails/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-import '../base_pop_up.dart';
-import 'custom_auth_textfield.dart';
+import '../../../widgets/base_pop_up.dart';
+import '../../../widgets/auth/custom_auth_textfield.dart';
 
 void authPopUp(BuildContext context) {
   showModalBottomSheet(
@@ -33,6 +35,7 @@ void authPopUp(BuildContext context) {
               child: TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
+                    forgotPassPopUp(context);
                   },
                   child: Text(
                     'Забыли пароль?',
@@ -45,9 +48,7 @@ void authPopUp(BuildContext context) {
             ),
             CustomButton(
               text: 'Войти',
-              onPressed: () {
-                authPopUp(context);
-              },
+              onPressed: () {},
               single: true,
             ),
             const SizedBox(
@@ -56,6 +57,44 @@ void authPopUp(BuildContext context) {
             const TextWithLines(
               text: 'или с помощью',
             ),
+            const SizedBox(
+              height: 24,
+            ),
+            RegistrationServicesButton(
+              text: 'Apple ID',
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            RegistrationServicesButton(
+              text: 'Google',
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            RegistrationServicesButton(
+              text: 'Facebook',
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            const SizedBox(
+              height: 24.0,
+            ),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Зарегистрироваться',
+                  style: context.textStyles.bodyText16White,
+                )),
           ],
         ),
       );

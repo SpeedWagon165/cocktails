@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../widgets/auth/auth_pop_up.dart';
+import 'popups/auth_pop_up.dart';
 import '../../widgets/custom_button.dart';
 
 class SignInPage extends StatefulWidget {
