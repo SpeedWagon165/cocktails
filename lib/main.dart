@@ -1,6 +1,7 @@
 import 'package:cocktails/pages/auth/sing_in_page.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
 import 'package:flutter/material.dart';
+import 'package:cocktails/theme/styles.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +21,11 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           theme: ThemeData(
             primarySwatch: Colors.blue,
+            extensions: [AppTextStyles.light],
+          ),
+          darkTheme: ThemeData(
+            primarySwatch: Colors.blue,
+            extensions: [AppTextStyles.dark],
           ),
           home: const SignInPage(),
         );

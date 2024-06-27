@@ -37,9 +37,8 @@ class _SignInPageState extends State<SignInPage> {
                       child: CustomButton(
                         text: 'Пропустить',
                         transper: true,
-                        color: Colors.white,
                         onPressed: () {},
-                        textColor: Colors.white,
+                        single: false,
                       ),
                     ),
                   ),
@@ -48,11 +47,10 @@ class _SignInPageState extends State<SignInPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: CustomButton(
                         text: 'Войти',
-                        color: const Color(0xFFF6B402),
                         onPressed: () {
                           authPopUp(context);
                         },
-                        textColor: Colors.black,
+                        single: false,
                       ),
                     ),
                   ),
