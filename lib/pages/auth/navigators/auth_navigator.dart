@@ -1,7 +1,9 @@
+import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../forgot_pass_page_1.dart';
 import '../forgot_pass_page_2.dart';
+import '../forgot_pass_page_3.dart';
 import '../sing_in_page.dart';
 
 class AuthPageView extends StatefulWidget {
@@ -16,17 +18,15 @@ class AuthPageViewState extends State<AuthPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.9,
-      child: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(), // Disable swiping
-        children: [
-          SingInPage(pageController: _pageController),
-          ForgotPassPage1(pageController: _pageController),
-          ForgotPassPage2(pageController: _pageController),
-        ],
-      ),
+    return ExpandablePageView(
+      controller: _pageController,
+      physics: const NeverScrollableScrollPhysics(), // Disable swiping
+      children: [
+        SingInPage(pageController: _pageController),
+        ForgotPassPage1(pageController: _pageController),
+        ForgotPassPage2(pageController: _pageController),
+        ForgotPassPage3(pageController: _pageController),
+      ],
     );
   }
 }

@@ -1,16 +1,14 @@
-import 'package:cocktails/theme/theme_extensions.dart';
-import 'package:cocktails/widgets/base_pop_up.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../../widgets/auth/center_text.dart';
 import '../../widgets/auth/custom_auth_textfield.dart';
+import '../../widgets/base_pop_up.dart';
 import '../../widgets/custom_button.dart';
 
-class ForgotPassPage2 extends StatelessWidget {
+class ForgotPassPage3 extends StatelessWidget {
   final PageController pageController;
 
-  const ForgotPassPage2({
+  const ForgotPassPage3({
     super.key,
     required this.pageController,
   });
@@ -18,9 +16,9 @@ class ForgotPassPage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BasePopup(
-      text: 'Код подтверждения',
+      text: 'Новый пароль',
       onPressed: () {
-        pageController.animateToPage(1,
+        pageController.animateToPage(2,
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut);
       },
@@ -28,35 +26,31 @@ class ForgotPassPage2 extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const CenterText(
-            text: 'Мы отправили код на почту irina_ivanov@gmail.com',
+            text: 'Создайте пароль для вашего аккаунта',
             padding: 60,
           ),
           const SizedBox(
             height: 24,
           ),
           const CustomTextField(
-            labelText: 'Код',
+            labelText: 'Новый пароль',
+            obscureText: true,
+            isJoined: true,
+            joinPosition: JoinPosition.top,
           ),
-          const SizedBox(
-            height: 24.0,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Center(
-              child: Text(
-                'Повторная отправка кода через 00:59',
-                style: context.textStyles.bodyText16White,
-                textAlign: TextAlign.center,
-              ),
-            ),
+          const CustomTextField(
+            labelText: 'Повторите новый пароль',
+            obscureText: true,
+            isJoined: true,
+            joinPosition: JoinPosition.bottom,
           ),
           const SizedBox(
             height: 24,
           ),
           CustomButton(
-            text: 'Подтвердить',
+            text: 'Войти',
             onPressed: () {
-              pageController.animateToPage(3,
+              pageController.animateToPage(2,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut);
             },

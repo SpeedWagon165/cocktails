@@ -3,6 +3,7 @@ import 'package:cocktails/widgets/base_pop_up.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../widgets/auth/center_text.dart';
 import '../../widgets/auth/custom_auth_textfield.dart';
 import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/auth/text_with_line.dart';
@@ -19,7 +20,7 @@ class ForgotPassPage1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BasePopup(
-      text: 'Вход',
+      text: 'Забыли пароль?',
       onPressed: () {
         pageController.animateToPage(0,
             duration: const Duration(milliseconds: 300),
@@ -28,54 +29,31 @@ class ForgotPassPage1 extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomTextField(
-            labelText: 'Электронная почта',
-            isJoined: true,
-            joinPosition: JoinPosition.top,
-          ),
-          const CustomTextField(
-            labelText: 'Пароль',
-            obscureText: true,
-            isJoined: true,
-            joinPosition: JoinPosition.bottom,
-          ),
-          RegistrationServicesButton(
-            text: 'Apple ID',
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+          const CenterText(
+            text: 'Введите электронную почту, куда выслать код подтверждения',
+            padding: 60,
           ),
           const SizedBox(
-            height: 12,
+            height: 24,
           ),
-          RegistrationServicesButton(
-            text: 'Google',
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+          const CustomTextField(
+            labelText: 'Эл. почта',
           ),
           const SizedBox(
-            height: 12,
+            height: 24,
           ),
-          RegistrationServicesButton(
-            text: 'Facebook',
+          CustomButton(
+            text: 'Отправить',
             onPressed: () {
               pageController.animateToPage(2,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut);
             },
+            single: true,
           ),
           const SizedBox(
-            height: 24.0,
+            height: 24,
           ),
-          TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'Зарегистрироваться',
-                style: context.textStyles.bodyText16White,
-              )),
         ],
       ),
     );
