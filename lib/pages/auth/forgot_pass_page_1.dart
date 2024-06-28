@@ -11,10 +11,12 @@ import '../../widgets/custom_button.dart';
 
 class ForgotPassPage1 extends StatelessWidget {
   final PageController pageController;
+  final PageController mainPageController;
 
   const ForgotPassPage1({
     super.key,
     required this.pageController,
+    required this.mainPageController,
   });
 
   @override
@@ -22,9 +24,9 @@ class ForgotPassPage1 extends StatelessWidget {
     return BasePopup(
       text: 'Забыли пароль?',
       onPressed: () {
-        pageController.animateToPage(0,
+        mainPageController.animateToPage(0,
             duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut);
+            curve: Curves.bounceIn);
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -45,7 +47,7 @@ class ForgotPassPage1 extends StatelessWidget {
           CustomButton(
             text: 'Отправить',
             onPressed: () {
-              pageController.animateToPage(2,
+              pageController.animateToPage(1,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut);
             },

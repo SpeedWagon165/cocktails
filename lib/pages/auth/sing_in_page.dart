@@ -41,7 +41,7 @@ class SingInPage extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: TextButton(
                 onPressed: () {
-                  pageController.animateToPage(1,
+                  pageController.animateToPage(2,
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut);
                 },
@@ -99,7 +99,9 @@ class SingInPage extends StatelessWidget {
           ),
           TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                pageController.animateToPage(1,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut);
               },
               child: Text(
                 'Зарегистрироваться',

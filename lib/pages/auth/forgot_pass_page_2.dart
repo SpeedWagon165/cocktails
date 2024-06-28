@@ -20,7 +20,7 @@ class ForgotPassPage2 extends StatelessWidget {
     return BasePopup(
       text: 'Код подтверждения',
       onPressed: () {
-        pageController.animateToPage(1,
+        pageController.animateToPage(0,
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut);
       },
