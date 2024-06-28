@@ -6,13 +6,15 @@ class BasePopup extends StatelessWidget {
   final Widget child;
   final bool arrow;
   final String text;
+  final dynamic onPressed;
 
-  const BasePopup(
-      {super.key,
-      required this.child,
-      this.arrow = true,
-      required this.text,
-      });
+  const BasePopup({
+    super.key,
+    required this.child,
+    this.arrow = true,
+    required this.text,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +54,12 @@ class BasePopup extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 CustomArrowBack(
+                  auth: true,
                   text: text,
                   arrow: arrow,
+                  onPressed: () {
+                    onPressed();
+                  },
                 ),
                 const SizedBox(
                   height: 25.0,

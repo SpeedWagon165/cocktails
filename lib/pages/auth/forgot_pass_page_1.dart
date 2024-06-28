@@ -3,22 +3,28 @@ import 'package:cocktails/widgets/base_pop_up.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../widgets/auth/custom_auth_textfield.dart';
-import '../../../widgets/auth/custom_registration_button.dart';
-import '../../../widgets/auth/text_with_line.dart';
-import '../../../widgets/custom_button.dart';
-import 'auth_pop_up.dart';
-import 'forgot_pass_pop_up1.dart';
+import '../../widgets/auth/custom_auth_textfield.dart';
+import '../../widgets/auth/custom_registration_button.dart';
+import '../../widgets/auth/text_with_line.dart';
+import '../../widgets/custom_button.dart';
 
-import 'package:flutter/material.dart';
+class ForgotPassPage1 extends StatelessWidget {
+  final PageController pageController;
 
-class SingInPage extends StatelessWidget {
-  const SingInPage({super.key});
+  const ForgotPassPage1({
+    super.key,
+    required this.pageController,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BasePopup(
       text: 'Вход',
+      onPressed: () {
+        pageController.animateToPage(0,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut);
+      },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -32,36 +38,6 @@ class SingInPage extends StatelessWidget {
             obscureText: true,
             isJoined: true,
             joinPosition: JoinPosition.bottom,
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  forgotPassPopUp(context);
-                },
-                child: Text(
-                  'Забыли пароль?',
-                  style:
-                      context.textStyles.bodyText12Grey.copyWith(fontSize: 14),
-                )),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          CustomButton(
-            text: 'Войти',
-            onPressed: () {},
-            single: true,
-          ),
-          const SizedBox(
-            height: 24.0,
-          ),
-          const TextWithLines(
-            text: 'или с помощью',
-          ),
-          const SizedBox(
-            height: 24,
           ),
           RegistrationServicesButton(
             text: 'Apple ID',
@@ -84,7 +60,9 @@ class SingInPage extends StatelessWidget {
           RegistrationServicesButton(
             text: 'Facebook',
             onPressed: () {
-              Navigator.of(context).pop();
+              pageController.animateToPage(2,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut);
             },
           ),
           const SizedBox(

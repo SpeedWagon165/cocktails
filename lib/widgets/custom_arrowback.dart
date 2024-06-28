@@ -8,9 +8,16 @@ import '../utilities/adaptive_size.dart';
 class CustomArrowBack extends StatelessWidget {
   final String text;
   final bool arrow;
+  final bool auth;
+  final dynamic onPressed;
 
-  const CustomArrowBack(
-      {super.key, required this.text, this.arrow = true,});
+  const CustomArrowBack({
+    super.key,
+    required this.text,
+    required this.auth,
+    required this.onPressed,
+    this.arrow = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +44,12 @@ class CustomArrowBack extends StatelessWidget {
               ),
               iconSize: 30.0,
               onPressed: () {
-    Navigator.of(context).pop();},
+                if (auth) {
+                  onPressed();
+                } else {
+                  Navigator.of(context).pop();
+                }
+              },
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
               splashRadius: 24.0,
@@ -48,7 +60,7 @@ class CustomArrowBack extends StatelessWidget {
           width: SizeConfig.widthAdaptive(16),
         ),
         Text(
-          'Вход',
+          text,
           style: context.textStyles.headline20White,
         ),
       ],
