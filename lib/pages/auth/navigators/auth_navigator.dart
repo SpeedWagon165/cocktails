@@ -16,20 +16,17 @@ class AuthPageViewState extends State<AuthPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return IntrinsicHeight(
-          child: PageView(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(), // Disable swiping
-            children: [
-              SingInPage(pageController: _pageController),
-              ForgotPassPage1(pageController: _pageController),
-              ForgotPassPage2(pageController: _pageController),
-            ],
-          ),
-        );
-      },
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.9,
+      child: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(), // Disable swiping
+        children: [
+          SingInPage(pageController: _pageController),
+          ForgotPassPage1(pageController: _pageController),
+          ForgotPassPage2(pageController: _pageController),
+        ],
+      ),
     );
   }
 }
