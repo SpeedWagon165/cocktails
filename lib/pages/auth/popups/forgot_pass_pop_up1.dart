@@ -8,7 +8,7 @@ void forgotPassPopUp(BuildContext context) {
     context: context,
     isScrollControlled: true,
     useRootNavigator: true,
-    backgroundColor: const Color(0xFF1C1615),
+    backgroundColor: Colors.transparent,
     builder: (context) {
       return const BasePopup(
         text: 'Вход',

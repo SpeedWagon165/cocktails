@@ -12,33 +12,6 @@ import 'forgot_pass_pop_up1.dart';
 
 import 'package:flutter/material.dart';
 
-class MainAuthNavigator extends StatelessWidget {
-  const MainAuthNavigator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      onGenerateRoute: (RouteSettings settings) {
-        WidgetBuilder builder;
-        switch (settings.name) {
-          case '/':
-            builder = (BuildContext context) => const SingInPage();
-            break;
-          case '/registration':
-            builder = (BuildContext context) => RegistrationNavigator();
-            break;
-          case '/forgotPassword':
-            builder = (BuildContext context) => ForgotPasswordNavigator();
-            break;
-          default:
-            throw Exception('Invalid route: ${settings.name}');
-        }
-        return MaterialPageRoute(builder: builder, settings: settings);
-      },
-    );
-  }
-}
-
 class SingInPage extends StatelessWidget {
   const SingInPage({super.key});
 
