@@ -1,6 +1,7 @@
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 enum JoinPosition { none, top, bottom }
@@ -9,6 +10,7 @@ class CustomTextField extends StatefulWidget {
   final String labelText;
   final bool obscureText;
   final bool isJoined;
+  final bool phoneNumber;
   final JoinPosition joinPosition;
 
   const CustomTextField({
@@ -16,14 +18,15 @@ class CustomTextField extends StatefulWidget {
     required this.labelText,
     this.obscureText = false,
     this.isJoined = false,
+    this.phoneNumber = false,
     this.joinPosition = JoinPosition.none,
   });
 
   @override
-  _CustomTextFieldState createState() => _CustomTextFieldState();
+  CustomTextFieldState createState() => CustomTextFieldState();
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
+class CustomTextFieldState extends State<CustomTextField> {
   late bool _obscureText;
 
   @override
@@ -76,17 +79,34 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
             Row(
               children: [
-                Expanded(
-                  child: TextField(
-                    obscureText: _obscureText,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 2.0),
+                if (widget.phoneNumber)
+                  Expanded(
+                    child: TextField(
+                      obscureText: _obscureText,
+                      keyboardType: TextInputType.phone,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 2.0),
+                      ),
+                      style: context.textStyles.bodyText16White,
+                      inputFormatters: [
+                        MaskedInputFormatter('+#(###) ###-##-##')
+                      ],
                     ),
-                    style: context.textStyles.bodyText16White,
+                  )
+                else
+                  Expanded(
+                    child: TextField(
+                      obscureText: _obscureText,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 0.0, horizontal: 2.0),
+                      ),
+                      style: context.textStyles.bodyText16White,
+                    ),
                   ),
-                ),
                 if (widget.obscureText)
                   Transform.translate(
                     offset: const Offset(0, -12),

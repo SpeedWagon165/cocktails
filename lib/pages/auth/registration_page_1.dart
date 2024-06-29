@@ -39,7 +39,9 @@ class RegistrationPage1 extends StatelessWidget {
           CustomButton(
             text: 'Далее',
             onPressed: () {
-              Navigator.of(context).pop();
+              pageController.animateToPage(1,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut);
             },
             single: true,
           ),

@@ -55,7 +55,7 @@ class RegistrationPage2 extends StatelessWidget {
           CustomButton(
             text: 'Подтвердить',
             onPressed: () {
-              pageController.animateToPage(3,
+              pageController.animateToPage(2,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut);
             },

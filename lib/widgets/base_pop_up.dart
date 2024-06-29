@@ -37,35 +37,40 @@ class BasePopup extends StatelessWidget {
         child: Container(
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Center(
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 5.0),
-                    width: 42.0,
-                    height: 4.0,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF343434),
-                      borderRadius: BorderRadius.circular(8),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.86,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 5.0),
+                      width: 42.0,
+                      height: 4.0,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF343434),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 30),
-                CustomArrowBack(
-                  auth: true,
-                  text: text,
-                  arrow: arrow,
-                  onPressed: () {
-                    onPressed();
-                  },
-                ),
-                const SizedBox(
-                  height: 25.0,
-                ),
-                child,
-              ],
+                  const SizedBox(height: 30),
+                  CustomArrowBack(
+                    auth: true,
+                    text: text,
+                    arrow: arrow,
+                    onPressed: () {
+                      onPressed();
+                    },
+                  ),
+                  const SizedBox(
+                    height: 25.0,
+                  ),
+                  child,
+                ],
+              ),
             ),
           ),
         ),
