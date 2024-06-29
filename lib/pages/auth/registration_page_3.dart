@@ -1,8 +1,8 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:cocktails/widgets/auth/user_agreement.dart';
 import 'package:cocktails/widgets/base_pop_up.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import '../../widgets/auth/custom_auth_textfield.dart';
 import '../../widgets/auth/custom_switcher.dart';
 import '../../widgets/custom_button.dart';
@@ -80,14 +80,32 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
           const SizedBox(
             height: 24,
           ),
+          const UserAgreement(
+            text:
+                'Даю согласие на обработку персональных данных в соответствии с ',
+            clickText: 'пользовательским соглашением.',
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          const UserAgreement(
+            text: 'Принимаю условия ',
+            clickText: 'политики конфиденциальности.',
+          ),
+          const SizedBox(
+            height: 24,
+          ),
           CustomButton(
             text: 'Далее',
             onPressed: () {
-              widget.pageController.animateToPage(1,
+              widget.pageController.animateToPage(3,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut);
             },
             single: true,
+          ),
+          const SizedBox(
+            height: 15,
           ),
         ],
       ),

@@ -32,7 +32,6 @@ class CustomArrowBack extends StatelessWidget {
               shape: BoxShape.circle, // Круглая форма
               border: Border.all(
                 color: Colors.white.withOpacity(0.5),
-                // Полупрозрачная белая обводка
                 width: 1.5, // Ширина обводки
               ),
             ),
@@ -55,9 +54,13 @@ class CustomArrowBack extends StatelessWidget {
               splashRadius: 24.0,
               tooltip: 'Back',
             ),
+          )
+        else
+          const SizedBox(
+            width: 0,
           ),
-        SizedBox(
-          width: SizeConfig.widthAdaptive(16),
+        const SizedBox(
+          width: 16,
         ),
         Text(
           text,

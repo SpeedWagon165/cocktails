@@ -1,54 +1,55 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../custom_checkbox.dart';
+
 class UserAgreement extends StatefulWidget {
+  final String text;
+  final String clickText;
+
+  const UserAgreement({super.key, required this.text, required this.clickText});
+
   @override
-  _UserAgreementState createState() => _UserAgreementState();
+  UserAgreementState createState() => UserAgreementState();
 }
 
-class _UserAgreementState extends State<UserAgreement> {
-  bool _isChecked = false;
-
+class UserAgreementState extends State<UserAgreement> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Checkbox(
-            value: _isChecked,
-            onChanged: (bool? value) {
-              setState(() {
-                _isChecked = value!;
-              });
-            },
-          ),
-          Expanded(
-            child: RichText(
-              text: TextSpan(
-                text:
-                    'Даю согласие на обработку персональных данных в соответствии с ',
-                style: TextStyle(color: Colors.grey),
-                children: [
-                  TextSpan(
-                    text: 'пользовательским соглашением.',
-                    style: TextStyle(
-                      color: Colors.white,
-                      decoration: TextDecoration.underline,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        // Действие при нажатии на пользовательское соглашение
-                        print('Пользовательское соглашение нажато');
-                      },
-                  ),
-                ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        CustomCircularCheckbox(),
+        const SizedBox(
+          width: 12,
+        ),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              text: widget.text,
+              style: context.textStyles.bodyText12Grey.copyWith(
+                fontSize: 13,
+                height: 1.5,
               ),
+              children: [
+                TextSpan(
+                  text: widget.clickText,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      // Действие при нажатии на пользовательское соглашение
+                      print('Пользовательское соглашение нажато');
+                    },
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

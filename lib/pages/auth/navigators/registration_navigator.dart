@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import '../registration_page_1.dart';
 import '../registration_page_2.dart';
 import '../registration_page_3.dart';
+import '../registration_page_4.dart';
+import '../registration_page_5.dart';
 
 class RegistrationNavigator extends StatefulWidget {
   final PageController mainPageController;
@@ -30,6 +32,12 @@ class RegistrationNavigatorState extends State<RegistrationNavigator> {
           pageController: _pageController,
         ),
         RegistrationPage3(
+          pageController: _pageController,
+        ),
+        RegistrationPage4(
+          pageController: _pageController,
+        ),
+        RegistrationPage5(
           pageController: _pageController,
         ),
       ],
