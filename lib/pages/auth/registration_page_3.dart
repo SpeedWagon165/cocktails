@@ -3,10 +3,8 @@ import 'package:cocktails/widgets/base_pop_up.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-
 import '../../widgets/auth/custom_auth_textfield.dart';
-import '../../widgets/auth/custom_registration_button.dart';
-import '../../widgets/auth/text_with_line.dart';
+import '../../widgets/auth/custom_switcher.dart';
 import '../../widgets/custom_button.dart';
 
 class RegistrationPage3 extends StatefulWidget {
@@ -22,8 +20,6 @@ class RegistrationPage3 extends StatefulWidget {
 }
 
 class _RegistrationPage3State extends State<RegistrationPage3> {
-  int _selectedIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return BasePopup(
@@ -70,22 +66,28 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
           const SizedBox(
             height: 20.0,
           ),
-          ToggleSwitch(
-            minWidth: 90.0,
-            initialLabelIndex: 1,
-            cornerRadius: 10.0,
-            activeFgColor: Colors.white,
-            inactiveBgColor: Colors.grey,
-            inactiveFgColor: Colors.white,
-            totalSwitches: 2,
-            labels: ['Male', 'Female'],
-            activeBgColors: [
-              [Colors.blue],
-              [Colors.pink],
-            ],
-            onToggle: (index) {
-              _selectedIndex = index!;
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Ваш пол',
+              style: context.textStyles.bodyText16White,
+            ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          const GradientBorderSwitch(),
+          const SizedBox(
+            height: 24,
+          ),
+          CustomButton(
+            text: 'Далее',
+            onPressed: () {
+              widget.pageController.animateToPage(1,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut);
             },
+            single: true,
           ),
         ],
       ),
