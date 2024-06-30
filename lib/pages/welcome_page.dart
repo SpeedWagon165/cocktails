@@ -2,17 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'popups/auth_pop_up.dart';
-import '../../widgets/custom_button.dart';
+import 'auth/popups/auth_pop_up.dart';
+import '../widgets/custom_button.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+class WelcomePage extends StatefulWidget {
+  const WelcomePage({super.key});
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<WelcomePage> createState() => _WelcomePageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
     super.initState();

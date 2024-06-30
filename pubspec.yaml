@@ -48,6 +48,8 @@ dependencies:
   page_transition: ^2.1.0
   flutter_multi_formatter: ^2.1.0
   gradient_borders: ^1.0.1
+  intl: ^0.19.0
+  persistent_bottom_nav_bar_v2: ^5.2.3
 
 dev_dependencies:
   flutter_test:

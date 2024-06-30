@@ -20,6 +20,8 @@ class RegistrationPage3 extends StatefulWidget {
 }
 
 class _RegistrationPage3State extends State<RegistrationPage3> {
+  final TextEditingController _birthdateController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BasePopup(
@@ -53,10 +55,12 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
             phoneNumber: true,
             joinPosition: JoinPosition.none,
           ),
-          const CustomTextField(
+          CustomTextField(
             labelText: 'Дата рождения',
             isJoined: true,
             joinPosition: JoinPosition.none,
+            isDate: true,
+            controller: _birthdateController,
           ),
           const CustomTextField(
             labelText: 'Номер реферала',

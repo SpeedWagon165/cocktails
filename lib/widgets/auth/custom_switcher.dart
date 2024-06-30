@@ -58,7 +58,7 @@ class GradientBorderSwitchState extends State<GradientBorderSwitch> {
           height: 50,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.04),
+            color: Colors.white.withOpacity(0.04),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(index == 0 ? 10 : 0),
               bottomLeft: Radius.circular(index == 0 ? 10 : 0),

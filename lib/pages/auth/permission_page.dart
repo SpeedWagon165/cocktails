@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
-
-import '../../widgets/auth/center_text.dart';
-import '../../widgets/auth/custom_auth_textfield.dart';
+import 'package:flutter/material.dart';
 import '../../widgets/auth/permission_widget.dart';
 import '../../widgets/base_pop_up.dart';
 import '../../widgets/custom_button.dart';
+import '../home/home_page.dart';
 
 class RegistrationPage5 extends StatelessWidget {
   final PageController pageController;
@@ -62,7 +61,12 @@ class RegistrationPage5 extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: CustomButton(
                     text: 'Подтвердить',
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                    },
                     single: false,
                   ),
                 ),

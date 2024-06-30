@@ -1,4 +1,4 @@
-import 'package:cocktails/pages/auth/welcome_page.dart';
+import 'package:cocktails/pages/welcome_page.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
 import 'package:flutter/material.dart';
 import 'package:cocktails/theme/styles.dart';
@@ -20,14 +20,12 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
-            primarySwatch: Colors.blue,
             extensions: [AppTextStyles.light],
           ),
           darkTheme: ThemeData(
-            primarySwatch: Colors.blue,
             extensions: [AppTextStyles.dark],
           ),
-          home: const SignInPage(),
+          home: const WelcomePage(),
         );
       },
     );
