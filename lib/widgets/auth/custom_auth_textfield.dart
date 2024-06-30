@@ -12,6 +12,8 @@ class CustomTextField extends StatefulWidget {
   final bool isJoined;
   final bool phoneNumber;
   final JoinPosition joinPosition;
+  final TextEditingController? controller;
+  final bool isReferral; // Добавлено для проверки поля номера реферала
 
   const CustomTextField({
     super.key,
@@ -20,6 +22,8 @@ class CustomTextField extends StatefulWidget {
     this.isJoined = false,
     this.phoneNumber = false,
     this.joinPosition = JoinPosition.none,
+    this.controller,
+    this.isReferral = false, // Инициализация нового параметра
   });
 
   @override
@@ -28,6 +32,7 @@ class CustomTextField extends StatefulWidget {
 
 class CustomTextFieldState extends State<CustomTextField> {
   late bool _obscureText;
+  bool _showReferralInfo = false;
 
   @override
   void initState() {
@@ -38,6 +43,12 @@ class CustomTextFieldState extends State<CustomTextField> {
   void _togglePasswordVisibility() {
     setState(() {
       _obscureText = !_obscureText;
+    });
+  }
+
+  void _toggleReferralInfo() {
+    setState(() {
+      _showReferralInfo = !_showReferralInfo;
     });
   }
 
@@ -79,38 +90,27 @@ class CustomTextFieldState extends State<CustomTextField> {
             ),
             Row(
               children: [
-                if (widget.phoneNumber)
-                  Expanded(
-                    child: TextField(
-                      obscureText: _obscureText,
-                      keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 0.0, horizontal: 2.0),
-                      ),
-                      style: context.textStyles.bodyText16White,
-                      inputFormatters: [
-                        MaskedInputFormatter('+#(###) ###-##-##')
-                      ],
+                Expanded(
+                  child: TextField(
+                    controller: widget.controller,
+                    obscureText: _obscureText,
+                    keyboardType: widget.phoneNumber
+                        ? TextInputType.phone
+                        : TextInputType.text,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 2.0),
                     ),
-                  )
-                else
-                  Expanded(
-                    child: TextField(
-                      obscureText: _obscureText,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 0.0, horizontal: 2.0),
-                      ),
-                      style: context.textStyles.bodyText16White,
-                    ),
+                    style: context.textStyles.bodyText16White,
+                    inputFormatters: widget.phoneNumber
+                        ? [MaskedInputFormatter('+#(###) ###-##-##')]
+                        : [],
                   ),
+                ),
                 if (widget.obscureText)
                   Transform.translate(
                     offset: const Offset(0, -12),
-                    // Сдвиг иконки вверх на 8 пикселей
                     child: IconButton(
                       icon: SvgPicture.asset(
                         _obscureText
@@ -118,6 +118,14 @@ class CustomTextFieldState extends State<CustomTextField> {
                             : 'assets/images/show_password.svg',
                       ),
                       onPressed: _togglePasswordVisibility,
+                    ),
+                  ),
+                if (widget.isReferral)
+                  Transform.translate(
+                    offset: const Offset(0, -12),
+                    child: IconButton(
+                      icon: SvgPicture.asset('assets/images/referal.svg'),
+                      onPressed: _toggleReferralInfo,
                     ),
                   ),
               ],

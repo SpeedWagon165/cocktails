@@ -61,6 +61,7 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
           const CustomTextField(
             labelText: 'Номер реферала',
             isJoined: true,
+            isReferral: true,
             joinPosition: JoinPosition.bottom,
           ),
           const SizedBox(

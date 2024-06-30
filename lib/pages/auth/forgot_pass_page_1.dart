@@ -12,15 +12,19 @@ import '../../widgets/custom_button.dart';
 class ForgotPassPage1 extends StatelessWidget {
   final PageController pageController;
   final PageController mainPageController;
+  final Function(String) onEmailEntered;
 
   const ForgotPassPage1({
     super.key,
     required this.pageController,
     required this.mainPageController,
+    required this.onEmailEntered,
   });
 
   @override
   Widget build(BuildContext context) {
+    final emailController = TextEditingController();
+
     return BasePopup(
       text: 'Забыли пароль?',
       onPressed: () {
@@ -38,8 +42,9 @@ class ForgotPassPage1 extends StatelessWidget {
           const SizedBox(
             height: 24,
           ),
-          const CustomTextField(
+          CustomTextField(
             labelText: 'Эл. почта',
+            controller: emailController,
           ),
           const SizedBox(
             height: 24,
@@ -47,6 +52,7 @@ class ForgotPassPage1 extends StatelessWidget {
           CustomButton(
             text: 'Отправить',
             onPressed: () {
+              onEmailEntered(emailController.text);
               pageController.animateToPage(1,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut);

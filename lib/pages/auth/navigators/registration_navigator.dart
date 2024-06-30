@@ -5,7 +5,7 @@ import '../registration_page_1.dart';
 import '../registration_page_2.dart';
 import '../registration_page_3.dart';
 import '../registration_page_4.dart';
-import '../registration_page_5.dart';
+import '../permission_page.dart';
 
 class RegistrationNavigator extends StatefulWidget {
   final PageController mainPageController;

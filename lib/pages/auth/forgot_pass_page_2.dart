@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/base_pop_up.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,28 +9,65 @@ import '../../widgets/auth/center_text.dart';
 import '../../widgets/auth/custom_auth_textfield.dart';
 import '../../widgets/custom_button.dart';
 
-class ForgotPassPage2 extends StatelessWidget {
+class ForgotPassPage2 extends StatefulWidget {
   final PageController pageController;
+  final String email;
 
   const ForgotPassPage2({
     super.key,
     required this.pageController,
+    required this.email,
   });
+
+  @override
+  State<ForgotPassPage2> createState() => _ForgotPassPage2State();
+}
+
+class _ForgotPassPage2State extends State<ForgotPassPage2> {
+  Timer? _timer;
+
+  int _start = 59;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_start == 0) {
+        setState(() {
+          timer.cancel();
+        });
+      } else {
+        setState(() {
+          _start--;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BasePopup(
       text: 'Код подтверждения',
       onPressed: () {
-        pageController.animateToPage(0,
+        widget.pageController.animateToPage(0,
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut);
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CenterText(
-            text: 'Мы отправили код на почту irina_ivanov@gmail.com',
+          CenterText(
+            text: 'Мы отправили код на почту ${widget.email}',
             padding: 60,
           ),
           const SizedBox(
@@ -44,7 +83,7 @@ class ForgotPassPage2 extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Center(
               child: Text(
-                'Повторная отправка кода через 00:59',
+                'Повторная отправка кода через 00:${_start.toString().padLeft(2, '0')}',
                 style: context.textStyles.bodyText16White,
                 textAlign: TextAlign.center,
               ),
@@ -56,7 +95,7 @@ class ForgotPassPage2 extends StatelessWidget {
           CustomButton(
             text: 'Подтвердить',
             onPressed: () {
-              pageController.animateToPage(3,
+              widget.pageController.animateToPage(3,
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOut);
             },
