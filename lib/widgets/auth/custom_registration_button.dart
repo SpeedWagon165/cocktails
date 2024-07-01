@@ -2,7 +2,9 @@ import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
+import '../../pages/auth/popups/auth_pop_up.dart';
 import '../../utilities/adaptive_size.dart';
 
 class RegistrationServicesButton extends StatelessWidget {
@@ -35,7 +37,7 @@ class RegistrationServicesButton extends StatelessWidget {
                 children: [
                   Text(
                     text,
-                    style: context.textStyles.bodyText16White,
+                    style: context.text.bodyText16White,
                   ),
                   Container(
                     width: SizeConfig.heightAdaptive(27),
@@ -70,6 +72,44 @@ class RegistrationServicesButton extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class CustomRegistrationButton extends StatelessWidget {
+  const CustomRegistrationButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        authPopUp(context);
+      },
+      child: Container(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          border: GradientBoxBorder(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFFF8C82C),
+                Color(0xFFEF7F31),
+                Color(0xFFDD66A9),
+              ],
+            ),
+            width: 2,
+          ),
+        ),
+        child: Container(
+          height: 36,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.04),
+            borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+          ),
+          child: Text('Зарегестрироваться',
+              style: context.text.bodyText16White.copyWith(fontSize: 15)),
+        ),
+      ),
     );
   }
 }

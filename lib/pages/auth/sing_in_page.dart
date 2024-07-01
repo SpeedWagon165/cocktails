@@ -49,8 +49,7 @@ class SingInPage extends StatelessWidget {
                 },
                 child: Text(
                   'Забыли пароль?',
-                  style:
-                      context.textStyles.bodyText12Grey.copyWith(fontSize: 14),
+                  style: context.text.bodyText12Grey.copyWith(fontSize: 14),
                 )),
           ),
           const SizedBox(
@@ -111,7 +110,7 @@ class SingInPage extends StatelessWidget {
               },
               child: Text(
                 'Зарегистрироваться',
-                style: context.textStyles.bodyText16White,
+                style: context.text.bodyText16White,
               )),
         ],
       ),

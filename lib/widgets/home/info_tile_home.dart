@@ -37,12 +37,11 @@ class InfoTileHome extends StatelessWidget {
           ),
           title: Text(
             title,
-            style: context.textStyles.buttonText18Brown
-                .copyWith(color: Colors.white),
+            style: context.text.buttonText18Brown.copyWith(color: Colors.white),
           ),
           subtitle: Text(
             subtitle,
-            style: context.textStyles.bodyText12Grey.copyWith(fontSize: 14),
+            style: context.text.bodyText12Grey.copyWith(fontSize: 14),
           ),
           trailing: Container(
             width: 30,

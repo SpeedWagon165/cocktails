@@ -4,7 +4,7 @@ import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../theme/styles.dart';
+import '../theme/text_styles.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -57,7 +57,7 @@ class CustomButton extends StatelessWidget {
                     ),
                     child: Text(
                       text,
-                      style: context.textStyles.buttonText18Brown
+                      style: context.text.buttonText18Brown
                           .copyWith(color: Colors.white),
                     ),
                   ),
@@ -82,7 +82,7 @@ class CustomButton extends StatelessWidget {
                   ),
                   child: Text(
                     text,
-                    style: context.textStyles.buttonText18Brown,
+                    style: context.text.buttonText18Brown,
                   ),
                 ),
               ),
@@ -112,7 +112,7 @@ class CustomButton extends StatelessWidget {
                 ),
                 child: Text(
                   text,
-                  style: context.textStyles.buttonText18Brown
+                  style: context.text.buttonText18Brown
                       .copyWith(color: Colors.white),
                 ),
               ),
@@ -146,7 +146,7 @@ class CustomButton extends StatelessWidget {
               ),
               child: Text(
                 text,
-                style: context.textStyles.buttonText18Brown
+                style: context.text.buttonText18Brown
                     .copyWith(color: Colors.white),
               ),
             ),
@@ -165,7 +165,7 @@ class CustomButton extends StatelessWidget {
             ),
             child: Text(
               text,
-              style: context.textStyles.buttonText18Brown
+              style: context.text.buttonText18Brown
                   .copyWith(color: const Color(0x66FFFFFF)),
             ),
           ),
@@ -183,7 +183,7 @@ class CustomButton extends StatelessWidget {
             ),
             child: Text(
               text,
-              style: context.textStyles.buttonText18Brown,
+              style: context.text.buttonText18Brown,
             ),
           ),
         );

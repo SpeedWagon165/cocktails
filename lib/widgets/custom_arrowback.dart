@@ -25,8 +25,8 @@ class CustomArrowBack extends StatelessWidget {
       children: [
         if (arrow)
           Container(
-            width: SizeConfig.heightAdaptive(30), // Адаптивный размер кнопки
-            height: SizeConfig.heightAdaptive(30),
+            width: 30, // Адаптивный размер кнопки
+            height: 30,
             decoration: BoxDecoration(
               color: Colors.transparent, // Цвет фона кнопки
               shape: BoxShape.circle, // Круглая форма
@@ -38,8 +38,8 @@ class CustomArrowBack extends StatelessWidget {
             child: IconButton(
               icon: SvgPicture.asset(
                 'assets/images/arrow_back.svg',
-                width: SizeConfig.heightAdaptive(10), // Адаптивная ширина SVG
-                height: SizeConfig.heightAdaptive(10), // Адаптивная высота SVG
+                width: 10, // Адаптивная ширина SVG
+                height: 10, // Адаптивная высота SVG
               ),
               iconSize: 30.0,
               onPressed: () {
@@ -64,7 +64,7 @@ class CustomArrowBack extends StatelessWidget {
         ),
         Text(
           text,
-          style: context.textStyles.headline20White,
+          style: context.text.headline20White,
         ),
       ],
     );

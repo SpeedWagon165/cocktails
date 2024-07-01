@@ -44,7 +44,7 @@ class RegistrationPage2 extends StatelessWidget {
             child: Center(
               child: Text(
                 'Повторная отправка кода через 00:59',
-                style: context.textStyles.bodyText16White,
+                style: context.text.bodyText16White,
                 textAlign: TextAlign.center,
               ),
             ),

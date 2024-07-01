@@ -86,12 +86,11 @@ class RegistrationPage1 extends StatelessWidget {
               children: [
                 TextSpan(
                   text: 'Уже есть аккаунт? ',
-                  style:
-                      context.textStyles.bodyText12Grey.copyWith(fontSize: 16),
+                  style: context.text.bodyText12Grey.copyWith(fontSize: 16),
                 ),
                 TextSpan(
                   text: 'Войти',
-                  style: context.textStyles.bodyText16White,
+                  style: context.text.bodyText16White,
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       // Navigate back to Sign In Page

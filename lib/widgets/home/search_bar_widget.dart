@@ -5,28 +5,31 @@ class CustomSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.06),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: const Row(
-        children: [
-          Icon(Icons.search, color: Colors.white54),
-          SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Найти',
-                hintStyle: TextStyle(color: Colors.white54),
-                border: InputBorder.none,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.06),
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.search, color: Colors.white54),
+            SizedBox(width: 8),
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Найти',
+                  hintStyle: TextStyle(color: Colors.white54),
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(color: Colors.white),
               ),
-              style: TextStyle(color: Colors.white),
             ),
-          ),
-          Icon(Icons.mic, color: Colors.white54),
-        ],
+            Icon(Icons.mic, color: Colors.white54),
+          ],
+        ),
       ),
     );
   }

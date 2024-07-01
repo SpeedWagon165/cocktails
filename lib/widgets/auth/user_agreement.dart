@@ -28,7 +28,7 @@ class UserAgreementState extends State<UserAgreement> {
           child: RichText(
             text: TextSpan(
               text: widget.text,
-              style: context.textStyles.bodyText12Grey.copyWith(
+              style: context.text.bodyText12Grey.copyWith(
                 fontSize: 13,
                 height: 1.5,
               ),

@@ -75,7 +75,7 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
             alignment: Alignment.centerLeft,
             child: Text(
               'Ваш пол',
-              style: context.textStyles.bodyText16White,
+              style: context.text.bodyText16White,
             ),
           ),
           const SizedBox(
