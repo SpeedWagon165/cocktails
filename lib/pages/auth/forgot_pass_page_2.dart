@@ -84,7 +84,7 @@ class _ForgotPassPage2State extends State<ForgotPassPage2> {
             child: Center(
               child: Text(
                 'Повторная отправка кода через 00:${_start.toString().padLeft(2, '0')}',
-                style: context.textStyles.bodyText16White,
+                style: context.text.bodyText16White,
                 textAlign: TextAlign.center,
               ),
             ),

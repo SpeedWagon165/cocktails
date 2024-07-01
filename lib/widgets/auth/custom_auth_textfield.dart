@@ -103,7 +103,7 @@ class CustomTextFieldState extends State<CustomTextField> {
               children: [
                 Text(
                   widget.labelText,
-                  style: context.textStyles.bodyText12Grey,
+                  style: context.text.bodyText12Grey,
                 ),
                 Row(
                   children: [
@@ -124,7 +124,7 @@ class CustomTextFieldState extends State<CustomTextField> {
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 0.0, horizontal: 2.0),
                             ),
-                            style: context.textStyles.bodyText16White,
+                            style: context.text.bodyText16White,
                             inputFormatters: widget.phoneNumber
                                 ? [MaskedInputFormatter('+#(###) ###-##-##')]
                                 : [],
@@ -180,8 +180,7 @@ class CustomTextFieldState extends State<CustomTextField> {
                     ),
                     Text(
                       'В данном поле нужно указать номер телефона человека, который порекомендовал вам скачать приложение',
-                      style: context.textStyles.bodyText14White
-                          .copyWith(height: 1.5),
+                      style: context.text.bodyText14White.copyWith(height: 1.5),
                     ),
                   ],
                 ),

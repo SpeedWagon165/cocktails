@@ -43,11 +43,11 @@ class PermissionWidget extends StatelessWidget {
           children: [
             Text(
               headLineText,
-              style: context.textStyles.bodyText16White,
+              style: context.text.bodyText16White,
             ),
             Text(
               text,
-              style: context.textStyles.bodyText12Grey.copyWith(fontSize: 14),
+              style: context.text.bodyText12Grey.copyWith(fontSize: 14),
             )
           ],
         )

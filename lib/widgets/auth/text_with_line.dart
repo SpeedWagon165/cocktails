@@ -27,7 +27,7 @@ class TextWithLines extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Text(
             text,
-            style: context.textStyles.bodyText12Grey.copyWith(fontSize: 14.0),
+            style: context.text.bodyText12Grey.copyWith(fontSize: 14.0),
           ),
         ),
         Expanded(
