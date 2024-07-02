@@ -1,4 +1,5 @@
 import 'package:aura_box/aura_box.dart';
+import 'package:cocktails/pages/home/popups/cocktail_selection_pop_up.dart';
 import 'package:cocktails/widgets/home/info_tile_home.dart';
 import 'package:flutter/material.dart';
 import 'package:scaffold_gradient_background/scaffold_gradient_background.dart';
@@ -127,7 +128,7 @@ class HomePage extends StatelessWidget {
                 CustomButton(
                   text: 'Подобрать коктейль',
                   onPressed: () {
-                    needRegistrationPopUp(context);
+                    cocktailSelectionPopUp(context);
                   },
                   single: true,
                 ),

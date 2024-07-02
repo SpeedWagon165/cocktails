@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatelessWidget {
-  const CustomSearchBar({super.key});
+  const CustomSearchBar({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: Container(
+        height: 50,
         padding: EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.06),

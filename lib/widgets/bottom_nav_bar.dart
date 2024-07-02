@@ -35,52 +35,65 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ),
           child: BlocBuilder<BottomNavigationBloc, BottomNavigationState>(
             builder: (context, state) {
-              return BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: Color(0xFF0B0B0B),
-                currentIndex: _getCurrentIndex(state),
-                onTap: (index) {
-                  switch (index) {
-                    case 0:
-                      BlocProvider.of<BottomNavigationBloc>(context)
-                          .add(NavigateToHome());
-                      break;
-                    case 1:
-                      BlocProvider.of<BottomNavigationBloc>(context)
-                          .add(NavigateToCatalog());
-                      break;
-                    case 2:
-                      BlocProvider.of<BottomNavigationBloc>(context)
-                          .add(NavigateToStore());
-                      break;
-                    case 3:
-                      BlocProvider.of<BottomNavigationBloc>(context)
-                          .add(NavigateToAccount());
-                      break;
-                  }
-                },
-                items: [
-                  _buildBottomNavigationBarItem(
-                    icon: 'assets/images/home_icon.svg',
-                    label: 'Главная',
-                    isSelected: state is HomePageState,
-                  ),
-                  _buildBottomNavigationBarItem(
-                    icon: 'assets/images/book_icon.svg',
-                    label: 'Каталог',
-                    isSelected: state is CatalogPageState,
-                  ),
-                  _buildBottomNavigationBarItem(
-                    icon: 'assets/images/store_icon.svg',
-                    label: 'Магазин',
-                    isSelected: state is StorePageState,
-                  ),
-                  _buildBottomNavigationBarItem(
-                    icon: 'assets/images/account_icon.svg',
-                    label: 'Аккаунт',
-                    isSelected: state is AccountPageState,
-                  ),
-                ],
+              return Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFE76E24).withOpacity(0.15),
+                      spreadRadius: 120,
+                      blurRadius: 140,
+                      offset: Offset(0, 5),
+                      blurStyle: BlurStyle.normal,
+                    ),
+                  ],
+                ),
+                child: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  backgroundColor: Color(0xFF0B0B0B),
+                  currentIndex: _getCurrentIndex(state),
+                  onTap: (index) {
+                    switch (index) {
+                      case 0:
+                        BlocProvider.of<BottomNavigationBloc>(context)
+                            .add(NavigateToHome());
+                        break;
+                      case 1:
+                        BlocProvider.of<BottomNavigationBloc>(context)
+                            .add(NavigateToCatalog());
+                        break;
+                      case 2:
+                        BlocProvider.of<BottomNavigationBloc>(context)
+                            .add(NavigateToStore());
+                        break;
+                      case 3:
+                        BlocProvider.of<BottomNavigationBloc>(context)
+                            .add(NavigateToAccount());
+                        break;
+                    }
+                  },
+                  items: [
+                    _buildBottomNavigationBarItem(
+                      icon: 'assets/images/home_icon.svg',
+                      label: 'Главная',
+                      isSelected: state is HomePageState,
+                    ),
+                    _buildBottomNavigationBarItem(
+                      icon: 'assets/images/book_icon.svg',
+                      label: 'Каталог',
+                      isSelected: state is CatalogPageState,
+                    ),
+                    _buildBottomNavigationBarItem(
+                      icon: 'assets/images/store_icon.svg',
+                      label: 'Магазин',
+                      isSelected: state is StorePageState,
+                    ),
+                    _buildBottomNavigationBarItem(
+                      icon: 'assets/images/account_icon.svg',
+                      label: 'Аккаунт',
+                      isSelected: state is AccountPageState,
+                    ),
+                  ],
+                ),
               );
             },
           ),
@@ -95,7 +108,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return BottomNavigationBarItem(
       icon: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           SvgPicture.asset(icon,
@@ -109,7 +122,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ),
           if (isSelected)
             Container(
-              margin: EdgeInsets.only(top: 5),
+              margin: const EdgeInsets.only(top: 5),
               decoration: const BoxDecoration(
                   gradient: LinearGradient(
                 colors: [

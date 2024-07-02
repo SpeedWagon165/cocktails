@@ -1,5 +1,11 @@
+import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:cocktails/widgets/base_pop_up.dart';
+import 'package:easy_stepper/easy_stepper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../widgets/home/step_indicator.dart';
 
 class CocktailSelectionPage extends StatefulWidget {
   @override
@@ -28,52 +34,25 @@ class _CocktailSelectionPageState extends State<CocktailSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Подбор коктейля'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildStepIndicator(),
-              SizedBox(height: 20),
-              _buildSelectedChips(selectedAlcohol),
-              _buildSelectedChips(selectedIngredients),
-              SizedBox(height: 20),
-              _buildExpansionPanelList(),
-              SizedBox(height: 20),
-              _buildActionButtons(),
-            ],
+    return BasePopup(
+      text: 'Подбор коктейля',
+      onPressed: null,
+      arrow: false,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          StepIndicator(
+            activeStep: 0,
           ),
-        ),
+          SizedBox(height: 20),
+          _buildSelectedChips(selectedAlcohol),
+          _buildSelectedChips(selectedIngredients),
+          SizedBox(height: 20),
+          _buildExpansionPanelList(),
+          SizedBox(height: 20),
+          _buildActionButtons(),
+        ],
       ),
-    );
-  }
-
-  Widget _buildStepIndicator() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildStep("Алкоголь", isActive: true),
-        _buildStep("Доп. ингредиенты"),
-        _buildStep("Подбор"),
-      ],
-    );
-  }
-
-  Widget _buildStep(String label, {bool isActive = false}) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 10,
-          backgroundColor: isActive ? Colors.green : Colors.grey,
-        ),
-        SizedBox(height: 4),
-        Text(label, style: TextStyle(color: Colors.white)),
-      ],
     );
   }
 
