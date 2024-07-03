@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../pages/cocktail_list/cocktail_list_page.dart';
+
 class AnimatedProgressBarPage extends StatefulWidget {
   const AnimatedProgressBarPage({super.key});
 
@@ -15,9 +17,23 @@ class AnimatedProgressBarPageState extends State<AnimatedProgressBarPage>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: 2), // Changed to 2 seconds
       vsync: this,
-    )..forward();
+    )..addListener(() {
+        if (_animationController.isCompleted) {
+          Future.delayed(const Duration(seconds: 2), () {
+            // Переход на CocktailListPage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CocktailListPage(),
+              ),
+            );
+          });
+        }
+      });
+
+    _animationController.forward();
   }
 
   @override
@@ -87,7 +103,7 @@ class AnimatedProgressBarPageState extends State<AnimatedProgressBarPage>
                               30,
                           // Adjust to align text with the progress
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
                             decoration: BoxDecoration(
                               color: Colors.black.withOpacity(0.7),
                               borderRadius: BorderRadius.circular(12),

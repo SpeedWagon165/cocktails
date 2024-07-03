@@ -6,6 +6,8 @@ import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/home/search_bar_widget.dart';
 import '../bonus_page/bonus_screen.dart';
+import '../../widgets/base_appbar.dart';
+import '../cocktail_list/cocktail_list_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -67,30 +69,46 @@ class HomePage extends StatelessWidget {
                       width: 1.0,
                     ),
                   ),
-                  child: const Column(
+                  child: Column(
                     children: [
                       InfoTileHome(
                         icon: 'assets/images/gift_icon.svg',
                         title: 'Мои баллы',
                         subtitle: '150 баллов',
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const BonusScreen()));
+                        },
                       ),
                       Divider(color: Color(0xff343434), height: 1),
                       InfoTileHome(
                         icon: 'assets/images/cocktail_icon.svg',
                         title: 'Мои коктейли',
                         subtitle: '20 рецептов',
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const CocktailListPage()));
+                        },
                       ),
                       Divider(color: Color(0xff343434), height: 1),
                       InfoTileHome(
                         icon: 'assets/images/heart_icon.svg',
                         title: 'Избранное',
                         subtitle: '40 избранных',
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const BonusScreen()));
+                        },
                       ),
                       Divider(color: Color(0xff343434), height: 1),
                       InfoTileHome(
                         icon: 'assets/images/mail_icon.svg',
                         title: 'Уведомления',
                         subtitle: '3 новых',
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const BonusScreen()));
+                        },
                       ),
                     ],
                   ),
