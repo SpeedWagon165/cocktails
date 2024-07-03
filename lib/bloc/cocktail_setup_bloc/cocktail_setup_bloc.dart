@@ -14,7 +14,7 @@ class CocktailSelectionBloc
           'Виски': [],
           'Шампанское': [],
           'Б/а напитки': [],
-          'Продукты': []
+          'Продукты': [],
         })) {
     on<ToggleSelectionEvent>(_toggleSelectionEvent);
     on<ClearSelectionEvent>(_clearSelectionEvent);
@@ -24,14 +24,15 @@ class CocktailSelectionBloc
       ToggleSelectionEvent event, Emitter<CocktailSelectionState> emit) async {
     final currentSelection = state.selectedItems[event.category] ?? [];
     final updatedSelection = List<String>.from(currentSelection);
-
     if (updatedSelection.contains(event.item)) {
       updatedSelection.remove(event.item);
     } else {
       updatedSelection.add(event.item);
     }
-
-    emit(state.copyWith({event.category: updatedSelection}));
+    // Создаем новое состояние, объединяя старые и новые значения
+    final updatedItems = Map<String, List<String>>.from(state.selectedItems)
+      ..[event.category] = updatedSelection;
+    emit(state.copyWith(updatedItems));
   }
 
   void _clearSelectionEvent(

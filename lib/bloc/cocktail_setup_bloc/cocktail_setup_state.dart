@@ -5,7 +5,14 @@ class CocktailSelectionState {
 
   CocktailSelectionState(this.selectedItems);
 
-  CocktailSelectionState copyWith(Map<String, List<String>>? selectedItems) {
-    return CocktailSelectionState(selectedItems ?? this.selectedItems);
+  CocktailSelectionState copyWith(Map<String, List<String>>? updatedItems) {
+    // Объединяем старые и новые значения, чтобы не терять данные
+    final newItems = Map<String, List<String>>.from(selectedItems);
+    if (updatedItems != null) {
+      updatedItems.forEach((key, value) {
+        newItems[key] = value;
+      });
+    }
+    return CocktailSelectionState(newItems);
   }
 }

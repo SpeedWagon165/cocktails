@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/home/search_bar_widget.dart';
+import '../bonus_page/bonus_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -66,7 +67,7 @@ class HomePage extends StatelessWidget {
                       width: 1.0,
                     ),
                   ),
-                  child: Column(
+                  child: const Column(
                     children: [
                       InfoTileHome(
                         icon: 'assets/images/gift_icon.svg',

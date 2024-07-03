@@ -13,7 +13,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    final List<GlobalKey<NavigatorState>> navigatorKeys = [
       GlobalKey<NavigatorState>(),
       GlobalKey<NavigatorState>(),
       GlobalKey<NavigatorState>(),
@@ -24,13 +24,13 @@ class CustomBottomNavigationBar extends StatelessWidget {
       body: BlocBuilder<BottomNavigationBloc, BottomNavigationState>(
           builder: (context, state) {
         if (state is HomePageState) {
-          return _buildNavigator(0, const HomePage(), _navigatorKeys[0]);
+          return _buildNavigator(0, const HomePage(), navigatorKeys[0]);
         } else if (state is CatalogPageState) {
-          return _buildNavigator(1, const CatalogPage(), _navigatorKeys[1]);
+          return _buildNavigator(1, const CatalogPage(), navigatorKeys[1]);
         } else if (state is StorePageState) {
-          return _buildNavigator(2, const StorePage(), _navigatorKeys[2]);
+          return _buildNavigator(2, const StorePage(), navigatorKeys[2]);
         } else if (state is AccountPageState) {
-          return _buildNavigator(3, const AccountPage(), _navigatorKeys[3]);
+          return _buildNavigator(3, const AccountPage(), navigatorKeys[3]);
         } else {
           return const SizedBox();
         }

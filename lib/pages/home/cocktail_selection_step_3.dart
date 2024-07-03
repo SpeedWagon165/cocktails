@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../widgets/custom_button.dart';
+import '../../widgets/home/animaited_loading.dart';
 import '../../widgets/home/cocktail_selection_widget.dart';
 import '../../widgets/home/step_indicator.dart';
 
@@ -21,50 +22,19 @@ class CocktailSelectionStep3 extends StatefulWidget {
 class CocktailSelectionStep3State extends State<CocktailSelectionStep3> {
   @override
   Widget build(BuildContext context) {
-    return BasePopup(
+    return const BasePopup(
       text: 'Подбор коктейля',
       onPressed: null,
       arrow: false,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const StepIndicator(
+          StepIndicator(
             activeStep: 2,
           ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: CustomButton(
-                    text: 'Отказатся',
-                    grey: true,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    single: false,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: CustomButton(
-                    text: 'Подтвердить',
-                    onPressed: () {
-                      widget.pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    },
-                    single: false,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          SizedBox(height: 50),
+          AnimatedProgressBarPage(),
+          SizedBox(height: 50),
         ],
       ),
     );

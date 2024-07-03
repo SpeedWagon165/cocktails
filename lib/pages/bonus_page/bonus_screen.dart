@@ -16,6 +16,7 @@ class _BonusScreenState extends State<BonusScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      minimum: const EdgeInsets.only(top: 40),
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
