@@ -1,14 +1,10 @@
-import 'package:aura_box/aura_box.dart';
 import 'package:cocktails/pages/home/popups/cocktail_selection_pop_up.dart';
 import 'package:cocktails/widgets/home/info_tile_home.dart';
 import 'package:flutter/material.dart';
-import 'package:scaffold_gradient_background/scaffold_gradient_background.dart';
+
 import '../../widgets/auth/custom_registration_button.dart';
-import '../../widgets/bottom_nav_bar.dart';
 import '../../widgets/custom_button.dart';
-import '../../widgets/gradient_scaffold.dart';
 import '../../widgets/home/search_bar_widget.dart';
-import 'popups/need_registration_pop_up.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -70,7 +66,7 @@ class HomePage extends StatelessWidget {
                       width: 1.0,
                     ),
                   ),
-                  child: const Column(
+                  child: Column(
                     children: [
                       InfoTileHome(
                         icon: 'assets/images/gift_icon.svg',
