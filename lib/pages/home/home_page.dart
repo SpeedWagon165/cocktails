@@ -16,32 +16,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: Stack(
-      //   children: [
-      //     AuraBox(
-      //       spots: [
-      //         AuraSpot(
-      //           color: Color(0xFFE76E24),
-      //           radius: 300.0,
-      //           alignment: const Alignment(0.6, -1.3),
-      //           blurRadius: 100.0,
-      //         ),
-      //         AuraSpot(
-      //           color: Color(0xFFE76E24),
-      //           radius: 350.0,
-      //           alignment: const Alignment(0.0, 1.52),
-      //           blurRadius: 100.0,
-      //         ),
-      //       ],
-      //       decoration: const BoxDecoration(
-      //         color: Colors.transparent,
-      //         shape: BoxShape.rectangle,
-      //       ),
-      //       child: const SizedBox(
-      //         height: double.infinity,
-      //         width: double.infinity,
-      //       ),
-      //     ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

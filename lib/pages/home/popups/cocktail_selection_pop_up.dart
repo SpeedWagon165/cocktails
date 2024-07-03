@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../cocktail_selection_page.dart';
+import '../cocktail_selection_step_1.dart';
+import '../navigators/cocktail_selection_navigator.dart';
 
 void cocktailSelectionPopUp(BuildContext context) {
   showModalBottomSheet(
@@ -9,7 +10,7 @@ void cocktailSelectionPopUp(BuildContext context) {
     useRootNavigator: true,
     backgroundColor: Colors.transparent,
     builder: (context) {
-      return SingleChildScrollView(child: CocktailSelectionPage());
+      return const SingleChildScrollView(child: CocktailSelectionNavigator());
     },
   );
 }

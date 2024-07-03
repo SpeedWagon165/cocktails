@@ -20,7 +20,7 @@ class UserAgreementState extends State<UserAgreement> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        CustomCircularCheckbox(),
+        const CustomCircularCheckbox(),
         const SizedBox(
           width: 12,
         ),

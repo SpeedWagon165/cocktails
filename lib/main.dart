@@ -1,3 +1,4 @@
+import 'package:cocktails/bloc/cocktail_setup_bloc/cocktail_setup_bloc.dart';
 import 'package:cocktails/pages/welcome_page.dart';
 import 'package:cocktails/theme/themes.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         });
         return MultiBlocProvider(
           providers: [
+            BlocProvider(create: (context) => CocktailSelectionBloc()),
             BlocProvider(create: (context) => BottomNavigationBloc()),
           ],
           child: MaterialApp(
