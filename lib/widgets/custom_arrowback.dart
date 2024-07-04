@@ -64,7 +64,9 @@ class CustomArrowBack extends StatelessWidget {
         ),
         Text(
           text,
-          style: context.text.headline20White,
+          style: auth
+              ? context.text.headline20White
+              : context.text.headline24White,
         ),
       ],
     );

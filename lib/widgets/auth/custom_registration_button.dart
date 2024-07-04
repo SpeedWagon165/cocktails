@@ -77,7 +77,11 @@ class RegistrationServicesButton extends StatelessWidget {
 }
 
 class CustomRegistrationButton extends StatelessWidget {
-  const CustomRegistrationButton({super.key});
+  final String text;
+  final bool icon;
+
+  const CustomRegistrationButton(
+      {super.key, required this.text, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -106,8 +110,19 @@ class CustomRegistrationButton extends StatelessWidget {
             color: Colors.white.withOpacity(0.04),
             borderRadius: const BorderRadius.all(Radius.circular(20.0)),
           ),
-          child: Text('Зарегестрироваться',
-              style: context.text.bodyText16White.copyWith(fontSize: 15)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (icon) SvgPicture.asset('assets/images/pen_icon.svg'),
+              if (icon)
+                SizedBox(
+                  width: 10,
+                ),
+              Text(text,
+                  style: context.text.bodyText16White.copyWith(fontSize: 15)),
+            ],
+          ),
         ),
       ),
     );

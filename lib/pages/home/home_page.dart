@@ -6,7 +6,6 @@ import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/home/search_bar_widget.dart';
 import '../bonus_page/bonus_screen.dart';
-import '../../widgets/base_appbar.dart';
 import '../cocktail_list/cocktail_list_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -52,7 +51,10 @@ class HomePage extends StatelessWidget {
                             SizedBox(
                               height: 14,
                             ),
-                            CustomRegistrationButton()
+                            CustomRegistrationButton(
+                              text: 'Зарегистрироваться',
+                              icon: false,
+                            )
                           ],
                         ),
                       ),

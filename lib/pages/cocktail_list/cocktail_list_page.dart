@@ -36,10 +36,10 @@ class _CocktailListPageState extends State<CocktailListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: baseAppBar(context, '18 рецептов'),
+      appBar: baseAppBar(context, '18 рецептов', true, true),
       body: Column(
         children: [
-          SelectedItemsCarousel(),
+          const SelectedItemsCarousel(),
           Expanded(
             child: ListView.builder(
               itemCount: cocktails.length,

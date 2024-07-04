@@ -3,14 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-
-PreferredSizeWidget baseAppBar(BuildContext context, String title) {
+PreferredSizeWidget baseAppBar(BuildContext context, String title, bool actions,
+    bool arrowBack) {
   return AppBar(
     leadingWidth: 50,
     toolbarHeight: 70,
     titleSpacing: 8,
     elevation: 0,
-    leading: Padding(
+    leading: arrowBack ? Padding(
       padding: const EdgeInsets.all(10.0),
       child: InkWell(
         onTap: () {
@@ -38,9 +38,10 @@ PreferredSizeWidget baseAppBar(BuildContext context, String title) {
           ),
         ),
       ),
-    ),
+    ) : SizedBox(),
     title: Text(title, style: context.text.headline24White),
     actions: [
+      actions ?
       IconButton(
         icon: SvgPicture.asset(
           'assets/images/filter_icon.svg',
@@ -49,8 +50,7 @@ PreferredSizeWidget baseAppBar(BuildContext context, String title) {
         onPressed: () {
           Navigator.of(context).pop();
         },
-      ),
+      ) : SizedBox()
     ],
   );
 }
-
