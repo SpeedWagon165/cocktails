@@ -5,6 +5,7 @@ import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/custom_arrowback.dart';
 import '../bonus_page/bonus_screen.dart';
 import '../cocktail_list/cocktail_list_page.dart';
+import 'notification_settings_page.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
@@ -14,7 +15,7 @@ class AccountPage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(top: 12, left: 14),
+          padding: const EdgeInsets.only(top: 15, left: 14),
           child: Column(
             children: [
               const CustomArrowBack(
@@ -100,7 +101,8 @@ class AccountPage extends StatelessWidget {
                       title: 'Уведомления',
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const BonusScreen()));
+                            builder: (context) =>
+                                const NotificationSetupPage()));
                       },
                     ),
                     const Divider(color: Color(0xff343434), height: 1),
