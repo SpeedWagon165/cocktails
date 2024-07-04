@@ -1,6 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/base_pop_up.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/auth/custom_auth_textfield.dart';
@@ -8,7 +7,6 @@ import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/auth/text_with_line.dart';
 import '../../widgets/bottom_nav_bar.dart';
 import '../../widgets/custom_button.dart';
-import '../home/home_page.dart';
 
 class SingInPage extends StatelessWidget {
   final PageController pageController;

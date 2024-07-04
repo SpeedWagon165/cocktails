@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-import 'auth/popups/auth_pop_up.dart';
+import '../widgets/bottom_nav_bar.dart';
 import '../widgets/custom_button.dart';
+import 'auth/popups/auth_pop_up.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -37,7 +36,11 @@ class _WelcomePageState extends State<WelcomePage> {
                       child: CustomButton(
                         text: 'Пропустить',
                         transper: true,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const CustomBottomNavigationBar()));
+                        },
                         single: false,
                       ),
                     ),

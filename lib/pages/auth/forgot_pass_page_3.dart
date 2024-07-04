@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../widgets/auth/center_text.dart';
 import '../../widgets/auth/custom_auth_textfield.dart';
 import '../../widgets/base_pop_up.dart';
+import '../../widgets/bottom_nav_bar.dart';
 import '../../widgets/custom_button.dart';
 
 class ForgotPassPage3 extends StatelessWidget {
@@ -50,9 +51,8 @@ class ForgotPassPage3 extends StatelessWidget {
           CustomButton(
             text: 'Войти',
             onPressed: () {
-              pageController.animateToPage(2,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut);
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const CustomBottomNavigationBar()));
             },
             single: true,
           ),
