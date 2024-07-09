@@ -25,7 +25,7 @@ class StorePage extends StatelessWidget {
       'Бочонки',
       'Дымные наборы',
       'Набор 17 предмет',
-      'Приколы',
+      'Вино',
       'Вино шотланское'
     ];
     return Scaffold(

@@ -1,10 +1,10 @@
 import 'package:cocktails/widgets/base_appbar.dart';
 import 'package:cocktails/widgets/cocktail_list/selected_items_carousel_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/cocktail_setup_bloc/cocktail_setup_bloc.dart';
+import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
+import '../../provider/cocktail_list_get.dart';
 import '../../widgets/cocktail_list/cocktail_card.dart';
 
 class CocktailListPage extends StatefulWidget {
@@ -15,40 +15,38 @@ class CocktailListPage extends StatefulWidget {
 }
 
 class _CocktailListPageState extends State<CocktailListPage> {
-  final List<Cocktail> cocktails = [
-    Cocktail(
-      name: 'Джин на красной смородине',
-      imageUrl: 'assets/images/1aa3b101bb92d5754f486009f6cc29b6.jpeg',
-      points: 10,
-      hasAllIngredients: true,
-      missingIngredients: [],
-    ),
-    Cocktail(
-      name: 'Old Fashion',
-      imageUrl: 'assets/images/18d69d8a15af86ee1c05a22baf387939.jpeg',
-      points: 20,
-      hasAllIngredients: false,
-      missingIngredients: ['Водка', 'Кока-кола'],
-    ),
-    // Добавьте больше коктейлей по необходимости
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: baseAppBar(context, '18 рецептов', true, true),
-      body: Column(
-        children: [
-          const SelectedItemsCarousel(),
-          Expanded(
-            child: ListView.builder(
-              itemCount: cocktails.length,
-              itemBuilder: (context, index) {
-                return CocktailCard(cocktail: cocktails[index]);
-              },
+    return BlocProvider(
+      create: (context) =>
+          CocktailListBloc(CocktailRepository())..add(FetchCocktails()),
+      child: Scaffold(
+        appBar: baseAppBar(context, '18 рецептов', true, true),
+        body: Column(
+          children: [
+            SelectedItemsCarousel(),
+            const SizedBox(height: 16),
+            Expanded(
+              child: BlocBuilder<CocktailListBloc, CocktailListState>(
+                builder: (context, state) {
+                  if (state is CocktailLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is CocktailLoaded) {
+                    return ListView.builder(
+                      itemCount: state.cocktails.length,
+                      itemBuilder: (context, index) {
+                        return CocktailCard(cocktail: state.cocktails[index]);
+                      },
+                    );
+                  } else if (state is CocktailError) {
+                    return Center(child: Text(state.message));
+                  }
+                  return const Center(child: Text('Начните поиск рецептов'));
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

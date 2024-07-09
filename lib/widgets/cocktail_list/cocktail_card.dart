@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../models/cocktail_list_model.dart';
+
 class CocktailCard extends StatelessWidget {
   final Cocktail cocktail;
 
@@ -24,12 +26,23 @@ class CocktailCard extends StatelessWidget {
                   topLeft: Radius.circular(12),
                   topRight: Radius.circular(12),
                 ),
-                child: Image.asset(
-                  cocktail.imageUrl,
-                  width: double.infinity,
-                  height: 190,
-                  fit: BoxFit.cover,
-                ),
+                child: cocktail.imageUrl != null
+                    ? Image.network(
+                        cocktail.imageUrl!,
+                        width: double.infinity,
+                        height: 190,
+                        fit: BoxFit.cover,
+                      )
+                    : Container(
+                        width: double.infinity,
+                        height: 190,
+                        color: Colors.grey,
+                        child: const Icon(
+                          Icons.image,
+                          color: Colors.white,
+                          size: 50,
+                        ),
+                      ),
               ),
               Positioned(
                 top: 10,
@@ -37,24 +50,9 @@ class CocktailCard extends StatelessWidget {
                 child: Chip(
                   backgroundColor: const Color(0xffFFBA08),
                   label: Text(
-                    '${cocktail.points} баллов',
+                    '${cocktail.ingredientCount} балла',
                     style: const TextStyle(color: Colors.black),
                   ),
-                ),
-              ),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: IconButton(
-                  icon: Icon(
-                    cocktail.hasAllIngredients
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color: Colors.red,
-                  ),
-                  onPressed: () {
-                    // Добавьте логику для обработки нажатия
-                  },
                 ),
               ),
             ],
@@ -71,48 +69,17 @@ class CocktailCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: cocktail.hasAllIngredients
-                ? Row(
-                    children: [
-                      const Icon(Icons.check_circle, color: Colors.green),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Есть все ингредиенты',
-                        style: const TextStyle(color: Colors.green),
-                      ),
-                    ],
-                  )
-                : Row(
-                    children: [
-                      const Icon(Icons.error, color: Colors.orange),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Не хватает ${cocktail.missingIngredients.join(' и ')}',
-                        style: const TextStyle(color: Colors.orange),
-                      ),
-                    ],
-                  ),
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              cocktail.description,
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 14,
+              ),
+            ),
           ),
-          const SizedBox(height: 12),
         ],
       ),
     );
   }
-}
-
-class Cocktail {
-  final String name;
-  final String imageUrl;
-  final int points;
-  final bool hasAllIngredients;
-  final List<String> missingIngredients;
-
-  Cocktail({
-    required this.name,
-    required this.imageUrl,
-    required this.points,
-    required this.hasAllIngredients,
-    required this.missingIngredients,
-  });
 }

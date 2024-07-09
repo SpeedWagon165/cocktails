@@ -4,12 +4,18 @@ import 'package:cocktails/pages/welcome_page.dart';
 import 'package:cocktails/theme/themes.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/bottom_navigation_bloc/bottom_navigation_bloc.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // Разрешить только портретную ориентацию
+  ]).then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
