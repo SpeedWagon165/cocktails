@@ -16,7 +16,12 @@ class CatalogPage extends StatelessWidget {
       create: (context) =>
           CocktailListBloc(CocktailRepository())..add(FetchCocktails()),
       child: Scaffold(
-        appBar: baseAppBar(context, 'Каталог рецептов', true, true),
+        appBar: baseAppBar(
+          context,
+          'Каталог рецептов',
+          true,
+          true,
+        ),
         body: Column(
           children: [
             const CustomSearchBar(),

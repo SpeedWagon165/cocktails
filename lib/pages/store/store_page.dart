@@ -19,7 +19,7 @@ class StorePage extends StatelessWidget {
         'name': 'Бочонок светлый',
         'imageUrl': 'assets/images/18d69d8a15af86ee1c05a22baf387939.jpeg',
         'price': 4000.0,
-      },
+      }
     ];
     final List<String> categories = [
       'Бочонки',

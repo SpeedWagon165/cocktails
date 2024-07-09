@@ -21,7 +21,12 @@ class _CocktailListPageState extends State<CocktailListPage> {
       create: (context) =>
           CocktailListBloc(CocktailRepository())..add(FetchCocktails()),
       child: Scaffold(
-        appBar: baseAppBar(context, '18 рецептов', true, true),
+        appBar: baseAppBar(
+          context,
+          '18 рецептов',
+          true,
+          true,
+        ),
         body: Column(
           children: [
             SelectedItemsCarousel(),

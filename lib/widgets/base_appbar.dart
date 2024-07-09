@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 PreferredSizeWidget baseAppBar(
-    BuildContext context, String title, bool actions, bool arrowBack) {
+  BuildContext context,
+  String title,
+  bool actions,
+  bool arrowBack,
+) {
   return AppBar(
     leadingWidth: 50,
     toolbarHeight: 70,
@@ -49,7 +53,7 @@ PreferredSizeWidget baseAppBar(
                 color: Colors.white,
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                print('dsa');
               },
             )
           : SizedBox()
