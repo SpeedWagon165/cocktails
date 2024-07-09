@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 class CenterText extends StatelessWidget {
   final String text;
   final double padding;
+  final bool pop;
 
   const CenterText({
     required this.text,
     required this.padding,
+    this.pop = true,
     super.key,
   });
 
@@ -18,7 +20,9 @@ class CenterText extends StatelessWidget {
       child: Center(
         child: Text(
           text,
-          style: context.text.bodyText12Grey.copyWith(fontSize: 14),
+          style: pop
+              ? context.text.bodyText12Grey.copyWith(fontSize: 14)
+              : context.text.bodyText12Grey.copyWith(fontSize: 16),
           textAlign: TextAlign.center,
         ),
       ),

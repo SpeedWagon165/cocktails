@@ -19,7 +19,7 @@ class NotificationSetupPageState extends State<NotificationSetupPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(top: 15, left: 14, right: 16),
+          padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
           child: Column(children: [
             const CustomArrowBack(
               text: 'Уведомления',

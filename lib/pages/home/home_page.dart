@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/home/search_bar_widget.dart';
+import '../auth/popups/auth_pop_up.dart';
 import '../bonus_page/bonus_screen.dart';
 import '../cocktail_list/cocktail_list_page.dart';
 
@@ -24,14 +25,14 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 22),
                 const CustomSearchBar(),
                 const SizedBox(height: 20),
-                const Row(
+                Row(
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 55,
                       backgroundImage:
                           AssetImage('assets/images/auth_background.jpeg'),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(right: 35.0),
@@ -39,7 +40,7 @@ class HomePage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               'Привет, Ирина!',
                               maxLines: 2,
                               style: TextStyle(
@@ -48,12 +49,15 @@ class HomePage extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 14,
                             ),
                             CustomRegistrationButton(
                               text: 'Зарегистрироваться',
-                              icon: false,
+                              onTap: () {
+                                authPopUp(context);
+                              },
+                              haveIcon: false,
                             )
                           ],
                         ),

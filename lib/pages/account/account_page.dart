@@ -4,7 +4,9 @@ import '../../widgets/account/info_tile_account.dart';
 import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/custom_arrowback.dart';
 import '../bonus_page/bonus_screen.dart';
-import '../cocktail_list/cocktail_list_page.dart';
+import 'about_app_page.dart';
+import 'change_password/change_password_step_1.dart';
+import 'editing_account_page.dart';
 import 'notification_settings_page.dart';
 
 class AccountPage extends StatelessWidget {
@@ -27,14 +29,14 @@ class AccountPage extends StatelessWidget {
               const SizedBox(
                 height: 24,
               ),
-              const Row(
+              Row(
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 55,
                     backgroundImage:
                         AssetImage('assets/images/auth_background.jpeg'),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(right: 35.0),
@@ -42,7 +44,7 @@ class AccountPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Ирина Иванова',
                             maxLines: 2,
                             style: TextStyle(
@@ -51,12 +53,18 @@ class AccountPage extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 14,
                           ),
                           CustomRegistrationButton(
                             text: 'Редактировать',
-                            icon: true,
+                            icon: 'assets/images/pen_icon.svg',
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EditingAccountPage()));
+                            },
+                            haveIcon: true,
                           )
                         ],
                       ),
@@ -64,7 +72,7 @@ class AccountPage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
               Card(
@@ -92,7 +100,7 @@ class AccountPage extends StatelessWidget {
                       title: 'Пароль',
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const CocktailListPage()));
+                            builder: (context) => const ChangePasswordStep1()));
                       },
                     ),
                     const Divider(color: Color(0xff343434), height: 1),
@@ -120,7 +128,7 @@ class AccountPage extends StatelessWidget {
                       title: 'О приложении',
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const BonusScreen()));
+                            builder: (context) => const AboutAppPage()));
                       },
                     ),
                   ],

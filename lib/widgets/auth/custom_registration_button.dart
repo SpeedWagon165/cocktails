@@ -1,10 +1,8 @@
 import 'package:cocktails/theme/theme_extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
-import '../../pages/auth/popups/auth_pop_up.dart';
 import '../../utilities/adaptive_size.dart';
 
 class RegistrationServicesButton extends StatelessWidget {
@@ -78,17 +76,21 @@ class RegistrationServicesButton extends StatelessWidget {
 
 class CustomRegistrationButton extends StatelessWidget {
   final String text;
-  final bool icon;
+  final bool haveIcon;
+  final String? icon;
+  final Function()? onTap;
 
   const CustomRegistrationButton(
-      {super.key, required this.text, required this.icon});
+      {super.key,
+      required this.text,
+      this.icon,
+      this.onTap,
+      required this.haveIcon});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        authPopUp(context);
-      },
+      onTap: onTap,
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -114,9 +116,9 @@ class CustomRegistrationButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (icon) SvgPicture.asset('assets/images/pen_icon.svg'),
-              if (icon)
-                SizedBox(
+              if (haveIcon) SvgPicture.asset(icon!),
+              if (haveIcon)
+                const SizedBox(
                   width: 10,
                 ),
               Text(text,
