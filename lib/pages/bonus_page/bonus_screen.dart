@@ -45,7 +45,7 @@ class _BonusScreenState extends State<BonusScreen> {
                   onPressed: () {},
                   gradient: true),
               const SizedBox(height: 45.0),
-              BonusStoryWidget(),
+              const BonusStoryWidget(),
             ],
           ),
         ),

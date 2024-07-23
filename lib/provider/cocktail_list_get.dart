@@ -16,6 +16,7 @@ class CocktailRepository {
         // Проверяем, есть ли ключ "results"
         if (data.containsKey('results')) {
           List<dynamic> recipesJson = data['results'];
+          print(recipesJson);
           return recipesJson.map((json) => Cocktail.fromJson(json)).toList();
         } else {
           throw Exception('Invalid response format');

@@ -53,6 +53,7 @@ dependencies:
   aura_box: ^1.0.2
   easy_stepper: ^0.8.5
   flutter_switch: ^0.3.2
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

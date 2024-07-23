@@ -44,7 +44,13 @@ PreferredSizeWidget baseAppBar(
             ),
           )
         : const SizedBox(),
-    title: Text(title, style: context.text.headline24White),
+    title: Flexible(
+      child: Text(
+        title,
+        style: context.text.headline24White,
+        overflow: TextOverflow.ellipsis,
+      ),
+    ),
     actions: [
       actions
           ? IconButton(

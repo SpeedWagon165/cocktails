@@ -1,8 +1,8 @@
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
-class BonusStoryCard extends StatelessWidget {
-  const BonusStoryCard(
+class IngredientsListCard extends StatelessWidget {
+  const IngredientsListCard(
       {super.key,
       required this.title,
       required this.count,
@@ -26,12 +26,9 @@ class BonusStoryCard extends StatelessWidget {
                 style: context.text.headline20White
                     .copyWith(color: Colors.white, fontSize: 15.0),
               ),
-              Text(count > 0 ? "+$count баллов" : "$count баллов",
-                  style: count > 0
-                      ? context.text.headline20White.copyWith(
-                          color: const Color(0xFF68C248), fontSize: 15.0)
-                      : context.text.headline20White.copyWith(
-                          color: const Color(0xFFFF4747), fontSize: 15.0)),
+              Text("$count мл",
+                  style: context.text.headline20White.copyWith(
+                      color: const Color(0xFFB7B7B7), fontSize: 15.0)),
             ],
           ),
         ),

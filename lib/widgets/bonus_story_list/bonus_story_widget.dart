@@ -30,13 +30,14 @@ class _BonusStoryWidgetState extends State<BonusStoryWidget> {
           const SizedBox(height: 12.0),
           Container(
             decoration: BoxDecoration(
-                border: Border.all(color: Color(0xFF343434), width: 1.0),
+                border: Border.all(color: const Color(0xFF343434), width: 1.0),
                 color: Colors.white.withOpacity(0.02),
                 borderRadius: BorderRadius.circular(10.0)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: jsonExample.length,
                   itemBuilder: (context, index) => BonusStoryCard(

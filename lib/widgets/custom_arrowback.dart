@@ -1,9 +1,6 @@
 import 'package:cocktails/theme/theme_extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-import '../utilities/adaptive_size.dart';
 
 class CustomArrowBack extends StatelessWidget {
   final String text;
@@ -62,11 +59,14 @@ class CustomArrowBack extends StatelessWidget {
         const SizedBox(
           width: 16,
         ),
-        Text(
-          text,
-          style: auth
-              ? context.text.headline20White
-              : context.text.headline24White,
+        Flexible(
+          child: Text(
+            text,
+            overflow: TextOverflow.ellipsis,
+            style: auth
+                ? context.text.headline20White
+                : context.text.headline24White,
+          ),
         ),
       ],
     );
