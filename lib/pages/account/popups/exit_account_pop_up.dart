@@ -1,8 +1,11 @@
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import '../../../widgets/base_pop_up.dart';
 import '../../../widgets/custom_button.dart';
+import '../../welcome_page.dart';
 
 void exitAccount(BuildContext context) {
   showModalBottomSheet(
@@ -36,7 +39,16 @@ void exitAccount(BuildContext context) {
                     child: CustomButton(
                       text: 'Выйти',
                       grey: true,
-                      onPressed: () {},
+                      onPressed: () {
+                        BlocProvider.of<AuthBloc>(context)
+                            .add(SignOutRequested());
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const WelcomePage()),
+                          (route) => false,
+                        );
+                      },
                       single: false,
                     ),
                   ),

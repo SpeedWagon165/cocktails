@@ -1,7 +1,9 @@
 import 'package:cocktails/pages/home/popups/cocktail_selection_pop_up.dart';
 import 'package:cocktails/widgets/home/info_tile_home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/home/search_bar_widget.dart';
@@ -49,16 +51,21 @@ class HomePage extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(
-                              height: 14,
-                            ),
-                            CustomRegistrationButton(
-                              text: 'Зарегистрироваться',
-                              onTap: () {
-                                authPopUp(context);
+                            const SizedBox(height: 14),
+                            BlocBuilder<AuthBloc, AuthState>(
+                              builder: (context, state) {
+                                if (state is AuthAuthenticated) {
+                                  return Container(); // Return empty container if authenticated
+                                }
+                                return CustomRegistrationButton(
+                                  text: 'Зарегистрироваться',
+                                  onTap: () {
+                                    authPopUp(context);
+                                  },
+                                  haveIcon: false,
+                                );
                               },
-                              haveIcon: false,
-                            )
+                            ),
                           ],
                         ),
                       ),

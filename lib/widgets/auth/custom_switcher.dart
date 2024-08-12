@@ -1,16 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 class GradientBorderSwitch extends StatefulWidget {
-  const GradientBorderSwitch({super.key});
+  final Function(String)
+      onGenderChanged; // Добавим коллбэк для передачи выбранного пола
+
+  const GradientBorderSwitch({super.key, required this.onGenderChanged});
 
   @override
   GradientBorderSwitchState createState() => GradientBorderSwitchState();
 }
 
 class GradientBorderSwitchState extends State<GradientBorderSwitch> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 0; // 0 - мужской, 1 - женский
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,9 @@ class GradientBorderSwitchState extends State<GradientBorderSwitch> {
       onTap: () {
         setState(() {
           _selectedIndex = index;
+          widget.onGenderChanged(_selectedIndex == 0
+              ? 'Male'
+              : 'Female'); // Передаем значение выбранного пола
         });
       },
       child: Container(

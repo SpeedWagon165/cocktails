@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../widgets/auth/permission_widget.dart';
 import '../../widgets/base_pop_up.dart';
@@ -12,6 +14,31 @@ class RegistrationPage5 extends StatelessWidget {
     super.key,
     required this.pageController,
   });
+
+  Future<void> _requestPermissions(BuildContext context) async {
+    // Запрашиваем доступ к камере
+    PermissionStatus cameraStatus = await Permission.camera.request();
+
+    // Запрашиваем разрешение на отправку уведомлений
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    final bool notificationsGranted = await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+                IOSFlutterLocalNotificationsPlugin>()
+            ?.requestPermissions(alert: true, badge: true, sound: true) ??
+        false;
+
+    // Если оба разрешения выданы, переходим к следующему экрану
+    if (cameraStatus.isGranted && notificationsGranted) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const CustomBottomNavigationBar()));
+    } else {
+      // Показываем сообщение об ошибке или предоставляем возможность повторного запроса
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Не все разрешения были выданы.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +76,14 @@ class RegistrationPage5 extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: CustomButton(
-                    text: 'Отказатся',
+                    text: 'Отказаться',
                     grey: true,
-                    onPressed: () {},
+                    onPressed: () {
+                      // Если пользователь отказывается, можно просто завершить регистрацию
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              const CustomBottomNavigationBar()));
+                    },
                     single: false,
                   ),
                 ),
@@ -62,9 +94,7 @@ class RegistrationPage5 extends StatelessWidget {
                   child: CustomButton(
                     text: 'Подтвердить',
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              const CustomBottomNavigationBar()));
+                      _requestPermissions(context);
                     },
                     single: false,
                   ),

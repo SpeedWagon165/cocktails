@@ -1,11 +1,15 @@
 import 'package:cocktails/bloc/cocktail_setup_bloc/cocktail_setup_bloc.dart';
 import 'package:cocktails/bloc/notification_settings_bloc/notification_settings_bloc.dart';
+import 'package:cocktails/bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import 'package:cocktails/pages/welcome_page.dart';
+import 'package:cocktails/provider/cocktail_auth_repository.dart';
 import 'package:cocktails/theme/themes.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
+import 'package:cocktails/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bloc/bottom_navigation_bloc/bottom_navigation_bloc.dart';
 
@@ -29,20 +33,40 @@ class MyApp extends StatelessWidget {
           SizeConfig().init(context);
         });
         return MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (context) => CocktailSelectionBloc()),
-            BlocProvider(create: (context) => BottomNavigationBloc()),
-            BlocProvider(create: (context) => NotificationSettingsBloc()),
-          ],
-          child: MaterialApp(
+            providers: [
+              BlocProvider(create: (context) => CocktailSelectionBloc()),
+              BlocProvider(create: (context) => BottomNavigationBloc()),
+              BlocProvider(create: (context) => NotificationSettingsBloc()),
+              BlocProvider(
+                create: (context) =>
+                    AuthBloc(AuthRepository())..add(CheckAuthStatus()),
+              ),
+            ],
+            child: MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Flutter Demo',
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
               themeMode: ThemeMode.system,
-              home: const WelcomePage()),
-        );
+              home: BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  if (state is AuthLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is AuthAuthenticated) {
+                    return const CustomBottomNavigationBar();
+                  } else {
+                    return const WelcomePage();
+                  }
+                },
+              ),
+            ));
       },
     );
+  }
+
+  Future<bool> _checkAuthStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    return token != null && token.isNotEmpty;
   }
 }
