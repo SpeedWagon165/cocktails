@@ -29,20 +29,13 @@ class RegistrationPage1 extends StatelessWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoading) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) =>
-                const Center(child: CircularProgressIndicator()),
-          );
+          const Center(child: CircularProgressIndicator());
         } else if (state is EmailVerified) {
-          Navigator.pop(context);
           onEmailEntered(emailController.text); // Сохранение email
           pageController.animateToPage(1,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut);
         } else if (state is AuthError) {
-          Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
           );

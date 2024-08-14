@@ -14,7 +14,15 @@ class EmailVerified extends AuthState {}
 
 class UserRegistered extends AuthState {}
 
+class AuthUnauthenticated extends AuthState {}
+
 class CodeConfirmed extends AuthState {}
+
+class PasswordResetRequested extends AuthState {}
+
+class PasswordResetCodeConfirmed extends AuthState {}
+
+class PasswordResetSuccess extends AuthState {}
 
 class AuthAuthenticated extends AuthState {
   final AuthResponse authResponse;

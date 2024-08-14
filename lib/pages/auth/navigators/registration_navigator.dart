@@ -68,8 +68,13 @@ class RegistrationNavigatorState extends State<RegistrationNavigator> {
     });
   }
 
-  void setPersonalInfo(String firstName, String lastName, String phone,
-      String gender, String dateOfBirth) {
+  void setPersonalInfo(
+    String firstName,
+    String lastName,
+    String phone,
+    String gender,
+    String dateOfBirth,
+  ) {
     setState(() {
       _firstName = firstName;
       _lastName = lastName;

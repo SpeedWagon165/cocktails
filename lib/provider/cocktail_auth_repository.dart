@@ -93,27 +93,121 @@ class AuthRepository {
     required String gender,
     required String dateOfBirth,
     required String password,
+    required String email,
   }) async {
     try {
+      print('Registering with data:');
+      print('First Name: $firstName');
+      print('Last Name: $lastName');
+      print('Phone: $phone');
+      print('Gender: $gender');
+      print('Date of Birth: $dateOfBirth');
+      print('Password: $password');
+      print('Email: $email');
+
       final response = await _dio.post(
         'http://109.71.246.251:8000/api/auth/auth/register/',
         data: {
-          'first_name': firstName,
-          'last_name': lastName,
-          'phone': phone,
-          'gender': gender,
-          'date_of_birth': dateOfBirth,
-          'password': password,
+          "first_name": firstName,
+          "last_name": lastName,
+          "phone": phone,
+          "gender": gender,
+          "date_of_birth": dateOfBirth,
+          "password": password,
+          "email": email,
         },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json',
+          },
+        ),
       );
-      if (response.statusCode == 200) {
-        print('Verification code sent successfully');
+
+      if (response.statusCode == 201) {
+        print('Registration successful');
       } else {
-        print('Failed to send verification email: ${response.statusCode}');
-        throw Exception('Failed to send verification email');
+        print('Failed to register: ${response.statusCode}');
+        throw Exception('Failed to register');
       }
     } catch (e) {
+      print('Error during registration: $e');
       throw Exception('Failed to register: $e');
+    }
+  }
+
+  Future<void> requestPasswordReset(String email) async {
+    try {
+      final response = await _dio.post(
+        'http://109.71.246.251:8000/api/auth/password/reset/',
+        data: {'email': email},
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to request password reset');
+      }
+    } catch (e) {
+      throw Exception('Error during password reset request: $e');
+    }
+  }
+
+  // Метод для подтверждения кода сброса пароля
+  Future<void> confirmPasswordResetCode(String email, String code) async {
+    try {
+      final response = await _dio.post(
+        'http://109.71.246.251:8000/api/auth/password/reset-code/',
+        data: {'email': email, 'code': code},
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to confirm password reset code');
+      }
+    } catch (e) {
+      throw Exception('Error during password reset code confirmation: $e');
+    }
+  }
+
+  // Метод для установки нового пароля
+  Future<void> resetPassword(String email, String newPassword,
+      String repeatPassword, String code) async {
+    try {
+      final response = await _dio.post(
+        'http://109.71.246.251:8000/api/auth/password/confirm/',
+        data: {
+          'email': email,
+          'new_password': newPassword,
+          'repeat_password': repeatPassword,
+          'code': code,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode == 201) {
+        print('Пароль изменен');
+      } else {
+        print('Ошибка изменения пароля: ${response.statusCode}');
+        throw Exception('Ошибка изменения пароля');
+      }
+    } catch (e) {
+      print('Ошибка во время сброса пароля: $e');
+      throw Exception('Ошибка во время сброса пароля: $e');
     }
   }
 }

@@ -11,10 +11,21 @@ import '../auth/popups/auth_pop_up.dart';
 import '../bonus_page/bonus_screen.dart';
 import '../cocktail_list/cocktail_list_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    // Инициализация: проверяем авторизацию пользователя
+    context.read<AuthBloc>().add(CheckAuthStatus());
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -52,19 +63,24 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 14),
-                            BlocBuilder<AuthBloc, AuthState>(
-                              builder: (context, state) {
-                                if (state is AuthAuthenticated) {
-                                  return Container(); // Return empty container if authenticated
-                                }
-                                return CustomRegistrationButton(
-                                  text: 'Зарегистрироваться',
-                                  onTap: () {
-                                    authPopUp(context);
-                                  },
-                                  haveIcon: false,
-                                );
+                            BlocListener<AuthBloc, AuthState>(
+                              listener: (context, state) {
+                                if (state is AuthAuthenticated) {}
                               },
+                              child: BlocBuilder<AuthBloc, AuthState>(
+                                builder: (context, state) {
+                                  if (state is AuthAuthenticated) {
+                                    return Container(); // Return empty container if authenticated
+                                  }
+                                  return CustomRegistrationButton(
+                                    text: 'Зарегистрироваться',
+                                    onTap: () {
+                                      authPopUp(context);
+                                    },
+                                    haveIcon: false,
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),

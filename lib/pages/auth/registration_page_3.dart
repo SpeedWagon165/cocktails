@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/standart_auth_bloc/standart_auth_bloc.dart';
+import '../../utilities/data_formater.dart';
 import '../../widgets/auth/custom_auth_textfield.dart';
 import '../../widgets/auth/custom_switcher.dart';
 import '../../widgets/bottom_nav_bar.dart';
@@ -13,7 +14,13 @@ import '../../widgets/custom_button.dart';
 class RegistrationPage3 extends StatefulWidget {
   final PageController pageController;
   final String email;
-  final Function(String, String, String, String, String) onPersonalInfoEntered;
+  final Function(
+    String,
+    String,
+    String,
+    String,
+    String,
+  ) onPersonalInfoEntered;
 
   const RegistrationPage3({
     super.key,
@@ -89,7 +96,7 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
                 joinPosition: JoinPosition.none,
               ),
               CustomTextField(
-                labelText: 'Дата рождения',
+                labelText: 'Дата рождения*',
                 controller: _birthdateController,
                 isJoined: true,
                 isDate: true,
@@ -130,17 +137,13 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
               CustomButton(
                 text: 'Далее',
                 onPressed: () {
-                  context.read<AuthBloc>().add(
-                        RegisterRequested(
-                          firstName: _firstNameController.text,
-                          lastName: _lastNameController.text,
-                          phone: _phoneController.text,
-                          gender: _selectedGender,
-                          dateOfBirth: _birthdateController.text,
-                          password:
-                              "", // Нужно добавить поле для пароля на следующей странице
-                        ),
-                      );
+                  widget.onPersonalInfoEntered(
+                    _firstNameController.text,
+                    _lastNameController.text,
+                    formatPhoneNumber(_phoneController.text),
+                    _selectedGender,
+                    formatDate(_birthdateController.text),
+                  );
                   widget.pageController.animateToPage(3,
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut);

@@ -26,6 +26,10 @@
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSUserNotificationUsageDescription</key>
+    <string>Это приложение отправляет уведомления, чтобы вы не пропустили важные события.</string>
+	<key>NSCameraUsageDescription</key>
+    <string>Это приложение использует камеру для создания и добавления фотографий.</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>

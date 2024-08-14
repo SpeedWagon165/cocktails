@@ -5,7 +5,6 @@ import '../../bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import '../../widgets/auth/center_text.dart';
 import '../../widgets/auth/custom_auth_textfield.dart';
 import '../../widgets/base_pop_up.dart';
-import '../../widgets/bottom_nav_bar.dart';
 import '../../widgets/custom_button.dart';
 
 class RegistrationPage4 extends StatelessWidget {
@@ -34,28 +33,7 @@ class RegistrationPage4 extends StatelessWidget {
     final confirmPasswordController = TextEditingController();
 
     return BlocConsumer<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthLoading) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) =>
-                const Center(child: CircularProgressIndicator()),
-          );
-        } else if (state is UserRegistered) {
-          Navigator.pop(context); // Закрыть диалог загрузки
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const CustomBottomNavigationBar(),
-            ),
-          );
-        } else if (state is AuthError) {
-          Navigator.pop(context); // Закрыть диалог загрузки
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
-        }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return BasePopup(
           text: 'Пароль',
@@ -103,6 +81,7 @@ class RegistrationPage4 extends StatelessWidget {
                             gender: gender,
                             dateOfBirth: dateOfBirth,
                             password: password,
+                            email: email,
                           ),
                         );
                     pageController.animateToPage(4,

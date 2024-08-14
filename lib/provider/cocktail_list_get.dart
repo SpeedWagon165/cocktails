@@ -10,6 +10,7 @@ class CocktailRepository {
   Future<List<Cocktail>> fetchCocktails() async {
     try {
       final response = await _dio.get('http://109.71.246.251:8000/api/recipe/');
+      print(response.statusCode);
       log('Response data: ${response.data}');
       if (response.statusCode == 200) {
         Map<String, dynamic> data = response.data;

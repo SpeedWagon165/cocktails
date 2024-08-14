@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +10,7 @@ import '../../widgets/auth/custom_auth_textfield.dart';
 import '../../widgets/base_pop_up.dart';
 import '../../widgets/custom_button.dart';
 
-class RegistrationPage2 extends StatelessWidget {
+class RegistrationPage2 extends StatefulWidget {
   final PageController pageController;
   final String email;
 
@@ -17,6 +19,41 @@ class RegistrationPage2 extends StatelessWidget {
     required this.pageController,
     required this.email,
   });
+
+  @override
+  State<RegistrationPage2> createState() => _RegistrationPage2State();
+}
+
+class _RegistrationPage2State extends State<RegistrationPage2> {
+  Timer? timer;
+
+  int start = 59;
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (start == 0) {
+        setState(() {
+          timer.cancel();
+        });
+      } else {
+        setState(() {
+          start--;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +70,7 @@ class RegistrationPage2 extends StatelessWidget {
           );
         } else if (state is CodeConfirmed) {
           Navigator.pop(context);
-          pageController.animateToPage(2,
+          widget.pageController.animateToPage(2,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut);
         } else if (state is AuthError) {
@@ -47,7 +84,7 @@ class RegistrationPage2 extends StatelessWidget {
         return BasePopup(
           text: 'Код подтверждения',
           onPressed: () {
-            pageController.animateToPage(0,
+            widget.pageController.animateToPage(0,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut);
           },
@@ -55,7 +92,7 @@ class RegistrationPage2 extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               CenterText(
-                text: 'Мы отправили код на почту $email',
+                text: 'Мы отправили код на почту ${widget.email}',
                 padding: 60,
               ),
               const SizedBox(height: 24),
@@ -68,7 +105,7 @@ class RegistrationPage2 extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Center(
                   child: Text(
-                    'Повторная отправка кода через 00:59',
+                    'Повторная отправка кода через 00:${start.toString().padLeft(2, '0')}',
                     style: context.text.bodyText16White,
                     textAlign: TextAlign.center,
                   ),
@@ -80,7 +117,7 @@ class RegistrationPage2 extends StatelessWidget {
                 onPressed: () {
                   final code = codeController.text;
                   context.read<AuthBloc>().add(
-                        ConfirmCodeRequested(email, code),
+                        ConfirmCodeRequested(widget.email, code),
                       );
                 },
                 single: true,

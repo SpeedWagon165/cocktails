@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'bloc/app_start_bloc/app_start_bloc.dart';
 import 'bloc/bottom_navigation_bloc/bottom_navigation_bloc.dart';
 
 void main() {
@@ -35,6 +36,10 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
             providers: [
               BlocProvider(create: (context) => CocktailSelectionBloc()),
+              BlocProvider(
+                create: (context) =>
+                    AppBloc(AuthRepository())..add(AppStarted()),
+              ),
               BlocProvider(create: (context) => BottomNavigationBloc()),
               BlocProvider(create: (context) => NotificationSettingsBloc()),
               BlocProvider(
@@ -48,14 +53,18 @@ class MyApp extends StatelessWidget {
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
               themeMode: ThemeMode.system,
-              home: BlocBuilder<AuthBloc, AuthState>(
+              home: BlocBuilder<AppBloc, AppState>(
                 builder: (context, state) {
-                  if (state is AuthLoading) {
+                  if (state is AppInitial) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is AuthAuthenticated) {
+                  } else if (state is AppAuthenticated) {
                     return const CustomBottomNavigationBar();
-                  } else {
+                  } else if (state is AppUnauthenticated) {
                     return const WelcomePage();
+                  } else {
+                    return const Center(
+                      child: Text('Unexpected state!'),
+                    );
                   }
                 },
               ),

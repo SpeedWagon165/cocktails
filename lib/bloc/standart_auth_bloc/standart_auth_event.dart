@@ -45,6 +45,7 @@ class RegisterRequested extends AuthEvent {
   final String gender;
   final String dateOfBirth;
   final String password;
+  final String email;
 
   RegisterRequested({
     required this.firstName,
@@ -53,6 +54,7 @@ class RegisterRequested extends AuthEvent {
     required this.gender,
     required this.dateOfBirth,
     required this.password,
+    required this.email,
   });
 
   @override
@@ -63,5 +65,42 @@ class RegisterRequested extends AuthEvent {
         gender,
         dateOfBirth,
         password,
+        email,
       ];
+}
+
+class RequestPasswordReset extends AuthEvent {
+  final String email;
+
+  RequestPasswordReset({required this.email});
+
+  @override
+  List<Object> get props => [email];
+}
+
+class ConfirmResetCode extends AuthEvent {
+  final String email;
+  final String code;
+
+  ConfirmResetCode({required this.email, required this.code});
+
+  @override
+  List<Object> get props => [email, code];
+}
+
+class ResetPassword extends AuthEvent {
+  final String email;
+  final String newPassword;
+  final String repeatPassword;
+  final String code;
+
+  ResetPassword({
+    required this.email,
+    required this.newPassword,
+    required this.repeatPassword,
+    required this.code,
+  });
+
+  @override
+  List<Object> get props => [email, newPassword, repeatPassword, code];
 }
