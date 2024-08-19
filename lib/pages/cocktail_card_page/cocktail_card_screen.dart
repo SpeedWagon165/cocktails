@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 
 import '../../models/cocktail_list_model.dart';
 import '../../widgets/coctail_card_widgets/cocktail_instruction_builder.dart';
+import '../../widgets/coctail_card_widgets/tool_list_builder.dart';
+import '../../widgets/pure_custom_arrow_back.dart';
 
 class CocktailCardScreen extends StatefulWidget {
   const CocktailCardScreen({super.key, required this.cocktail});
@@ -24,52 +26,57 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const CocktailCardSlider(),
-              const SizedBox(height: 12.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CocktailCardButtons(
-                        isCocked: isCocked,
-                        isFavorite: widget.cocktail.isFavorite,
-                        changeState: () => setState(() {
-                              widget.cocktail.isFavorite =
-                                  !widget.cocktail.isFavorite;
-                            })),
-                    const SizedBox(height: 24.0),
-                    Text(
-                      widget.cocktail.name,
-                      overflow: TextOverflow.clip,
-                      style: context.text.headline24White,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CocktailCardSlider(),
+                  const SizedBox(height: 12.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CocktailCardButtons(
+                            isCocked: isCocked,
+                            isFavorite: widget.cocktail.isFavorite,
+                            changeState: () => setState(() {
+                                  widget.cocktail.isFavorite =
+                                      !widget.cocktail.isFavorite;
+                                })),
+                        const SizedBox(height: 24.0),
+                        Text(
+                          widget.cocktail.name,
+                          overflow: TextOverflow.clip,
+                          style: context.text.headline24White,
+                        ),
+                        const SizedBox(height: 24.0),
+                        CocktailDescriptionWidget(
+                            text: widget.cocktail.description),
+                        const SizedBox(height: 24.0),
+                        IngredientsListBuilder(cocktail: widget.cocktail),
+                        const SizedBox(height: 24.0),
+                        CocktailInstructionBuilder(
+                          cocktail: widget.cocktail,
+                        ),
+                        const SizedBox(height: 24.0),
+                        ToolsListBuilder(
+                          cocktail: widget.cocktail,
+                        ),
+                        const SizedBox(height: 24.0),
+                      ],
                     ),
-                    const SizedBox(height: 24.0),
-                    CocktailDescriptionWidget(
-                        text: widget.cocktail.description),
-                    const SizedBox(height: 24.0),
-                    IngredientsListBuilder(cocktail: widget.cocktail),
-                    const SizedBox(height: 24.0),
-                    CocktailInstructionBuilder(
-                      cocktail: widget.cocktail,
-                    ),
-                    const SizedBox(height: 24.0),
-                    Text(
-                      "Необходимые инструменты",
-                      overflow: TextOverflow.clip,
-                      style: context.text.headline24White,
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+                  )
+                ],
+              ),
+            ),
+            const Positioned(
+                top: 26.0, left: 26.0, child: PureCustomArrowBack()),
+          ],
         ),
       ),
     );

@@ -100,10 +100,25 @@ class ChangePasswordStep2State extends State<ChangePasswordStep2> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Center(
-                      child: Text(
-                        'Повторная отправка кода через 00:${start.toString().padLeft(2, '0')}',
-                        style: context.text.bodyText16White,
+                      child: RichText(
                         textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Повторная отправка ',
+                              style: context.text
+                                  .bodyText16White, // Стиль текста по умолчанию
+                            ),
+                            TextSpan(
+                              text:
+                                  'кода через 00:${start.toString().padLeft(2, '0')}',
+                              // Здесь будет ваше время
+                              style: context.text.bodyText12Grey.copyWith(
+                                  fontSize: 16 // Измените цвет на нужный вам
+                                  ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

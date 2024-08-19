@@ -18,6 +18,10 @@ class _CocktailInstructionBuilderState
     extends State<CocktailInstructionBuilder> {
   @override
   Widget build(BuildContext context) {
+    // Проверяем, есть ли инструкция и не является ли она пустой строкой
+    final hasInstructions = widget.cocktail.instruction != null &&
+        widget.cocktail.instruction!.isNotEmpty;
+
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Column(
@@ -29,7 +33,7 @@ class _CocktailInstructionBuilderState
             child: Text(
               "Приготовление",
               overflow: TextOverflow.clip,
-              style: context.text.headline24White,
+              style: context.text.bodyText16White.copyWith(fontSize: 18),
             ),
           ),
           const SizedBox(height: 12.0),
@@ -37,19 +41,27 @@ class _CocktailInstructionBuilderState
             decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.10),
                 borderRadius: BorderRadius.circular(10.0)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: widget.cocktail.instruction.split(".").length,
-                  itemBuilder: (context, index) => CocktailInstructionCard(
-                      index: index + 1,
-                      text: widget.cocktail.instruction.split(".")[index]),
-                )
-              ],
-            ),
+            child: hasInstructions
+                ? ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: widget.cocktail.instruction!.length,
+                    itemBuilder: (context, index) {
+                      final step =
+                          widget.cocktail.instruction![(index + 1).toString()];
+                      return step!.isNotEmpty
+                          ? CocktailInstructionCard(
+                              index: index + 1, text: step)
+                          : const SizedBox.shrink();
+                    },
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      'Инструкции по приготовлению отсутствуют',
+                      style: context.text.bodyText14White,
+                    ),
+                  ),
           ),
         ],
       ),

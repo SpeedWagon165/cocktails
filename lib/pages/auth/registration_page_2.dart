@@ -1,12 +1,10 @@
-import 'dart:async';
-
-import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import '../../widgets/auth/center_text.dart';
 import '../../widgets/auth/custom_auth_textfield.dart';
+import '../../widgets/auth/timer_widget.dart';
 import '../../widgets/base_pop_up.dart';
 import '../../widgets/custom_button.dart';
 
@@ -25,36 +23,6 @@ class RegistrationPage2 extends StatefulWidget {
 }
 
 class _RegistrationPage2State extends State<RegistrationPage2> {
-  Timer? timer;
-
-  int start = 59;
-
-  void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (start == 0) {
-        setState(() {
-          timer.cancel();
-        });
-      } else {
-        setState(() {
-          start--;
-        });
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    startTimer();
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final codeController = TextEditingController();
@@ -101,15 +69,10 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
                 controller: codeController,
               ),
               const SizedBox(height: 24.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Center(
-                  child: Text(
-                    'Повторная отправка кода через 00:${start.toString().padLeft(2, '0')}',
-                    style: context.text.bodyText16White,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+              TimerWidget(
+                onTimerEnd: () {
+                  print('Timer ended');
+                },
               ),
               const SizedBox(height: 24),
               CustomButton(

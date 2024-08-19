@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -19,22 +17,7 @@ class ForgotPassNavigator extends StatefulWidget {
 class ForgotPassNavigatorState extends State<ForgotPassNavigator> {
   final PageController _pageController = PageController();
   String _email = '';
-  int _remainingTime = 59;
-  Timer? _timer;
-
-  void _startTimer() {
-    if (_timer != null) return; // Prevent multiple timers
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_remainingTime > 0) {
-          _remainingTime--;
-        } else {
-          timer.cancel();
-          _timer = null;
-        }
-      });
-    });
-  }
+  String _code = '';
 
   void _setEmail(String email) {
     setState(() {
@@ -42,15 +25,10 @@ class ForgotPassNavigatorState extends State<ForgotPassNavigator> {
     });
   }
 
-  void _resetTimer() {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
+  void _setCode(String code) {
     setState(() {
-      _remainingTime = 59;
-      _timer = null;
+      _code = code;
     });
-    _startTimer();
   }
 
   @override
@@ -64,14 +42,20 @@ class ForgotPassNavigatorState extends State<ForgotPassNavigator> {
           mainPageController: widget.mainPageController,
           onEmailEntered: (email) {
             _setEmail(email);
-            _resetTimer();
           },
         ),
         ForgotPassPage2(
+            pageController: _pageController,
+            email: _email,
+            onCodeEntered: (code) {
+              print('Code saved: $code');
+              _setCode(code);
+            }),
+        ForgotPassPage3(
           pageController: _pageController,
           email: _email,
+          code: _code,
         ),
-        ForgotPassPage3(pageController: _pageController),
       ],
     );
   }

@@ -44,25 +44,22 @@ PreferredSizeWidget baseAppBar(
             ),
           )
         : const SizedBox(),
-    title: Flexible(
-      child: Text(
-        title,
-        style: context.text.headline24White,
-        overflow: TextOverflow.ellipsis,
-      ),
+    title: Text(
+      title,
+      style: context.text.headline24White,
+      overflow: TextOverflow.ellipsis,
     ),
     actions: [
-      actions
-          ? IconButton(
-              icon: SvgPicture.asset(
-                'assets/images/filter_icon.svg',
-                color: Colors.white,
-              ),
-              onPressed: () {
-                print('dsa');
-              },
-            )
-          : SizedBox()
+      if (actions)
+        IconButton(
+          icon: SvgPicture.asset(
+            'assets/images/filter_icon.svg',
+            color: Colors.white,
+          ),
+          onPressed: () {
+            print('dsa');
+          },
+        )
     ],
   );
 }

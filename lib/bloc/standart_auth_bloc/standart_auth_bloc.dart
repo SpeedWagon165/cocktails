@@ -145,6 +145,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         event.repeatPassword,
         event.code,
       );
+      final authResponse =
+          await authRepository.signIn(event.email, event.newPassword);
+      emit(AuthAuthenticated(authResponse));
       emit(PasswordResetSuccess());
     } catch (e) {
       emit(AuthError(e.toString()));

@@ -24,7 +24,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
       emit(CocktailLoaded(cocktails));
     } catch (e, stacktrace) {
       // Логирование ошибки и стектрейса для отладки
-      log('Error fetching cocktails', error: e, stackTrace: stacktrace);
+      log('Error fetching cocktail', error: e, stackTrace: stacktrace);
       emit(CocktailError('Failed to fetch cocktails: ${e.toString()}'));
     }
   }

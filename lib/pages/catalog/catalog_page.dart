@@ -20,7 +20,7 @@ class CatalogPage extends StatelessWidget {
           context,
           'Каталог рецептов',
           true,
-          true,
+          false,
         ),
         body: Column(
           children: [

@@ -1,4 +1,5 @@
 import 'package:cocktails/pages/home/popups/cocktail_selection_pop_up.dart';
+import 'package:cocktails/pages/home/popups/need_registration_pop_up.dart';
 import 'package:cocktails/widgets/home/info_tile_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -146,7 +147,12 @@ class _HomePageState extends State<HomePage> {
                 CustomButton(
                   text: 'Подобрать коктейль',
                   onPressed: () {
-                    cocktailSelectionPopUp(context);
+                    final authState = context.read<AuthBloc>().state;
+                    if (authState is AuthAuthenticated) {
+                      cocktailSelectionPopUp(context);
+                    } else {
+                      needRegistrationPopUp(context);
+                    }
                   },
                   single: true,
                 ),

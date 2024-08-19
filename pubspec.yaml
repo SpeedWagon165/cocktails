@@ -49,6 +49,7 @@ dependencies:
   flutter_multi_formatter: ^2.1.0
   gradient_borders: ^1.0.1
   intl: ^0.19.0
+  http:
   scaffold_gradient_background: ^1.0.3+1
   aura_box: ^1.0.2
   easy_stepper: ^0.8.5
@@ -56,6 +57,7 @@ dependencies:
   carousel_slider: ^4.2.1
   permission_handler: ^11.3.1
   flutter_local_notifications: ^17.2.2
+  expandable_text: 2.3.0
 
 dev_dependencies:
   flutter_test:

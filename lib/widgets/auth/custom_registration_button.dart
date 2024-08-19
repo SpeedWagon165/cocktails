@@ -7,12 +7,14 @@ import '../../utilities/adaptive_size.dart';
 
 class RegistrationServicesButton extends StatelessWidget {
   final String text;
+  final String? trailingText;
   final VoidCallback onPressed;
 
   const RegistrationServicesButton({
     super.key,
     required this.text,
     required this.onPressed,
+    this.trailingText,
   });
 
   @override
@@ -33,9 +35,24 @@ class RegistrationServicesButton extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    text,
-                    style: context.text.bodyText16White,
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: text,
+                          style: context.text
+                              .bodyText16White, // Стиль текста по умолчанию
+                        ),
+                        TextSpan(
+                          text: trailingText,
+                          // Здесь будет ваше время
+                          style: context.text.bodyText12Grey.copyWith(
+                              fontSize: 16 // Измените цвет на нужный вам
+                              ),
+                        ),
+                      ],
+                    ),
                   ),
                   Container(
                     width: SizeConfig.heightAdaptive(27),

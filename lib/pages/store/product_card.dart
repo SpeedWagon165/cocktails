@@ -1,3 +1,4 @@
+import 'package:cocktails/pages/store/popups/product_page.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
@@ -70,7 +71,7 @@ class ProductCard extends StatelessWidget {
                             horizontal: 24, vertical: 12),
                       ),
                       onPressed: () {
-                        // Логика заказа
+                        productPagePopUp(context);
                       },
                       child: const Text(
                         'Заказать',
