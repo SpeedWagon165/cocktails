@@ -5,7 +5,7 @@
 class Cocktail {
   int id;
   int ingredientCount;
-  String? ingredients;
+  List<Ingredient>? ingredients;
   List<Tool> tools;
   bool isFavorite;
   dynamic imageUrl;
@@ -52,12 +52,18 @@ class Cocktail {
         moderationStatus: json["moderation_status"],
         videoUrl: json["video_url"],
         user: json["user"],
-        ingredients: json["ingredients"] ?? "123",
+        ingredients: json["ingredients"] != null
+            ? List<Ingredient>.from(
+                json["ingredients"].map((x) => Ingredient.fromJson(x)))
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "ingredient_count": ingredientCount,
+        "ingredients": ingredients != null
+            ? List<dynamic>.from(ingredients!.map((x) => x.toJson()))
+            : null,
         "tools": List<dynamic>.from(tools.map((x) => x.toJson())),
         "is_favorite": isFavorite,
         "image": imageUrl,
@@ -71,6 +77,39 @@ class Cocktail {
         "video_url": videoUrl,
         "user": user,
       };
+}
+
+class Ingredient {
+  int ingredientId;
+  String name;
+  String quantity;
+  String type;
+
+  Ingredient({
+    required this.ingredientId,
+    required this.name,
+    required this.quantity,
+    required this.type,
+  });
+
+  factory Ingredient.fromJson(Map<String, dynamic> json) => Ingredient(
+        ingredientId: json["ingredient"],
+        name: json["name"],
+        quantity: json["quantity"],
+        type: json["type"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "ingredient": ingredientId,
+        "name": name,
+        "quantity": quantity,
+        "type": type,
+      };
+
+  @override
+  String toString() {
+    return '$name: $quantity $type';
+  }
 }
 
 class Tool {
@@ -100,11 +139,16 @@ class Tool {
         id: json["id"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
-        name: json["name"],
-        description: json["description"],
-        history: json["history"],
-        howToUse: json["how_to_use"],
-        photo: json["photo"],
+        name: json["name"] ?? '',
+        // Обработка null
+        description: json["description"] ?? '',
+        // Обработка null
+        history: json["history"] ?? '',
+        // Обработка null
+        howToUse: json["how_to_use"] ?? '',
+        // Обработка null
+        photo: json["photo"] ?? '',
+        // Обработка null
         links: List<dynamic>.from(json["links"].map((x) => x)),
       );
 

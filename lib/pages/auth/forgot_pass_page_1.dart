@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/standart_auth_bloc/standart_auth_bloc.dart';
+import '../../utilities/data_formater.dart';
 import '../../widgets/auth/center_text.dart';
 import '../../widgets/auth/custom_auth_textfield.dart';
 import '../../widgets/custom_button.dart';
@@ -22,6 +23,7 @@ class ForgotPassPage1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final emailController = TextEditingController();
+    String? errorMessage;
 
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
@@ -33,9 +35,7 @@ class ForgotPassPage1 extends StatelessWidget {
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut);
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          errorMessage = formatErrorMessage(state.message);
         }
       },
       builder: (context, state) {
@@ -60,6 +60,7 @@ class ForgotPassPage1 extends StatelessWidget {
               CustomTextField(
                 labelText: 'Эл. почта',
                 controller: emailController,
+                errorMessage: errorMessage,
               ),
               const SizedBox(
                 height: 24,

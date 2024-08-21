@@ -1,7 +1,6 @@
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/coctail_card_widgets/cocktail_card_buttons.dart';
 import 'package:cocktails/widgets/coctail_card_widgets/cocktail_card_slider.dart';
-import 'package:cocktails/widgets/coctail_card_widgets/cocktail_description_widget.dart';
 import 'package:cocktails/widgets/coctail_card_widgets/ingredients_list_builder.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +8,7 @@ import '../../models/cocktail_list_model.dart';
 import '../../widgets/coctail_card_widgets/cocktail_instruction_builder.dart';
 import '../../widgets/coctail_card_widgets/tool_list_builder.dart';
 import '../../widgets/pure_custom_arrow_back.dart';
+import '../../widgets/store/expandable_text.dart';
 
 class CocktailCardScreen extends StatefulWidget {
   const CocktailCardScreen({super.key, required this.cocktail});
@@ -55,8 +55,10 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                           style: context.text.headline24White,
                         ),
                         const SizedBox(height: 24.0),
-                        CocktailDescriptionWidget(
-                            text: widget.cocktail.description),
+                        ExpandableTextWidget(
+                          text: widget.cocktail.description,
+                          titleText: 'Описание',
+                        ),
                         const SizedBox(height: 24.0),
                         IngredientsListBuilder(cocktail: widget.cocktail),
                         const SizedBox(height: 24.0),

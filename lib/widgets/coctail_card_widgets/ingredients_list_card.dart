@@ -6,10 +6,12 @@ class IngredientsListCard extends StatelessWidget {
       {super.key,
       required this.title,
       required this.count,
+      required this.type,
       required this.border});
 
   final String title;
-  final int count;
+  final String type;
+  final String count;
   final bool border;
 
   @override
@@ -26,7 +28,7 @@ class IngredientsListCard extends StatelessWidget {
                 style: context.text.headline20White
                     .copyWith(color: Colors.white, fontSize: 15.0),
               ),
-              Text("$count мл",
+              Text("$count $type",
                   style: context.text.headline20White.copyWith(
                       color: const Color(0xFFB7B7B7), fontSize: 15.0)),
             ],

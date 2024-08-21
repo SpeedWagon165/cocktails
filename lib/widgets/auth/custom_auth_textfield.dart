@@ -1,5 +1,4 @@
 import 'package:cocktails/theme/theme_extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,6 +15,7 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final bool isReferral;
   final bool isDate;
+  final String? errorMessage; // Добавлено для отображения ошибки
 
   const CustomTextField({
     super.key,
@@ -27,6 +27,7 @@ class CustomTextField extends StatefulWidget {
     this.controller,
     this.isReferral = false,
     this.isDate = false,
+    this.errorMessage, // Добавлено для отображения ошибки
   });
 
   @override
@@ -89,12 +90,18 @@ class CustomTextFieldState extends State<CustomTextField> {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           decoration: BoxDecoration(
             color: const Color(0x05FFFFFF),
             borderRadius: borderRadius,
-            border: Border.all(color: const Color(0xFF343434), width: 1),
+            border: Border.all(
+              color: widget.errorMessage != null
+                  ? Colors.red // Красная граница в случае ошибки
+                  : const Color(0xFF343434),
+              width: 1,
+            ),
           ),
           child: Padding(
             padding: const EdgeInsets.only(left: 18.0, top: 15.0, right: 8.0),
@@ -158,6 +165,17 @@ class CustomTextFieldState extends State<CustomTextField> {
             ),
           ),
         ),
+        if (widget.errorMessage != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0, left: 16.0),
+            child: Text(
+              widget.errorMessage!,
+              style: const TextStyle(
+                color: Colors.red,
+                fontSize: 12.0,
+              ),
+            ),
+          ),
         if (_showReferralInfo)
           Padding(
             padding: const EdgeInsets.only(top: 24.0),

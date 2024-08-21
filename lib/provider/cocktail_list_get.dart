@@ -15,6 +15,7 @@ class CocktailRepository {
         },
       );
       if (response.statusCode == 200) {
+        print(response.body);
         List<Cocktail> cocktails = List<Cocktail>.from(
             jsonDecode(utf8.decode(response.bodyBytes))["results"]
                 .map((x) => Cocktail.fromJson(x)));
