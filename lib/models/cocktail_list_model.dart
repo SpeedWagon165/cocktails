@@ -5,15 +5,15 @@
 class Cocktail {
   int id;
   int ingredientCount;
-  List<Ingredient>? ingredients;
+  List<Ingredient> ingredients;
   List<Tool> tools;
   bool isFavorite;
-  dynamic imageUrl;
+  String? imageUrl;
   String name;
   String description;
   Map<String, String>? instruction;
   bool isEnabled;
-  dynamic photo;
+  String? photo;
   String moderationStatus;
   String? videoUrl;
   int user;
@@ -35,42 +35,43 @@ class Cocktail {
     required this.user,
   });
 
-  factory Cocktail.fromJson(Map<String, dynamic> json) => Cocktail(
-        id: json["id"],
-        ingredientCount: json["ingredient_count"],
-        tools: List<Tool>.from(json["tools"].map((x) => Tool.fromJson(x))),
-        isFavorite: json["is_favorite"],
-        imageUrl: json["image"],
-        name: json["title"],
-        description: json["description"],
-        instruction: json["instruction"] == null
-            ? {'1': '1'}
-            : Map.from(json["instruction"])
-                .map((k, v) => MapEntry<String, String>(k, v)),
-        isEnabled: json["isEnabled"],
-        photo: json["photo"],
-        moderationStatus: json["moderation_status"],
-        videoUrl: json["video_url"],
-        user: json["user"],
-        ingredients: json["ingredients"] != null
-            ? List<Ingredient>.from(
-                json["ingredients"].map((x) => Ingredient.fromJson(x)))
-            : null,
-      );
+  factory Cocktail.fromJson(Map<String, dynamic> json) {
+    return Cocktail(
+      id: json["id"],
+      ingredientCount: json["ingredient_count"] ?? 0,
+      ingredients: (json["ingredients"] as List<dynamic>?)
+              ?.map((item) => Ingredient.fromJson(item))
+              .toList() ??
+          [],
+      tools: (json["tools"] as List<dynamic>?)
+              ?.map((item) => Tool.fromJson(item))
+              .toList() ??
+          [],
+      isFavorite: json["is_favorite"] ?? false,
+      imageUrl: json["image"] as String?,
+      name: json["title"] ?? '',
+      description: json["description"] ?? '',
+      instruction: json["instruction"] != null
+          ? Map<String, String>.from(json["instruction"])
+          : null,
+      isEnabled: json["isEnabled"] ?? true,
+      photo: json["photo"] as String?,
+      moderationStatus: json["moderation_status"] ?? '',
+      videoUrl: json["video_url"] as String?,
+      user: json["user"] ?? 0,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "ingredient_count": ingredientCount,
-        "ingredients": ingredients != null
-            ? List<dynamic>.from(ingredients!.map((x) => x.toJson()))
-            : null,
-        "tools": List<dynamic>.from(tools.map((x) => x.toJson())),
+        "ingredients": ingredients.map((x) => x.toJson()).toList(),
+        "tools": tools.map((x) => x.toJson()).toList(),
         "is_favorite": isFavorite,
         "image": imageUrl,
         "title": name,
         "description": description,
-        "instruction": Map.from(instruction!)
-            .map((k, v) => MapEntry<String, dynamic>(k, v)),
+        "instruction": instruction,
         "isEnabled": isEnabled,
         "photo": photo,
         "moderation_status": moderationStatus,
@@ -92,12 +93,14 @@ class Ingredient {
     required this.type,
   });
 
-  factory Ingredient.fromJson(Map<String, dynamic> json) => Ingredient(
-        ingredientId: json["ingredient"],
-        name: json["name"],
-        quantity: json["quantity"],
-        type: json["type"],
-      );
+  factory Ingredient.fromJson(Map<String, dynamic> json) {
+    return Ingredient(
+      ingredientId: json["ingredient"] ?? 0,
+      name: json["name"] ?? '',
+      quantity: json["quantity"] ?? '',
+      type: json["type"] ?? '',
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "ingredient": ingredientId,
@@ -117,40 +120,37 @@ class Tool {
   DateTime createdAt;
   DateTime updatedAt;
   String name;
-  String description;
-  String history;
-  String howToUse;
-  String photo;
-  List<dynamic> links;
+  String? description;
+  String? history;
+  String? howToUse;
+  String? photo;
+  List<dynamic>? links;
 
   Tool({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
     required this.name,
-    required this.description,
-    required this.history,
-    required this.howToUse,
-    required this.photo,
-    required this.links,
+    this.description,
+    this.history,
+    this.howToUse,
+    this.photo,
+    this.links,
   });
 
-  factory Tool.fromJson(Map<String, dynamic> json) => Tool(
-        id: json["id"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        name: json["name"] ?? '',
-        // Обработка null
-        description: json["description"] ?? '',
-        // Обработка null
-        history: json["history"] ?? '',
-        // Обработка null
-        howToUse: json["how_to_use"] ?? '',
-        // Обработка null
-        photo: json["photo"] ?? '',
-        // Обработка null
-        links: List<dynamic>.from(json["links"].map((x) => x)),
-      );
+  factory Tool.fromJson(Map<String, dynamic> json) {
+    return Tool(
+      id: json["id"],
+      createdAt: DateTime.parse(json["created_at"]),
+      updatedAt: DateTime.parse(json["updated_at"]),
+      name: json["name"] ?? '',
+      description: json["description"],
+      history: json["history"],
+      howToUse: json["how_to_use"],
+      photo: json["photo"],
+      links: json["links"] != null ? List<dynamic>.from(json["links"]) : null,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -161,6 +161,6 @@ class Tool {
         "history": history,
         "how_to_use": howToUse,
         "photo": photo,
-        "links": List<dynamic>.from(links.map((x) => x)),
+        "links": links?.map((x) => x).toList(),
       };
 }

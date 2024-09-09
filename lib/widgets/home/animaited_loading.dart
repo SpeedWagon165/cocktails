@@ -26,7 +26,7 @@ class AnimatedProgressBarPageState extends State<AnimatedProgressBarPage>
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => CocktailListPage(),
+                builder: (context) => MyCocktailsListPage(),
               ),
             );
           });

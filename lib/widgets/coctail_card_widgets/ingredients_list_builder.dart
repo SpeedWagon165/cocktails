@@ -34,14 +34,14 @@ class IngredientsListBuilder extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: cocktail.ingredientCount,
                 itemBuilder: (context, index) {
-                  final ingredient = cocktail.ingredients![index];
+                  final ingredient = cocktail.ingredients[index];
                   return IngredientsListCard(
                     type: ingredient.type,
                     title: ingredient.name,
                     count: ingredient.quantity,
                     // Используем количество ингредиента
                     border:
-                        index == cocktail.ingredientCount - 1 ? false : true,
+                        index == cocktail.ingredientCount! - 1 ? false : true,
                   );
                 },
               ),

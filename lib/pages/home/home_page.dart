@@ -117,7 +117,8 @@ class _HomePageState extends State<HomePage> {
                         subtitle: '20 рецептов',
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const CocktailListPage()));
+                              builder: (context) =>
+                                  const MyCocktailsListPage()));
                         },
                       ),
                       Divider(color: Color(0xff343434), height: 1),

@@ -8,3 +8,13 @@ abstract class CocktailListEvent extends Equatable {
 }
 
 class FetchCocktails extends CocktailListEvent {}
+
+// Событие для загрузки коктейлей пользователя
+class FetchUserCocktails extends CocktailListEvent {
+  final String token;
+
+  const FetchUserCocktails(this.token);
+
+  @override
+  List<Object> get props => [token];
+}
