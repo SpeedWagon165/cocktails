@@ -5,6 +5,7 @@ import 'package:cocktails/widgets/coctail_card_widgets/ingredients_list_builder.
 import 'package:flutter/material.dart';
 
 import '../../models/cocktail_list_model.dart';
+import '../../provider/cocktail_list_get.dart';
 import '../../widgets/coctail_card_widgets/cocktail_instruction_builder.dart';
 import '../../widgets/coctail_card_widgets/tool_list_builder.dart';
 import '../../widgets/pure_custom_arrow_back.dart';
@@ -21,6 +22,25 @@ class CocktailCardScreen extends StatefulWidget {
 
 class _CocktailCardScreenState extends State<CocktailCardScreen> {
   bool isCocked = false;
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    isFavorite = widget.cocktail.isFavorite;
+  }
+
+  Future<void> _toggleFavorite() async {
+    try {
+      // Отправляем запрос для добавления/удаления из избранного
+      await CocktailRepository().toggleFavorite(widget.cocktail.id, isFavorite);
+      setState(() {
+        isFavorite = !isFavorite; // Переключаем статус
+      });
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +54,13 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CocktailCardSlider(),
+                  CocktailCardSlider(
+                    imageUrls: widget.cocktail.imageUrl != null
+                        ? [
+                            widget.cocktail.imageUrl!
+                          ] // Передаем один URL как список
+                        : [],
+                  ),
                   const SizedBox(height: 12.0),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -42,12 +68,10 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CocktailCardButtons(
-                            isCocked: isCocked,
-                            isFavorite: widget.cocktail.isFavorite,
-                            changeState: () => setState(() {
-                                  widget.cocktail.isFavorite =
-                                      !widget.cocktail.isFavorite;
-                                })),
+                          isCocked: isCocked,
+                          isFavorite: isFavorite,
+                          changeState: _toggleFavorite,
+                        ),
                         const SizedBox(height: 24.0),
                         Text(
                           widget.cocktail.name,

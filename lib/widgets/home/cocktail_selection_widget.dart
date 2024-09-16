@@ -1,8 +1,6 @@
 import 'package:cocktails/theme/theme_extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../bloc/cocktail_setup_bloc/cocktail_setup_bloc.dart';
 import '../custom_checkbox.dart';
@@ -111,7 +109,7 @@ class CocktailSelectionViewState extends State<CocktailSelectionView> {
           }).toList(),
         ),
         if (shouldShowMoreButton)
-          SizedBox(
+          const SizedBox(
             height: 12,
           ),
         if (shouldShowMoreButton)

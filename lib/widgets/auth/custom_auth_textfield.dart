@@ -1,7 +1,5 @@
-import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
 enum JoinPosition { none, top, bottom }
@@ -15,7 +13,8 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final bool isReferral;
   final bool isDate;
-  final String? errorMessage; // Добавлено для отображения ошибки
+  final String? errorMessage;
+  final bool expandText; // Новое поле для расширения текста
 
   const CustomTextField({
     super.key,
@@ -27,7 +26,8 @@ class CustomTextField extends StatefulWidget {
     this.controller,
     this.isReferral = false,
     this.isDate = false,
-    this.errorMessage, // Добавлено для отображения ошибки
+    this.errorMessage,
+    this.expandText = false, // По умолчанию поле не расширяется
   });
 
   @override
@@ -37,6 +37,7 @@ class CustomTextField extends StatefulWidget {
 class CustomTextFieldState extends State<CustomTextField> {
   late bool _obscureText;
   bool _showReferralInfo = false;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -104,63 +105,61 @@ class CustomTextFieldState extends State<CustomTextField> {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(left: 18.0, top: 15.0, right: 8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.symmetric(
+                horizontal: 16.0, vertical: 4.0), // Уменьшенный padding
+            child: Row(
               children: [
-                Text(
-                  widget.labelText,
-                  style: context.text.bodyText12Grey,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap:
-                            widget.isDate ? () => _selectDate(context) : null,
-                        child: AbsorbPointer(
-                          absorbing: widget.isDate,
-                          child: TextField(
-                            controller: widget.controller,
-                            obscureText: _obscureText,
-                            keyboardType: widget.phoneNumber
-                                ? TextInputType.phone
-                                : TextInputType.text,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 0.0, horizontal: 2.0),
-                            ),
-                            style: context.text.bodyText16White,
-                            inputFormatters: widget.phoneNumber
-                                ? [MaskedInputFormatter('+#(###) ###-##-##')]
-                                : [],
-                          ),
-                        ),
-                      ),
+                Expanded(
+                  child: TextField(
+                    focusNode: _focusNode,
+                    controller: widget.controller,
+                    obscureText: _obscureText,
+                    maxLines: widget.expandText ? null : 1,
+                    // Управляем расширением текста
+                    minLines: 1,
+                    // Минимальная линия - одна
+                    keyboardType: widget.phoneNumber
+                        ? TextInputType.phone
+                        : TextInputType.multiline,
+                    // Включаем multiline
+                    decoration: InputDecoration(
+                      labelText: widget.labelText,
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      labelStyle: const TextStyle(color: Colors.grey),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10),
                     ),
-                    if (widget.obscureText)
-                      Transform.translate(
-                        offset: const Offset(0, -12),
-                        child: IconButton(
-                          icon: SvgPicture.asset(
-                            _obscureText
-                                ? 'assets/images/hide_password.svg'
-                                : 'assets/images/show_password.svg',
-                          ),
-                          onPressed: _togglePasswordVisibility,
-                        ),
-                      ),
-                    if (widget.isReferral)
-                      Transform.translate(
-                        offset: const Offset(0, -12),
-                        child: IconButton(
-                          icon: SvgPicture.asset('assets/images/referal.svg'),
-                          onPressed: _toggleReferralInfo,
-                        ),
-                      ),
-                  ],
+                    style: const TextStyle(color: Colors.white),
+                    onTap: widget.isDate ? () => _selectDate(context) : null,
+                  ),
                 ),
+                if (widget.obscureText)
+                  Transform.translate(
+                    offset: const Offset(0, 4),
+                    child: IconButton(
+                      icon: SvgPicture.asset(
+                        _obscureText
+                            ? 'assets/images/hide_password.svg'
+                            : 'assets/images/show_password.svg',
+                        width: 14,
+                        height: 14,
+                      ),
+                      onPressed: _togglePasswordVisibility,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ),
+                if (widget.isReferral)
+                  IconButton(
+                    icon: SvgPicture.asset(
+                      'assets/images/referal.svg',
+                      width: 20,
+                      height: 20,
+                    ),
+                    onPressed: _toggleReferralInfo,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
               ],
             ),
           ),
@@ -178,7 +177,7 @@ class CustomTextFieldState extends State<CustomTextField> {
           ),
         if (_showReferralInfo)
           Padding(
-            padding: const EdgeInsets.only(top: 24.0),
+            padding: const EdgeInsets.only(top: 10.0),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.06),
@@ -188,17 +187,17 @@ class CustomTextFieldState extends State<CustomTextField> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Номер реферала',
                       style: TextStyle(fontSize: 15, color: Color(0xffF6B402)),
                     ),
-                    const SizedBox(
-                      height: 11,
-                    ),
+                    const SizedBox(height: 11),
                     Text(
                       'В данном поле нужно указать номер телефона человека, который порекомендовал вам скачать приложение',
-                      style: context.text.bodyText14White.copyWith(height: 1.5),
+                      style: TextStyle(
+                          color: Colors.white.withOpacity(0.8), height: 1.5),
                     ),
                   ],
                 ),

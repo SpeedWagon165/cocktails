@@ -1,10 +1,9 @@
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../cocktail_selection_step_1.dart';
-import '../cocktail_selection_step_2.dart';
-import '../cocktail_selection_step_3.dart';
+import '../cocktail_selection_steps/cocktail_selection_step_1.dart';
+import '../cocktail_selection_steps/cocktail_selection_step_2.dart';
+import '../cocktail_selection_steps/cocktail_selection_step_3.dart';
 
 class CocktailSelectionNavigator extends StatefulWidget {
   const CocktailSelectionNavigator({

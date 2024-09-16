@@ -3,6 +3,7 @@ import 'package:cocktails/bloc/notification_settings_bloc/notification_settings_
 import 'package:cocktails/bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import 'package:cocktails/pages/welcome_page.dart';
 import 'package:cocktails/provider/cocktail_auth_repository.dart';
+import 'package:cocktails/provider/profile_repository.dart';
 import 'package:cocktails/theme/themes.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
 import 'package:cocktails/widgets/bottom_nav_bar.dart';
@@ -12,7 +13,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bloc/app_start_bloc/app_start_bloc.dart';
+import 'bloc/avatar_cubit/avatar_cubit.dart';
 import 'bloc/bottom_navigation_bloc/bottom_navigation_bloc.dart';
+import 'bloc/profile_bloc/profile_bloc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +45,13 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider(create: (context) => BottomNavigationBloc()),
               BlocProvider(create: (context) => NotificationSettingsBloc()),
+              BlocProvider(
+                create: (context) => ProfileImageCubit()..loadProfileImage(),
+              ),
+              BlocProvider(
+                create: (context) =>
+                    ProfileBloc(ProfileRepository())..add(FetchProfile()),
+              ),
               BlocProvider(
                 create: (context) =>
                     AuthBloc(AuthRepository())..add(CheckAuthStatus()),

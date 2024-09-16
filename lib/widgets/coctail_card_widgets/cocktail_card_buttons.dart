@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CocktailCardButtons extends StatefulWidget {
-  const CocktailCardButtons(
-      {super.key,
-      required this.isCocked,
-      required this.isFavorite,
-      required this.changeState});
-
   final bool isCocked;
   final bool isFavorite;
   final Function changeState;
+
+  const CocktailCardButtons({
+    super.key,
+    required this.isCocked,
+    required this.isFavorite,
+    required this.changeState,
+  });
 
   @override
   State<CocktailCardButtons> createState() => _CocktailCardButtonsState();
@@ -28,10 +29,11 @@ class _CocktailCardButtonsState extends State<CocktailCardButtons> {
             padding:
                 const EdgeInsets.symmetric(vertical: 7.0, horizontal: 11.0),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: widget.isCocked
-                    ? const Color(0xFFFFFFFF).withOpacity(0.06)
-                    : const Color(0xFFF6B402)),
+              borderRadius: BorderRadius.circular(20),
+              color: widget.isCocked
+                  ? const Color(0xFFFFFFFF).withOpacity(0.06)
+                  : const Color(0xFFF6B402),
+            ),
             child: widget.isCocked
                 ? Row(
                     children: [
@@ -64,15 +66,17 @@ class _CocktailCardButtonsState extends State<CocktailCardButtons> {
         Expanded(
           child: GestureDetector(
             onTap: () {
-              widget.changeState();
+              widget
+                  .changeState(); // Вызываем колбэк для переключения состояния
             },
             child: Container(
               alignment: Alignment.center,
               padding:
                   const EdgeInsets.symmetric(vertical: 7.0, horizontal: 11.0),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: const Color(0xFFFFFFFF).withOpacity(0.06)),
+                borderRadius: BorderRadius.circular(20),
+                color: const Color(0xFFFFFFFF).withOpacity(0.06),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -95,7 +99,7 @@ class _CocktailCardButtonsState extends State<CocktailCardButtons> {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

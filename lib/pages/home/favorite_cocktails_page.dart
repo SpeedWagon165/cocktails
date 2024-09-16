@@ -5,16 +5,17 @@ import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 import '../../provider/cocktail_list_get.dart';
 import '../../widgets/cocktail_list/cocktail_card.dart';
 import '../../widgets/custom_arrowback.dart';
-import '../../widgets/home/search_bar_widget.dart';
 
-class CatalogPage extends StatelessWidget {
-  const CatalogPage({super.key});
+class FavoriteCocktailsPage extends StatelessWidget {
+  const FavoriteCocktailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          CocktailListBloc(CocktailRepository())..add(FetchCocktails()),
+      create: (context) {
+        return CocktailListBloc(CocktailRepository())
+          ..add(const FetchFavoriteCocktails());
+      },
       child: Scaffold(
         body: SafeArea(
           child: Padding(
@@ -22,17 +23,13 @@ class CatalogPage extends StatelessWidget {
             child: Column(
               children: [
                 CustomArrowBack(
-                  text: 'Каталог рецептов',
+                  text: 'Избранные рецепты',
                   onPressed: null,
-                  secondIcon: true,
+                  secondIcon: false,
                   onSecondIconTap: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const CustomSearchBar(),
                 const SizedBox(height: 16),
                 Expanded(
                   child: BlocBuilder<CocktailListBloc, CocktailListState>(
@@ -51,7 +48,7 @@ class CatalogPage extends StatelessWidget {
                         return Center(child: Text(state.message));
                       }
                       return const Center(
-                          child: Text('Начните поиск рецептов'));
+                          child: Text('Нет избранных рецептов'));
                     },
                   ),
                 ),

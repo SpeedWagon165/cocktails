@@ -1,8 +1,17 @@
+import 'dart:io';
+
 import 'package:cocktails/pages/account/popups/exit_account_pop_up.dart';
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
 
+import '../../bloc/avatar_cubit/avatar_cubit.dart';
+import '../../bloc/profile_bloc/profile_bloc.dart';
+import '../../provider/profile_repository.dart';
 import '../../widgets/account/account_information_widget.dart';
+import '../../widgets/account/profile_avatar.dart';
 import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/custom_arrowback.dart';
 
@@ -14,97 +23,158 @@ class EditingAccountPage extends StatefulWidget {
 }
 
 class _EditingAccountPageState extends State<EditingAccountPage> {
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+  String? _savedImagePath;
+  late final ProfileBloc _profileBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileBloc = ProfileBloc(ProfileRepository());
+    _profileBloc.add(FetchProfile());
+  }
+
+  // Функция для уменьшения размера изображения
+  Future<File> reduceImageSize(File imageFile) async {
+    // Чтение изображения
+    img.Image? image = img.decodeImage(imageFile.readAsBytesSync());
+
+    // Изменение размера изображения
+    img.Image resizedImage = img.copyResize(image!, width: 300);
+
+    // Кодирование изображения в JPEG с качеством 70
+    File resizedFile = File(imageFile.path)
+      ..writeAsBytesSync(img.encodeJpg(resizedImage, quality: 70));
+
+    return resizedFile;
+  }
+
+  // Функция для выбора изображения с камеры или галереи
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+
+      // Уменьшение размера изображения перед сохранением (опционально)
+      File resizedFile = await reduceImageSize(imageFile);
+
+      // Сохраняем изображение через Cubit
+      context.read<ProfileImageCubit>().setProfileImage(resizedFile.path);
+
+      setState(() {
+        _image = resizedFile;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
-          child: Column(children: [
-            const CustomArrowBack(
-              text: 'Редактирование',
-              arrow: true,
-              auth: false,
-              onPressed: null,
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            const Center(
-              child: CircleAvatar(
-                radius: 55,
-                backgroundImage:
-                    AssetImage('assets/images/auth_background.jpeg'),
+          child: BlocProvider(
+            create: (_) => _profileBloc,
+            child: Column(children: [
+              const CustomArrowBack(
+                text: 'Редактирование',
+                arrow: true,
+                auth: false,
+                onPressed: null,
               ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 100.0),
-              child: CustomRegistrationButton(
-                text: 'Загрузить фото',
-                icon: 'assets/images/upload_icon.svg',
-                onTap: () {},
-                haveIcon: true,
+              const SizedBox(height: 24),
+              const Center(
+                child: ProfileAvatar(),
               ),
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            const AccountInformationWidget(
-              labelText: 'Имя',
-              infoText: 'Ирина',
-              joinPosition: JoinPosition.top,
-              isJoined: true,
-            ),
-            const AccountInformationWidget(
-              labelText: 'Фамилия',
-              infoText: 'Мякушкина',
-              joinPosition: JoinPosition.none,
-              isJoined: true,
-            ),
-            const AccountInformationWidget(
-              labelText: 'Эл. почта',
-              infoText: 'irina_ivanova@gmail.com',
-              joinPosition: JoinPosition.none,
-              isJoined: true,
-            ),
-            const AccountInformationWidget(
-              labelText: 'Пол',
-              infoText: 'женский',
-              joinPosition: JoinPosition.none,
-              isJoined: true,
-            ),
-            const AccountInformationWidget(
-              labelText: 'Дата рождения',
-              infoText: '01.01.2000',
-              joinPosition: JoinPosition.bottom,
-              isJoined: true,
-            ),
-            const SizedBox(
-              height: 35,
-            ),
-            SizedBox(
-              height: 38,
-              child: ElevatedButton(
-                onPressed: () {
-                  exitAccount(context);
-                },
-                style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
-                    backgroundColor: Colors.transparent,
-                    side: BorderSide(
-                      color: const Color(0xFFFF4747).withOpacity(0.5),
-                      width: 1.3,
-                    )),
-                child: Text(
-                  'Выйти из аккаунта',
-                  style: context.text.bodyText16White.copyWith(fontSize: 15),
+              const SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 100.0),
+                child: CustomRegistrationButton(
+                  text: 'Загрузить фото',
+                  icon: 'assets/images/upload_icon.svg',
+                  onTap: _pickImage,
+                  haveIcon: true,
                 ),
               ),
-            )
-          ]),
+              const SizedBox(height: 24),
+              BlocBuilder<ProfileBloc, ProfileState>(
+                builder: (context, state) {
+                  String firstName = 'Нет данных';
+                  String lastName = 'Нет данных';
+                  String email = 'Нет данных';
+                  String gender = 'Нет данных';
+                  String dateOfBirth = 'Нет данных';
+
+                  if (state is ProfileLoaded) {
+                    final profile = state.profileData;
+                    firstName = profile['first_name'] ?? 'Нет данных';
+                    lastName = profile['last_name'] ?? 'Нет данных';
+                    email = profile['email'] ?? 'Нет данных';
+                    gender = profile['gender'] ?? 'Нет данных';
+                    dateOfBirth = profile['date_of_birth'] ?? 'Нет данных';
+                  }
+
+                  return Column(
+                    children: [
+                      AccountInformationWidget(
+                        labelText: 'Имя',
+                        infoText: firstName,
+                        joinPosition: JoinPosition.top,
+                        isJoined: true,
+                      ),
+                      AccountInformationWidget(
+                        labelText: 'Фамилия',
+                        infoText: lastName,
+                        joinPosition: JoinPosition.none,
+                        isJoined: true,
+                      ),
+                      AccountInformationWidget(
+                        labelText: 'Эл. почта',
+                        infoText: email,
+                        joinPosition: JoinPosition.none,
+                        isJoined: true,
+                      ),
+                      AccountInformationWidget(
+                        labelText: 'Пол',
+                        infoText: gender,
+                        joinPosition: JoinPosition.none,
+                        isJoined: true,
+                      ),
+                      AccountInformationWidget(
+                        labelText: 'Дата рождения',
+                        infoText: dateOfBirth,
+                        joinPosition: JoinPosition.bottom,
+                        isJoined: true,
+                      ),
+                    ],
+                  );
+                },
+              ),
+              const SizedBox(
+                height: 35,
+              ),
+              SizedBox(
+                height: 38,
+                child: ElevatedButton(
+                  onPressed: () {
+                    exitAccount(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      shape: const StadiumBorder(),
+                      backgroundColor: Colors.transparent,
+                      side: BorderSide(
+                        color: const Color(0xFFFF4747).withOpacity(0.5),
+                        width: 1.3,
+                      )),
+                  child: Text(
+                    'Выйти из аккаунта',
+                    style: context.text.bodyText16White.copyWith(fontSize: 15),
+                  ),
+                ),
+              )
+            ]),
+          ),
         ),
       ),
     );

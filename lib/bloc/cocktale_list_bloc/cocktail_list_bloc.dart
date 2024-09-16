@@ -15,6 +15,8 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
   CocktailListBloc(this.repository) : super(CocktailInitial()) {
     on<FetchCocktails>(_onFetchCocktails);
     on<FetchUserCocktails>(_onFetchUserCocktails); // Обрабатываем новый ивент
+    on<SearchCocktails>(_onSearchCocktails);
+    on<FetchFavoriteCocktails>(_onFetchFavoriteCocktails);
   }
 
   // Получение всех коктейлей (без аутентификации)
@@ -39,7 +41,40 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
       emit(CocktailLoaded(cocktails));
     } catch (e, stacktrace) {
       log('Error fetching user cocktails', error: e, stackTrace: stacktrace);
+      log(e.toString());
       emit(CocktailError('Failed to fetch user cocktails: ${e.toString()}'));
+    }
+  }
+
+  void _onSearchCocktails(
+      SearchCocktails event, Emitter<CocktailListState> emit) async {
+    emit(CocktailLoading());
+    try {
+      final cocktails = await repository.searchCocktails(
+        query: event.query,
+        ingredients: event.ingredients,
+        tools: event.tools,
+        ordering: event.ordering,
+        page: event.page,
+        pageSize: event.pageSize,
+      );
+      emit(CocktailLoaded(cocktails));
+    } catch (e, stacktrace) {
+      log('Error searching cocktails', error: e, stackTrace: stacktrace);
+      emit(CocktailError('Failed to search cocktails: ${e.toString()}'));
+    }
+  }
+
+  void _onFetchFavoriteCocktails(
+      FetchFavoriteCocktails event, Emitter<CocktailListState> emit) async {
+    emit(CocktailLoading());
+    try {
+      final favoriteCocktails = await repository.fetchFavoriteCocktails();
+      emit(CocktailLoaded(favoriteCocktails));
+    } catch (e) {
+      print(e);
+      emit(
+          CocktailError('Failed to fetch favorite cocktails: ${e.toString()}'));
     }
   }
 }

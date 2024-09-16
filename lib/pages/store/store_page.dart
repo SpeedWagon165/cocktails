@@ -31,7 +31,7 @@ class StorePage extends StatelessWidget {
     return Scaffold(
         body: SafeArea(
             child: Padding(
-      padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+      padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
       child: Column(children: [
         const CustomArrowBack(
           text: 'Магазин',

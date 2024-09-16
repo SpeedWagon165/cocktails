@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../cocktail_selection_step_1.dart';
 import '../navigators/cocktail_selection_navigator.dart';
 
 void cocktailSelectionPopUp(BuildContext context) {
