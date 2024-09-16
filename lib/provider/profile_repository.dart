@@ -21,13 +21,13 @@ class ProfileRepository {
   }
 
   // Функция для сохранения профиля в SharedPreferences
-  Future<void> _saveProfileToCache(Map<String, dynamic> profileData) async {
+  Future<void> saveProfileToCache(Map<String, dynamic> profileData) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('profile', jsonEncode(profileData));
   }
 
   // Функция для загрузки профиля из SharedPreferences
-  Future<Map<String, dynamic>?> _getProfileFromCache() async {
+  Future<Map<String, dynamic>?> getProfileFromCache() async {
     final prefs = await SharedPreferences.getInstance();
     final String? profileString = prefs.getString('profile');
     if (profileString != null) {
@@ -39,13 +39,11 @@ class ProfileRepository {
   // Функция для загрузки профиля с сервера
   Future<Map<String, dynamic>> fetchProfile() async {
     try {
-      // Сначала проверяем наличие профиля в кэше
-      final cachedProfile = await _getProfileFromCache();
+      final cachedProfile = await getProfileFromCache();
       if (cachedProfile != null) {
         return cachedProfile;
       }
 
-      // Если профиля в кэше нет, загружаем его с сервера
       final token = await _getToken();
       if (token == null) {
         throw Exception('Token not found');
@@ -64,7 +62,7 @@ class ProfileRepository {
         final profileData = response.data as Map<String, dynamic>;
 
         // Сохраняем загруженные данные в кэш
-        await _saveProfileToCache(profileData);
+        await saveProfileToCache(profileData);
 
         return profileData;
       } else {
