@@ -1,6 +1,9 @@
 import 'package:cocktails/pages/store/product_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/goods_bloc/goods_bloc.dart';
+import '../../provider/store_repository.dart';
 import '../../widgets/custom_arrowback.dart';
 import '../../widgets/home/search_bar_widget.dart';
 
@@ -9,83 +12,92 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> products = [
-      {
-        'name': 'Бочонок тёмный',
-        'imageUrl': 'assets/images/1aa3b101bb92d5754f486009f6cc29b6.jpeg',
-        'price': 4000.0,
-      },
-      {
-        'name': 'Бочонок светлый',
-        'imageUrl': 'assets/images/18d69d8a15af86ee1c05a22baf387939.jpeg',
-        'price': 4000.0,
-      }
-    ];
-    final List<String> categories = [
-      'Бочонки',
-      'Дымные наборы',
-      'Набор 17 предмет',
-      'Вино',
-      'Вино шотланское'
-    ];
     return Scaffold(
-        body: SafeArea(
-            child: Padding(
-      padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
-      child: Column(children: [
-        const CustomArrowBack(
-          text: 'Магазин',
-          arrow: false,
-          auth: false,
-          onPressed: null,
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        const CustomSearchBar(),
-        const SizedBox(
-          height: 16,
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: categories.map((category) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: Chip(
-                  backgroundColor: Color(0xff212121),
-                  label: Text(
-                    category,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                  shape: const StadiumBorder(
-                    side: BorderSide(color: Color(0xff343434)),
+      body: SafeArea(
+        child: BlocProvider(
+          create: (context) => GoodsBloc(GoodsRepository())..add(FetchGoods()),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
+            child: Column(
+              children: [
+                const CustomArrowBack(
+                  text: 'Магазин',
+                  arrow: false,
+                  auth: false,
+                  onPressed: null,
+                ),
+                const SizedBox(height: 16),
+                const CustomSearchBar(),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: BlocBuilder<GoodsBloc, GoodsState>(
+                    builder: (context, state) {
+                      if (state is GoodsLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is GoodsLoaded) {
+                        return ListView.builder(
+                          itemCount: state.goods.length,
+                          itemBuilder: (context, index) {
+                            final product = state.goods[index];
+                            final minPrice = _getMinPrice(product['links']);
+                            return ProductCard(
+                              name: product['name'],
+                              imageUrl: product['photo'] ?? '',
+                              price: minPrice,
+                              product: product,
+                            );
+                          },
+                        );
+                      } else if (state is GoodsError) {
+                        return Center(child: Text(state.message));
+                      }
+                      return const Center(child: Text('Нет данных'));
+                    },
                   ),
                 ),
-              );
-            }).toList(),
+              ],
+            ),
           ),
         ),
-        const SizedBox(
-          height: 16,
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return ProductCard(
-                name: product['name'],
-                imageUrl: product['imageUrl'],
-                price: product['price'],
-              );
-            },
-          ),
-        ),
-      ]),
-    )));
+      ),
+    );
+  }
+
+  double _getMinPrice(Map<String, dynamic> links) {
+    final prices = links.values
+        .map((link) => double.tryParse(link['price']) ?? 0)
+        .toList();
+    prices.sort();
+    return prices.isNotEmpty ? prices.first : 0.0;
   }
 }
+// final List<String> categories = [
+//   'Бочонки',
+//   'Дымные наборы',
+//   'Набор 17 предмет',
+//   'Вино',
+//   'Вино шотланское'
+// ];
+//     SingleChildScrollView(
+//       scrollDirection: Axis.horizontal,
+//       child: Row(
+//         children: categories.map((category) {
+//           return Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 4.0),
+//             child: Chip(
+//               backgroundColor: Color(0xff212121),
+//               label: Text(
+//                 category,
+//                 style: const TextStyle(
+//                   color: Colors.white,
+//                   fontSize: 14,
+//                 ),
+//               ),
+//               shape: const StadiumBorder(
+//                 side: BorderSide(color: Color(0xff343434)),
+//               ),
+//             ),
+//           );
+//         }).toList(),
+//       ),
+//     ),

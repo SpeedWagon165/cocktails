@@ -5,12 +5,14 @@ class ProductCard extends StatelessWidget {
   final String name;
   final String imageUrl;
   final double price;
+  final Map<String, dynamic> product; // Передаем весь продукт для переходов
 
   const ProductCard({
     super.key,
     required this.name,
     required this.imageUrl,
     required this.price,
+    required this.product,
   });
 
   @override
@@ -26,12 +28,23 @@ class ProductCard extends StatelessWidget {
             padding: const EdgeInsets.only(right: 11.0),
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(11)),
-              child: Image.asset(
-                imageUrl,
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
-              ),
+              child: imageUrl.isNotEmpty
+                  ? Image.network(
+                      imageUrl,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      width: 100,
+                      height: 100,
+                      color: Colors.grey,
+                      child: const Icon(
+                        Icons.image,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                    ),
             ),
           ),
           Expanded(
@@ -71,7 +84,7 @@ class ProductCard extends StatelessWidget {
                             horizontal: 24, vertical: 12),
                       ),
                       onPressed: () {
-                        productPagePopUp(context);
+                        productPagePopUp(context, product);
                       },
                       child: const Text(
                         'Заказать',
