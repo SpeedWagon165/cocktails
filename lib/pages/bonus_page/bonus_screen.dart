@@ -69,3 +69,6 @@ class _BonusScreenState extends State<BonusScreen> {
     );
   }
 }
+//Вручную обновить баллы void onPointsUpdated() {
+//   context.read<ProfileBloc>().add(UpdatePoints());
+// }

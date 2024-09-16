@@ -5,41 +5,42 @@ import 'package:cocktails/widgets/coctail_card_widgets/ingredients_list_builder.
 import 'package:flutter/material.dart';
 
 import '../../models/cocktail_list_model.dart';
-import '../../provider/cocktail_list_get.dart';
 import '../../widgets/coctail_card_widgets/cocktail_instruction_builder.dart';
 import '../../widgets/coctail_card_widgets/tool_list_builder.dart';
 import '../../widgets/pure_custom_arrow_back.dart';
 import '../../widgets/store/expandable_text.dart';
 
 class CocktailCardScreen extends StatefulWidget {
-  const CocktailCardScreen({super.key, required this.cocktail});
-
   final Cocktail cocktail;
+  final bool isFavorite;
+  final Function onToggleFavorite; // Колбэк для изменения состояния
+
+  const CocktailCardScreen({
+    super.key,
+    required this.cocktail,
+    required this.isFavorite,
+    required this.onToggleFavorite,
+  });
 
   @override
   State<CocktailCardScreen> createState() => _CocktailCardScreenState();
 }
 
 class _CocktailCardScreenState extends State<CocktailCardScreen> {
-  bool isCocked = false;
   late bool isFavorite;
+  bool isCocked = false;
 
   @override
   void initState() {
     super.initState();
-    isFavorite = widget.cocktail.isFavorite;
+    isFavorite = widget.isFavorite;
   }
 
-  Future<void> _toggleFavorite() async {
-    try {
-      // Отправляем запрос для добавления/удаления из избранного
-      await CocktailRepository().toggleFavorite(widget.cocktail.id, isFavorite);
-      setState(() {
-        isFavorite = !isFavorite; // Переключаем статус
-      });
-    } catch (e) {
-      print('Error: $e');
-    }
+  void _toggleFavorite() {
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+    widget.onToggleFavorite(); // Вызываем метод для изменения в карточке
   }
 
   @override

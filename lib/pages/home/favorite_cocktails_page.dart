@@ -37,6 +37,12 @@ class FavoriteCocktailsPage extends StatelessWidget {
                       if (state is CocktailLoading) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (state is CocktailLoaded) {
+                        // Проверяем, есть ли избранные рецепты
+                        if (state.cocktails.isEmpty) {
+                          return const Center(
+                              child: Text('Нет избранных рецептов'));
+                        }
+
                         return ListView.builder(
                           itemCount: state.cocktails.length,
                           itemBuilder: (context, index) {

@@ -12,6 +12,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   ProfileBloc(this.repository) : super(ProfileInitial()) {
     on<FetchProfile>(_onFetchProfile);
+    on<UpdatePoints>(_onUpdatePoints);
   }
 
   // Обработка события FetchProfile
@@ -24,6 +25,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } catch (e) {
       print('Ошибка при загрузке профиля: $e');
       emit(ProfileError('Failed to fetch profile: ${e.toString()}'));
+    }
+  }
+
+  void _onUpdatePoints(UpdatePoints event, Emitter<ProfileState> emit) async {
+    try {
+      final points = await repository.fetchPointsFromServer();
+      if (state is ProfileLoaded && points != null) {
+        final updatedProfile =
+            Map<String, dynamic>.from((state as ProfileLoaded).profileData);
+        updatedProfile['points'] = points;
+        emit(ProfileLoaded(updatedProfile));
+      }
+    } catch (e) {
+      emit(ProfileError('Failed to update points: ${e.toString()}'));
     }
   }
 }

@@ -74,4 +74,27 @@ class ProfileRepository {
       throw Exception('Error fetching profile: $e');
     }
   }
+
+  Future<int?> fetchPointsFromServer() async {
+    final token = await _getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final response = await dio.get(
+      '/profile/',
+      options: Options(
+        headers: {
+          'Authorization': 'Token $token',
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final profileData = response.data as Map<String, dynamic>;
+      return profileData['points'];
+    } else {
+      throw Exception('Failed to load points from server');
+    }
+  }
 }

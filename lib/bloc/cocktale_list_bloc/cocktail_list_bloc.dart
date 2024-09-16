@@ -72,9 +72,8 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
       final favoriteCocktails = await repository.fetchFavoriteCocktails();
       emit(CocktailLoaded(favoriteCocktails));
     } catch (e) {
-      print(e);
-      emit(
-          CocktailError('Failed to fetch favorite cocktails: ${e.toString()}'));
+      emit(CocktailError(
+          'Не удалось загрузить избранные рецепты: ${e.toString()}'));
     }
   }
 }

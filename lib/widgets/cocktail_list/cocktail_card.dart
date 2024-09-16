@@ -7,7 +7,10 @@ import '../../provider/cocktail_list_get.dart';
 class CocktailCard extends StatefulWidget {
   final Cocktail cocktail;
 
-  const CocktailCard({super.key, required this.cocktail});
+  const CocktailCard({
+    super.key,
+    required this.cocktail,
+  });
 
   @override
   State<CocktailCard> createState() => _CocktailCardState();
@@ -26,7 +29,7 @@ class _CocktailCardState extends State<CocktailCard> {
     try {
       await CocktailRepository().toggleFavorite(widget.cocktail.id, isFavorite);
       setState(() {
-        isFavorite = !isFavorite; // Обновляем состояние для изменения иконки
+        isFavorite = !isFavorite;
       });
     } catch (e) {
       print('Error: $e');
@@ -37,9 +40,20 @@ class _CocktailCardState extends State<CocktailCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                CocktailCardScreen(cocktail: widget.cocktail)));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CocktailCardScreen(
+              cocktail: widget.cocktail,
+              isFavorite: isFavorite,
+              onToggleFavorite: (newFavoriteStatus) {
+                setState(() {
+                  // Синхронизируем статус избранного между экранами
+                  isFavorite = newFavoriteStatus;
+                });
+              },
+            ),
+          ),
+        );
       },
       child: Stack(
         children: [
@@ -90,12 +104,11 @@ class _CocktailCardState extends State<CocktailCard> {
               ],
             ),
           ),
-          // Добавляем иконку в верхний правый угол
           Positioned(
             top: 20,
             right: 20,
             child: GestureDetector(
-              onTap: _toggleFavorite, // Вызываем метод для переключения статуса
+              onTap: _toggleFavorite,
               child: Icon(
                 isFavorite ? Icons.favorite : Icons.favorite_border,
                 color: isFavorite ? Colors.red : Colors.white,

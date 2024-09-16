@@ -167,7 +167,6 @@ class CocktailRepository {
 
       if (response.statusCode == 200) {
         final jsonResponse = response.data;
-
         if (jsonResponse is List) {
           return jsonResponse
               .map<Cocktail>((item) => Cocktail.fromJson(item))
@@ -177,12 +176,12 @@ class CocktailRepository {
         }
       } else {
         throw Exception(
-            'Failed to load favorite cocktails: ${response.statusCode}');
+            'Не удалось загрузить избранные рецепты: ${response.statusCode}');
       }
     } catch (e, stacktrace) {
-      log('Error fetching favorite cocktails',
+      log('Ошибка при получении избранных коктейлей',
           error: e, stackTrace: stacktrace);
-      throw Exception('Failed to fetch favorite cocktails: $e');
+      throw Exception('Ошибка при загрузке избранных коктейлей: $e');
     }
   }
 }
