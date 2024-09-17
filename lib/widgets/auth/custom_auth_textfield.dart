@@ -15,6 +15,7 @@ class CustomTextField extends StatefulWidget {
   final bool isDate;
   final String? errorMessage;
   final bool expandText; // Новое поле для расширения текста
+  final bool showRedBorder;
 
   const CustomTextField({
     super.key,
@@ -27,7 +28,8 @@ class CustomTextField extends StatefulWidget {
     this.isReferral = false,
     this.isDate = false,
     this.errorMessage,
-    this.expandText = false, // По умолчанию поле не расширяется
+    this.expandText = false,
+    this.showRedBorder = false, // По умолчанию поле не расширяется
   });
 
   @override
@@ -98,8 +100,9 @@ class CustomTextFieldState extends State<CustomTextField> {
             color: const Color(0x05FFFFFF),
             borderRadius: borderRadius,
             border: Border.all(
-              color: widget.errorMessage != null
-                  ? Colors.red // Красная граница в случае ошибки
+              color: (widget.errorMessage != null || widget.showRedBorder)
+                  ? Colors
+                      .red // Красная граница в случае ошибки или общей ошибки
                   : const Color(0xFF343434),
               width: 1,
             ),
@@ -164,7 +167,7 @@ class CustomTextFieldState extends State<CustomTextField> {
             ),
           ),
         ),
-        if (widget.errorMessage != null)
+        if (widget.errorMessage != null && widget.showRedBorder == false)
           Padding(
             padding: const EdgeInsets.only(top: 4.0, left: 16.0),
             child: Text(
@@ -174,7 +177,9 @@ class CustomTextFieldState extends State<CustomTextField> {
                 fontSize: 12.0,
               ),
             ),
-          ),
+          )
+        else if (widget.showRedBorder == true)
+          const SizedBox(),
         if (_showReferralInfo)
           Padding(
             padding: const EdgeInsets.only(top: 10.0),

@@ -11,7 +11,7 @@ import '../../widgets/auth/text_with_line.dart';
 import '../../widgets/bottom_nav_bar.dart';
 import '../../widgets/custom_button.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   final PageController pageController;
 
   const SignInPage({
@@ -20,11 +20,62 @@ class SignInPage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final usernameController = TextEditingController();
-    final passwordController = TextEditingController();
+  State<SignInPage> createState() => _SignInPageState();
+}
 
+class _SignInPageState extends State<SignInPage> {
+  final formKey = GlobalKey<FormState>();
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  // Переменные для хранения ошибок
+  String? usernameError;
+  String? passwordError;
+  String? generalError;
+
+  void _onSubmit(BuildContext context) {
+    // Сброс ошибок перед валидацией
+    setState(() {
+      usernameError = null;
+      passwordError = null;
+      generalError = null;
+    });
+
+    bool usernameIsEmpty = usernameController.text.isEmpty;
+    bool passwordIsEmpty = passwordController.text.isEmpty;
+
+    // Если оба поля пусты, показываем только generalError
+    if (usernameIsEmpty && passwordIsEmpty) {
+      setState(() {
+        generalError = 'Введите электронную почту и пароль';
+      });
+    } else {
+      // Если одно из полей пусто, показываем соответствующую ошибку для поля
+      if (usernameIsEmpty) {
+        setState(() {
+          usernameError = 'Введите электронную почту';
+        });
+      }
+      if (passwordIsEmpty) {
+        setState(() {
+          passwordError = 'Введите пароль';
+        });
+      }
+    }
+
+    // Если оба поля заполнены и нет общей ошибки, отправляем запрос
+    if (!usernameIsEmpty && !passwordIsEmpty && generalError == null) {
+      BlocProvider.of<AuthBloc>(context).add(
+        SignInRequested(
+          usernameController.text,
+          passwordController.text,
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthBloc(AuthRepository()),
       child: BasePopup(
@@ -46,6 +97,11 @@ class SignInPage extends StatelessWidget {
                         labelText: 'Электронная почта',
                         isJoined: true,
                         joinPosition: JoinPosition.top,
+                        errorMessage:
+                            generalError != null ? ' ' : usernameError,
+                        // Подсвечиваем поле при общей ошибке
+                        showRedBorder: generalError !=
+                            null, // Принудительно подсвечиваем границу поля
                       ),
                       CustomTextField(
                         controller: passwordController,
@@ -53,31 +109,49 @@ class SignInPage extends StatelessWidget {
                         obscureText: true,
                         isJoined: true,
                         joinPosition: JoinPosition.bottom,
+                        errorMessage:
+                            generalError != null ? ' ' : passwordError,
+                        // Подсвечиваем поле при общей ошибке
+                        showRedBorder: generalError !=
+                            null, // Принудительно подсвечиваем границу поля
                       ),
                     ],
                   ),
                 ),
                 Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                      onPressed: () {
-                        pageController.animateToPage(2,
-                            duration: const Duration(milliseconds: 9),
-                            curve: Curves.easeInOut);
-                      },
-                      child: Text(
-                        'Забыли пароль?',
-                        style:
-                            context.text.bodyText12Grey.copyWith(fontSize: 14),
-                      )),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      generalError != null
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Text(
+                                generalError!,
+                                style: context.text.bodyText14White
+                                    .copyWith(color: Colors.red),
+                              ),
+                            )
+                          : const SizedBox(),
+                      TextButton(
+                        onPressed: () {
+                          widget.pageController.animateToPage(2,
+                              duration: const Duration(milliseconds: 9),
+                              curve: Curves.easeInOut);
+                        },
+                        child: Text(
+                          'Забыли пароль?',
+                          style: context.text.bodyText12Grey
+                              .copyWith(fontSize: 14),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {
                     if (state is AuthLoading) {
-                      print('AuthLoading state');
                       showDialog(
                         context: context,
                         barrierDismissible: false,
@@ -85,8 +159,7 @@ class SignInPage extends StatelessWidget {
                             const Center(child: CircularProgressIndicator()),
                       );
                     } else if (state is AuthAuthenticated) {
-                      print('AuthAuthenticated state');
-                      Navigator.of(context).pop(); // Close the loading dialog
+                      Navigator.of(context).pop(); // Закрываем окно загрузки
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -94,80 +167,44 @@ class SignInPage extends StatelessWidget {
                                 const CustomBottomNavigationBar()),
                       );
                     } else if (state is AuthError) {
-                      print('AuthError state: ${state.message}');
-                      Navigator.of(context).pop(); // Close the loading dialog
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.message)),
-                      );
+                      Navigator.of(context).pop(); // Закрываем окно загрузки
+
+                      // Если ошибка связана с неправильным логином или паролем
+                      if (state.message.contains('400')) {
+                        setState(() {
+                          generalError = 'Неверный логин или пароль';
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
                     return CustomButton(
                       text: 'Войти',
                       onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          print(
-                              'Form validated, sending SignInRequested event');
-                          BlocProvider.of<AuthBloc>(context).add(
-                            SignInRequested(
-                              usernameController.text,
-                              passwordController.text,
-                            ),
-                          );
-                        } else {
-                          print('Form validation failed');
-                        }
+                        _onSubmit(context); // Валидация и отправка
                       },
                       single: true,
                     );
                   },
                 ),
-                const SizedBox(
-                  height: 24.0,
-                ),
-                const TextWithLines(
-                  text: 'или с помощью',
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                RegistrationServicesButton(
-                  text: 'Apple ID',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                RegistrationServicesButton(
-                  text: 'Google',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                RegistrationServicesButton(
-                  text: 'Facebook',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                const SizedBox(
-                  height: 24.0,
-                ),
+                const SizedBox(height: 24.0),
+                const TextWithLines(text: 'или с помощью'),
+                const SizedBox(height: 24),
+                RegistrationServicesButton(text: 'Apple ID', onPressed: () {}),
+                const SizedBox(height: 12),
+                RegistrationServicesButton(text: 'Google', onPressed: () {}),
+                const SizedBox(height: 12),
+                RegistrationServicesButton(text: 'Facebook', onPressed: () {}),
+                const SizedBox(height: 24.0),
                 TextButton(
-                    onPressed: () {
-                      pageController.animateToPage(1,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut);
-                    },
-                    child: Text(
-                      'Зарегистрироваться',
-                      style: context.text.bodyText16White,
-                    )),
+                  onPressed: () {
+                    widget.pageController.animateToPage(1,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut);
+                  },
+                  child: Text('Зарегистрироваться',
+                      style: context.text.bodyText16White),
+                ),
               ],
             );
           },
