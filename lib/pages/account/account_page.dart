@@ -14,8 +14,19 @@ import 'change_password/change_password_step_1.dart';
 import 'editing_account_page.dart';
 import 'notification_settings_page.dart';
 
-class AccountPage extends StatelessWidget {
+class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
+
+  @override
+  State<AccountPage> createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthBloc>().add(CheckAuthStatus());
+  }
 
   @override
   Widget build(BuildContext context) {

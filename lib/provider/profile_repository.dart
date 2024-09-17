@@ -37,13 +37,16 @@ class ProfileRepository {
   }
 
   // Функция для загрузки профиля с сервера
-  Future<Map<String, dynamic>> fetchProfile() async {
+  Future<Map<String, dynamic>> fetchProfileDataFromServer(
+      {bool forceRefresh = false}) async {
     try {
       final cachedProfile = await getProfileFromCache();
-      if (cachedProfile != null) {
+      if (cachedProfile != null && !forceRefresh) {
+        // Возвращаем кэшированные данные сразу
         return cachedProfile;
       }
 
+      // Загружаем данные с сервера
       final token = await _getToken();
       if (token == null) {
         throw Exception('Token not found');
@@ -70,29 +73,6 @@ class ProfileRepository {
       }
     } catch (e) {
       throw Exception('Error fetching profile: $e');
-    }
-  }
-
-  Future<int?> fetchPointsFromServer() async {
-    final token = await _getToken();
-    if (token == null) {
-      throw Exception('Token not found');
-    }
-
-    final response = await dio.get(
-      '/profile/',
-      options: Options(
-        headers: {
-          'Authorization': 'Token $token',
-        },
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      final profileData = response.data as Map<String, dynamic>;
-      return profileData['points'];
-    } else {
-      throw Exception('Failed to load points from server');
     }
   }
 }

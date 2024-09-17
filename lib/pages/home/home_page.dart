@@ -26,8 +26,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Инициализация: проверяем авторизацию пользователя
     context.read<AuthBloc>().add(CheckAuthStatus());
+    context.read<ProfileBloc>().add(FetchProfile());
   }
 
   @override
@@ -141,71 +141,78 @@ class _HomePageState extends State<HomePage> {
                               width: 1.0,
                             ),
                           ),
-                          child: Column(
-                            children: [
-                              BlocBuilder<ProfileBloc, ProfileState>(
-                                builder: (context, profileState) {
-                                  String points = '0 баллов';
+                          child: BlocBuilder<ProfileBloc, ProfileState>(
+                            builder: (context, profileState) {
+                              if (profileState is ProfileLoaded) {
+                                final profile = profileState.profileData;
+                                final points = profile['points'] ?? 0;
+                                final recipesCount = profile['recipes_count'] ??
+                                    0; // Количество рецептов
+                                final favoritesCount =
+                                    profile['favorite_recipes_count'] ??
+                                        0; // Количество избранных
 
-                                  if (profileState is ProfileLoaded) {
-                                    final profile = profileState.profileData;
-                                    final pointsCount = profile['points'] ?? 0;
-                                    points = '$pointsCount баллов';
-                                  }
-
-                                  return InfoTileHome(
-                                    icon: 'assets/images/gift_icon.svg',
-                                    title: 'Мои баллы',
-                                    subtitle: points,
-                                    onTap: () {
-                                      context.read<ProfileBloc>().add(
-                                          UpdatePoints()); // Обновление только баллов
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            const BonusScreen(),
-                                      ));
-                                    },
-                                  );
-                                },
-                              ),
-                              const Divider(
-                                  color: Color(0xff343434), height: 1),
-                              InfoTileHome(
-                                icon: 'assets/images/cocktail_icon.svg',
-                                title: 'Мои коктейли',
-                                subtitle: '20 рецептов',
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          const MyCocktailsListPage()));
-                                },
-                              ),
-                              const Divider(
-                                  color: Color(0xff343434), height: 1),
-                              InfoTileHome(
-                                icon: 'assets/images/heart_icon.svg',
-                                title: 'Избранное',
-                                subtitle: '40 избранных',
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          const FavoriteCocktailsPage()));
-                                },
-                              ),
-                              const Divider(
-                                  color: Color(0xff343434), height: 1),
-                              InfoTileHome(
-                                icon: 'assets/images/mail_icon.svg',
-                                title: 'Уведомления',
-                                subtitle: '3 новых',
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          const BonusScreen()));
-                                },
-                              ),
-                            ],
+                                return Column(
+                                  children: [
+                                    InfoTileHome(
+                                      icon: 'assets/images/gift_icon.svg',
+                                      title: 'Мои баллы',
+                                      subtitle: '$points баллов',
+                                      onTap: () {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              const BonusScreen(),
+                                        ));
+                                      },
+                                    ),
+                                    const Divider(
+                                        color: Color(0xff343434), height: 1),
+                                    InfoTileHome(
+                                      icon: 'assets/images/cocktail_icon.svg',
+                                      title: 'Мои коктейли',
+                                      subtitle: '$recipesCount рецептов',
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const MyCocktailsListPage()));
+                                      },
+                                    ),
+                                    const Divider(
+                                        color: Color(0xff343434), height: 1),
+                                    InfoTileHome(
+                                      icon: 'assets/images/heart_icon.svg',
+                                      title: 'Избранное',
+                                      subtitle: '$favoritesCount избранных',
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const FavoriteCocktailsPage()));
+                                      },
+                                    ),
+                                    const Divider(
+                                        color: Color(0xff343434), height: 1),
+                                    InfoTileHome(
+                                      icon: 'assets/images/mail_icon.svg',
+                                      title: 'Уведомления',
+                                      subtitle: '3 новых',
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const BonusScreen()));
+                                      },
+                                    ),
+                                  ],
+                                );
+                              } else if (profileState is ProfileError) {
+                                return Text(profileState.message);
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            },
                           ),
                         );
                       } else {
