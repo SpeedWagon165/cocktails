@@ -22,19 +22,44 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
     return Scaffold(
       body: BlocBuilder<BottomNavigationBloc, BottomNavigationState>(
-          builder: (context, state) {
-        if (state is HomePageState) {
-          return _buildNavigator(0, const HomePage(), navigatorKeys[0]);
-        } else if (state is CatalogPageState) {
-          return _buildNavigator(1, const CatalogPage(), navigatorKeys[1]);
-        } else if (state is StorePageState) {
-          return _buildNavigator(2, const StorePage(), navigatorKeys[2]);
-        } else if (state is AccountPageState) {
-          return _buildNavigator(3, const AccountPage(), navigatorKeys[3]);
-        } else {
-          return const SizedBox();
-        }
-      }),
+        builder: (context, state) {
+          int currentIndex = _getCurrentIndex(state);
+
+          return WillPopScope(
+            onWillPop: () async {
+              // Открываем диалоговое окно с подтверждением выхода
+              final shouldExit = await showDialog<bool>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Вы действительно хотите выйти?'),
+                    content: const Text(
+                        'Вы уверены, что хотите закрыть приложение?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(false); // Не закрывать
+                        },
+                        child: const Text('Нет'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(true); // Закрыть приложение
+                        },
+                        child: const Text('Да'),
+                      ),
+                    ],
+                  );
+                },
+              );
+              // Если пользователь подтвердил, то приложение закроется
+              return shouldExit ?? false; // false для отмены действия "назад"
+            },
+            child: _buildNavigator(
+                currentIndex, navigatorKeys[currentIndex], state),
+          );
+        },
+      ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           splashColor: Colors.transparent,
@@ -108,6 +133,37 @@ class CustomBottomNavigationBar extends StatelessWidget {
     );
   }
 
+  Widget _buildNavigator(
+      int index, GlobalKey<NavigatorState> key, BottomNavigationState state) {
+    Widget child;
+    if (state is HomePageState) {
+      child = const HomePage();
+    } else if (state is CatalogPageState) {
+      child = const CatalogPage();
+    } else if (state is StorePageState) {
+      child = const StorePage();
+    } else if (state is AccountPageState) {
+      child = const AccountPage();
+    } else {
+      child = const HomePage(); // Default to HomePage
+    }
+
+    return Navigator(
+      key: key,
+      onGenerateRoute: (routeSettings) {
+        return MaterialPageRoute(builder: (context) => child);
+      },
+    );
+  }
+
+  int _getCurrentIndex(BottomNavigationState state) {
+    if (state is HomePageState) return 0;
+    if (state is CatalogPageState) return 1;
+    if (state is StorePageState) return 2;
+    if (state is AccountPageState) return 3;
+    return 0;
+  }
+
   BottomNavigationBarItem _buildBottomNavigationBarItem({
     required String icon,
     required String label,
@@ -116,65 +172,36 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return BottomNavigationBarItem(
       icon: Column(
         children: [
-          const SizedBox(
-            height: 10,
+          SvgPicture.asset(
+            icon,
+            width: 18,
+            height: 18,
+            color: isSelected ? Colors.white : const Color(0xFFB7B7B7),
           ),
-          SvgPicture.asset(icon,
-              width: 18,
-              height: 18,
-              color: isSelected ? Colors.white : const Color(0xFFB7B7B7)),
           Text(
             label,
             style: TextStyle(
-                color: isSelected ? Colors.white : const Color(0xFFB7B7B7)),
+              color: isSelected ? Colors.white : const Color(0xFFB7B7B7),
+            ),
           ),
           if (isSelected)
             Container(
               margin: const EdgeInsets.only(top: 5),
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                colors: [
-                  Color(0xFFF8C82C),
-                  Color(0xFFEF7F31),
-                  Color(0xFFDD66A9),
-                ],
-              )),
               height: 3,
               width: 24,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFFF8C82C),
+                    Color(0xFFEF7F31),
+                    Color(0xFFDD66A9),
+                  ],
+                ),
+              ),
             ),
-          if (isSelected == false)
-            const SizedBox(
-              height: 7,
-            )
         ],
       ),
       label: '',
-    );
-  }
-
-  int _getCurrentIndex(BottomNavigationState state) {
-    if (state is HomePageState) {
-      return 0;
-    } else if (state is CatalogPageState) {
-      return 1;
-    } else if (state is StorePageState) {
-      return 2;
-    } else if (state is AccountPageState) {
-      return 3;
-    } else {
-      return 0;
-    }
-  }
-
-  Widget _buildNavigator(
-      int index, Widget child, GlobalKey<NavigatorState> key) {
-    return Navigator(
-      key: key,
-      onGenerateRoute: (routeSettings) {
-        return MaterialPageRoute(
-          builder: (context) => child,
-        );
-      },
     );
   }
 }
