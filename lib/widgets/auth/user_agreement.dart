@@ -7,20 +7,46 @@ import '../custom_checkbox.dart';
 class UserAgreement extends StatefulWidget {
   final String text;
   final String clickText;
+  final Function(bool)
+      onCheckChanged; // Колбэк для обработки изменений состояния
 
-  const UserAgreement({super.key, required this.text, required this.clickText});
+  const UserAgreement({
+    super.key,
+    required this.text,
+    required this.clickText,
+    required this.onCheckChanged, // Передаем функцию для управления состоянием чекбокса
+  });
 
   @override
   UserAgreementState createState() => UserAgreementState();
 }
 
 class UserAgreementState extends State<UserAgreement> {
+  bool isChecked = false;
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const CustomCircularCheckbox(),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isChecked = !isChecked;
+              widget.onCheckChanged(
+                  isChecked); // Сообщаем родительскому компоненту об изменении состояния
+            });
+          },
+          child: CustomCircularCheckbox(
+            isChecked: isChecked, // Передаем текущее состояние
+            onChanged: (checked) {
+              setState(() {
+                isChecked = checked;
+                widget.onCheckChanged(isChecked);
+              });
+            },
+          ),
+        ),
         const SizedBox(
           width: 12,
         ),

@@ -32,6 +32,10 @@ class RegistrationPage4 extends StatelessWidget {
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
+    // Переменные для хранения ошибок
+    String? passwordError;
+    String? confirmPasswordError;
+
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -42,61 +46,95 @@ class RegistrationPage4 extends StatelessWidget {
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut);
           },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CenterText(
-                text: 'Создайте пароль для вашего аккаунта',
-                padding: 60,
-              ),
-              const SizedBox(height: 24),
-              CustomTextField(
-                labelText: 'Пароль',
-                obscureText: true,
-                controller: passwordController,
-                isJoined: true,
-                joinPosition: JoinPosition.top,
-              ),
-              CustomTextField(
-                labelText: 'Повторите пароль',
-                obscureText: true,
-                controller: confirmPasswordController,
-                isJoined: true,
-                joinPosition: JoinPosition.bottom,
-              ),
-              const SizedBox(height: 24),
-              CustomButton(
-                text: 'Зарегистрироваться',
-                gradient: true,
-                onPressed: () {
-                  final password = passwordController.text;
-                  final confirmPassword = confirmPasswordController.text;
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CenterText(
+                    text: 'Создайте пароль для вашего аккаунта',
+                    padding: 60,
+                  ),
+                  const SizedBox(height: 24),
+                  CustomTextField(
+                    labelText: 'Пароль',
+                    obscureText: true,
+                    controller: passwordController,
+                    isJoined: true,
+                    joinPosition: JoinPosition.top,
+                    errorMessage: passwordError, // Ошибка для пароля
+                  ),
+                  CustomTextField(
+                    labelText: 'Повторите пароль',
+                    obscureText: true,
+                    controller: confirmPasswordController,
+                    isJoined: true,
+                    joinPosition: JoinPosition.bottom,
+                    errorMessage:
+                        confirmPasswordError, // Ошибка для подтверждения пароля
+                  ),
+                  const SizedBox(height: 24),
+                  CustomButton(
+                    text: 'Зарегистрироваться',
+                    gradient: true,
+                    onPressed: () {
+                      final password = passwordController.text;
+                      final confirmPassword = confirmPasswordController.text;
 
-                  if (password == confirmPassword) {
-                    context.read<AuthBloc>().add(
-                          RegisterRequested(
-                            firstName: firstName,
-                            lastName: lastName,
-                            phone: phone,
-                            gender: gender,
-                            dateOfBirth: dateOfBirth,
-                            password: password,
-                            email: email,
-                          ),
-                        );
-                    pageController.animateToPage(4,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Пароли не совпадают")),
-                    );
-                  }
-                },
-                single: true,
-              ),
-              const SizedBox(height: 15),
-            ],
+                      // Сброс ошибок перед валидацией
+                      setState(() {
+                        passwordError = null;
+                        confirmPasswordError = null;
+                      });
+
+                      // Проверка пароля
+                      if (password.isEmpty) {
+                        setState(() {
+                          passwordError = 'Введите пароль';
+                        });
+                      } else if (password.length < 8) {
+                        setState(() {
+                          passwordError =
+                              'Пароль должен содержать не менее 8 символов';
+                        });
+                      }
+
+                      // Проверка подтверждения пароля
+                      if (confirmPassword.isEmpty) {
+                        setState(() {
+                          confirmPasswordError = 'Введите подтверждение пароля';
+                        });
+                      } else if (password != confirmPassword) {
+                        setState(() {
+                          confirmPasswordError = 'Пароли не совпадают';
+                        });
+                      }
+
+                      // Если ошибок нет, регистрируем пользователя
+                      if (passwordError == null &&
+                          confirmPasswordError == null) {
+                        context.read<AuthBloc>().add(
+                              RegisterRequested(
+                                firstName: firstName,
+                                lastName: lastName,
+                                phone: phone,
+                                gender: gender,
+                                dateOfBirth: dateOfBirth,
+                                password: password,
+                                email: email,
+                              ),
+                            );
+                        pageController.animateToPage(4,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut);
+                      }
+                    },
+                    single: true,
+                  ),
+                  const SizedBox(height: 15),
+                ],
+              );
+            },
           ),
         );
       },

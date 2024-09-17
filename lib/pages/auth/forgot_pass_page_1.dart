@@ -43,7 +43,7 @@ class ForgotPassPage1 extends StatelessWidget {
           text: 'Забыли пароль?',
           onPressed: () {
             mainPageController.animateToPage(0,
-                duration: const Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 3),
                 curve: Curves.bounceIn);
           },
           child: Column(

@@ -10,7 +10,7 @@ import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/auth/text_with_line.dart';
 import '../../widgets/custom_button.dart';
 
-class RegistrationPage1 extends StatelessWidget {
+class RegistrationPage1 extends StatefulWidget {
   final PageController pageController;
   final PageController mainPageController;
   final Function(String) onEmailEntered;
@@ -23,29 +23,69 @@ class RegistrationPage1 extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final emailController = TextEditingController();
+  _RegistrationPage1State createState() => _RegistrationPage1State();
+}
 
+class _RegistrationPage1State extends State<RegistrationPage1> {
+  final emailController = TextEditingController();
+  String? emailError; // Для хранения ошибки email
+
+  // Функция для проверки корректности email с использованием регулярного выражения
+  bool _isValidEmail(String email) {
+    final emailRegex =
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
+    return emailRegex.hasMatch(email);
+  }
+
+  void _onSubmit(BuildContext context) {
+    setState(() {
+      emailError = null; // Сброс ошибок
+    });
+
+    final email = emailController.text;
+
+    if (email.isEmpty) {
+      setState(() {
+        emailError = 'Введите электронную почту';
+      });
+      return;
+    }
+
+    if (!_isValidEmail(email)) {
+      setState(() {
+        emailError = 'Некорректный формат электронной почты';
+      });
+      return;
+    }
+
+    // Отправляем запрос на верификацию email
+    context.read<AuthBloc>().add(VerifyEmailRequested(email));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoading) {
           const Center(child: CircularProgressIndicator());
         } else if (state is EmailVerified) {
-          onEmailEntered(emailController.text); // Сохранение email
-          pageController.animateToPage(1,
+          widget.onEmailEntered(emailController.text); // Сохранение email
+          widget.pageController.animateToPage(1,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut);
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          if (state.message.contains('400')) {
+            setState(() {
+              emailError = 'Этот email уже зарегистрирован';
+            });
+          }
         }
       },
       builder: (context, state) {
         return BasePopup(
           text: 'Регистрация',
           onPressed: () {
-            mainPageController.animateToPage(0,
+            widget.mainPageController.animateToPage(0,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut);
           },
@@ -55,54 +95,25 @@ class RegistrationPage1 extends StatelessWidget {
               CustomTextField(
                 labelText: 'Эл. почта',
                 controller: emailController,
+                errorMessage: emailError, // Отображение ошибки
               ),
-              const SizedBox(
-                height: 24,
-              ),
+              const SizedBox(height: 24),
               CustomButton(
                 text: 'Далее',
                 onPressed: () {
-                  final email = emailController.text;
-                  context.read<AuthBloc>().add(VerifyEmailRequested(email));
+                  _onSubmit(context); // Валидация и отправка
                 },
                 single: true,
               ),
-              const SizedBox(
-                height: 24.0,
-              ),
-              const TextWithLines(
-                text: 'или с помощью',
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              RegistrationServicesButton(
-                text: 'Apple ID',
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              RegistrationServicesButton(
-                text: 'Google',
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              RegistrationServicesButton(
-                text: 'Facebook',
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              const SizedBox(
-                height: 24.0,
-              ),
+              const SizedBox(height: 24.0),
+              const TextWithLines(text: 'или с помощью'),
+              const SizedBox(height: 24),
+              RegistrationServicesButton(text: 'Apple ID', onPressed: () {}),
+              const SizedBox(height: 12),
+              RegistrationServicesButton(text: 'Google', onPressed: () {}),
+              const SizedBox(height: 12),
+              RegistrationServicesButton(text: 'Facebook', onPressed: () {}),
+              const SizedBox(height: 24.0),
               RichText(
                 text: TextSpan(
                   children: [
@@ -115,7 +126,7 @@ class RegistrationPage1 extends StatelessWidget {
                       style: context.text.bodyText16White,
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          mainPageController.animateToPage(0,
+                          widget.mainPageController.animateToPage(0,
                               duration: const Duration(milliseconds: 300),
                               curve: Curves.easeInOut);
                         },
@@ -123,9 +134,7 @@ class RegistrationPage1 extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 20.0,
-              ),
+              const SizedBox(height: 20.0),
             ],
           ),
         );

@@ -136,7 +136,7 @@ class _SignInPageState extends State<SignInPage> {
                       TextButton(
                         onPressed: () {
                           widget.pageController.animateToPage(2,
-                              duration: const Duration(milliseconds: 9),
+                              duration: const Duration(milliseconds: 3),
                               curve: Curves.easeInOut);
                         },
                         child: Text(

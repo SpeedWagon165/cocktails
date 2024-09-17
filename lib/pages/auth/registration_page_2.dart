@@ -23,10 +23,31 @@ class RegistrationPage2 extends StatefulWidget {
 }
 
 class _RegistrationPage2State extends State<RegistrationPage2> {
+  final codeController = TextEditingController();
+  String? codeError; // Переменная для отображения ошибки
+
+  void _onSubmit(BuildContext context) {
+    setState(() {
+      codeError = null; // Сбрасываем ошибку перед проверкой
+    });
+
+    final code = codeController.text;
+
+    if (code.isEmpty) {
+      setState(() {
+        codeError = 'Введите код подтверждения'; // Если поле пустое
+      });
+      return;
+    }
+
+    // Если код введен, отправляем запрос на проверку
+    context.read<AuthBloc>().add(
+          ConfirmCodeRequested(widget.email, code),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final codeController = TextEditingController();
-
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoading) {
@@ -37,15 +58,16 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
                 const Center(child: CircularProgressIndicator()),
           );
         } else if (state is CodeConfirmed) {
-          Navigator.pop(context);
+          Navigator.pop(context); // Закрываем диалог загрузки
           widget.pageController.animateToPage(2,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut);
         } else if (state is AuthError) {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          Navigator.pop(context); // Закрываем диалог загрузки
+          setState(() {
+            codeError =
+                'Неверный код подтверждения'; // Ошибка если код неверный
+          });
         }
       },
       builder: (context, state) {
@@ -67,6 +89,7 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
               CustomTextField(
                 labelText: 'Код',
                 controller: codeController,
+                errorMessage: codeError, // Отображаем ошибку
               ),
               const SizedBox(height: 24.0),
               TimerWidget(
@@ -78,10 +101,7 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
               CustomButton(
                 text: 'Подтвердить',
                 onPressed: () {
-                  final code = codeController.text;
-                  context.read<AuthBloc>().add(
-                        ConfirmCodeRequested(widget.email, code),
-                      );
+                  _onSubmit(context); // Проверка и отправка
                 },
                 single: true,
               ),
