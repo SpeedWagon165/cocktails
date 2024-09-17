@@ -56,6 +56,7 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CocktailCardSlider(
+                    videoUrl: widget.cocktail.videoUrl,
                     imageUrls: widget.cocktail.imageUrl != null
                         ? [
                             widget.cocktail.imageUrl!
