@@ -5,6 +5,7 @@ import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 import '../../provider/cocktail_list_get.dart';
 import '../../widgets/cocktail_list/cocktail_card.dart';
 import '../../widgets/custom_arrowback.dart';
+import '../../widgets/home/search_bar_widget.dart';
 
 class FavoriteCocktailsPage extends StatelessWidget {
   const FavoriteCocktailsPage({super.key});
@@ -29,6 +30,12 @@ class FavoriteCocktailsPage extends StatelessWidget {
                   onSecondIconTap: () {
                     Navigator.of(context).pop();
                   },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const CustomSearchBar(
+                  isFavorites: true,
                 ),
                 const SizedBox(height: 16),
                 Expanded(

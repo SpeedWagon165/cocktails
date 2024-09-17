@@ -58,3 +58,35 @@ class SearchCocktails extends CocktailListEvent {
         // Заменяем null на 10 (значение по умолчанию для размера страницы)
       ];
 }
+
+class SearchFavoriteCocktails extends CocktailListEvent {
+  final String query;
+  final String? ingredients;
+  final String? tools;
+  final String? ordering;
+  final int? page;
+  final int? pageSize;
+
+  const SearchFavoriteCocktails({
+    required this.query,
+    this.ingredients,
+    this.tools,
+    this.ordering,
+    this.page,
+    this.pageSize,
+  });
+
+  @override
+  List<Object> get props => [
+        query,
+        ingredients ?? '',
+        // Заменяем null на пустую строку
+        tools ?? '',
+        // Заменяем null на пустую строку
+        ordering ?? '',
+        // Заменяем null на пустую строку
+        page ?? 1,
+        // Заменяем null на 1 (значение по умолчанию для страницы)
+        pageSize ?? 10,
+      ];
+}

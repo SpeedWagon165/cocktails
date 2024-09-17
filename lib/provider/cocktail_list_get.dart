@@ -22,8 +22,30 @@ class CocktailRepository {
   // Метод для получения коктейлей
   Future<List<Cocktail>> fetchCocktails() async {
     try {
-      final response = await dio.get('/recipe/');
+      // Получаем токен из SharedPreferences
+      final token = await _getToken();
 
+      // Настраиваем опции запроса
+      Options options;
+      if (token != null) {
+        // Если токен есть, добавляем его в заголовки
+        options = Options(
+          headers: {
+            'Authorization': 'Token $token',
+          },
+        );
+      } else {
+        // Если токена нет, заголовки не нужны
+        options = Options();
+      }
+
+      // Выполняем запрос
+      final response = await dio.get(
+        '/recipe/',
+        options: options,
+      );
+
+      // Обрабатываем ответ
       if (response.statusCode == 200) {
         log('Response body: ${response.data}'); // Логируем полный ответ
 
@@ -114,6 +136,64 @@ class CocktailRepository {
     } catch (e, stacktrace) {
       log('Error searching cocktails', error: e, stackTrace: stacktrace);
       throw Exception('Failed to search cocktails: $e');
+    }
+  }
+
+  Future<List<Cocktail>> searchFavoriteCocktails({
+    required String query,
+    String? ingredients,
+    String? tools,
+    String? ordering,
+    int? page,
+    int? pageSize,
+  }) async {
+    try {
+      // Получаем токен, если есть
+      final token = await _getToken();
+
+      // Настраиваем опции запроса
+      Options options = Options();
+      if (token != null) {
+        options = Options(
+          headers: {
+            'Authorization': 'Token $token',
+          },
+        );
+      }
+
+      final response = await dio.get(
+        '/recipe/', // Ваш endpoint для поиска коктейлей
+        options: options,
+        queryParameters: {
+          'q': query,
+          if (ingredients != null) 'ingredients': ingredients,
+          if (tools != null) 'tools': tools,
+          if (ordering != null) 'ordering': ordering,
+          if (page != null) 'page': page,
+          if (pageSize != null) 'page_size': pageSize,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = response.data['results'];
+        if (jsonResponse.isNotEmpty) {
+          // Фильтруем коктейли по полю is_favorite
+          List<Cocktail> favoriteCocktails = jsonResponse
+              .map((item) => Cocktail.fromJson(item))
+              .where((cocktail) => cocktail.isFavorite == true)
+              .toList();
+
+          return favoriteCocktails;
+        } else {
+          throw Exception('Invalid response structure');
+        }
+      } else {
+        throw Exception('Failed to search cocktails: ${response.statusCode}');
+      }
+    } catch (e, stacktrace) {
+      log('Error searching favorite cocktails',
+          error: e, stackTrace: stacktrace);
+      throw Exception('Failed to search favorite cocktails: $e');
     }
   }
 

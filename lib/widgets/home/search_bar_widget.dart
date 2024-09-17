@@ -4,7 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 
 class CustomSearchBar extends StatelessWidget {
-  const CustomSearchBar({super.key});
+  final bool isFavorites; // Добавляем флаг для поиска по избранным
+
+  const CustomSearchBar({
+    super.key,
+    this.isFavorites = false, // По умолчанию флаг отключён
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,19 +34,39 @@ class CustomSearchBar extends StatelessWidget {
               style: const TextStyle(color: Colors.white),
               onChanged: (query) {
                 if (query.isNotEmpty) {
-                  context.read<CocktailListBloc>().add(
-                        SearchCocktails(
-                          query: query,
-                          // Передача дополнительных параметров (пример)
-                          ingredients: null,
-                          tools: null,
-                          ordering: '-title',
-                          page: null,
-                          pageSize: null,
-                        ),
-                      );
+                  // В зависимости от флага, выполняем разные запросы
+                  if (isFavorites) {
+                    context.read<CocktailListBloc>().add(
+                          SearchFavoriteCocktails(
+                            query: query,
+                            // Передача дополнительных параметров
+                            ingredients: null,
+                            tools: null,
+                            ordering: '-title',
+                            page: null,
+                            pageSize: null,
+                          ),
+                        );
+                  } else {
+                    context.read<CocktailListBloc>().add(
+                          SearchCocktails(
+                            query: query,
+                            ingredients: null,
+                            tools: null,
+                            ordering: '-title',
+                            page: null,
+                            pageSize: null,
+                          ),
+                        );
+                  }
                 } else {
-                  context.read<CocktailListBloc>().add(FetchCocktails());
+                  if (isFavorites) {
+                    context
+                        .read<CocktailListBloc>()
+                        .add(const FetchFavoriteCocktails());
+                  } else {
+                    context.read<CocktailListBloc>().add(FetchCocktails());
+                  }
                 }
               },
             ),
