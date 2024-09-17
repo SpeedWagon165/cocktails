@@ -25,77 +25,82 @@ class ForgotPassPage2 extends StatefulWidget {
 }
 
 class _ForgotPassPage2State extends State<ForgotPassPage2> {
+  final codeController = TextEditingController();
+  String? errorMessage;
+
   @override
   Widget build(BuildContext context) {
-    final codeController = TextEditingController();
-
-    return BlocConsumer<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthLoading) {
-          print('Loading state triggered');
-          const Center(child: CircularProgressIndicator());
-        } else if (state is PasswordResetCodeConfirmed) {
-          print('PasswordResetCodeConfirmed state triggered');
-          widget.onCodeEntered(codeController.text);
-          widget.pageController.animateToPage(2,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut);
-        } else if (state is AuthError) {
-          print('AuthError state triggered: ${state.message}');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
-        }
-      },
-      builder: (context, state) {
-        return BasePopup(
-          text: 'Код подтверждения',
-          onPressed: () {
-            widget.pageController.animateToPage(0,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut);
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthLoading) {
+              const Center(child: CircularProgressIndicator());
+            } else if (state is PasswordResetCodeConfirmed) {
+              widget.onCodeEntered(codeController.text);
+              widget.pageController.animateToPage(2,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut);
+            } else if (state is AuthError) {
+              setState(() {
+                errorMessage = "Неверный код подтверждения";
+              });
+            }
           },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CenterText(
-                text: 'Мы отправили код на почту ${widget.email}',
-                padding: 60,
+          builder: (context, state) {
+            return BasePopup(
+              text: 'Код подтверждения',
+              onPressed: () {
+                widget.pageController.animateToPage(0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut);
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CenterText(
+                    text: 'Мы отправили код на почту ${widget.email}',
+                    padding: 60,
+                  ),
+                  const SizedBox(height: 24),
+                  CustomTextField(
+                    labelText: 'Код',
+                    controller: codeController,
+                    errorMessage: errorMessage, // Ошибка кода
+                  ),
+                  const SizedBox(height: 24.0),
+                  TimerWidget(
+                    onTimerEnd: () {
+                      print('Timer ended');
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  CustomButton(
+                    text: 'Подтвердить',
+                    onPressed: () {
+                      final code = codeController.text.trim();
+
+                      if (code.isEmpty) {
+                        setState(() {
+                          errorMessage = 'Введите код подтверждения';
+                        });
+                      } else {
+                        setState(() {
+                          errorMessage = null;
+                        });
+
+                        context.read<AuthBloc>().add(
+                              ConfirmResetCode(email: widget.email, code: code),
+                            );
+                      }
+                    },
+                    single: true,
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
-              const SizedBox(
-                height: 24,
-              ),
-              CustomTextField(
-                labelText: 'Код',
-                controller: codeController,
-              ),
-              const SizedBox(
-                height: 24.0,
-              ),
-              TimerWidget(
-                onTimerEnd: () {
-                  print('Timer ended');
-                },
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              CustomButton(
-                text: 'Подтвердить',
-                onPressed: () {
-                  final code = codeController.text;
-                  print('Code entered: $code');
-                  context.read<AuthBloc>().add(
-                        ConfirmResetCode(email: widget.email, code: code),
-                      );
-                },
-                single: true,
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

@@ -1,12 +1,10 @@
-import 'dart:async';
-
-import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import '../../../widgets/auth/center_text.dart';
 import '../../../widgets/auth/custom_auth_textfield.dart';
+import '../../../widgets/auth/timer_widget.dart';
 import '../../../widgets/custom_arrowback.dart';
 import '../../../widgets/custom_button.dart';
 import 'change_password_step_3.dart';
@@ -21,35 +19,35 @@ class ChangePasswordStep2 extends StatefulWidget {
 }
 
 class ChangePasswordStep2State extends State<ChangePasswordStep2> {
-  Timer? timer;
-  int start = 59;
   final codeController = TextEditingController();
-
-  void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (start == 0) {
-        setState(() {
-          timer.cancel();
-        });
-      } else {
-        setState(() {
-          start--;
-        });
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    startTimer();
-  }
+  String? codeError; // Переменная для ошибки кода
 
   @override
   void dispose() {
-    timer?.cancel();
     codeController.dispose();
     super.dispose();
+  }
+
+  void _onSubmit() {
+    setState(() {
+      codeError = null; // Сброс ошибки
+    });
+
+    final code = codeController.text;
+
+    if (code.isEmpty) {
+      setState(() {
+        codeError = 'Введите код подтверждения'; // Проверка на пустое поле
+      });
+    } else {
+      // Отправка кода на сервер для подтверждения
+      context.read<AuthBloc>().add(
+            ConfirmResetCode(
+              email: widget.email,
+              code: code,
+            ),
+          );
+    }
   }
 
   @override
@@ -64,9 +62,9 @@ class ChangePasswordStep2State extends State<ChangePasswordStep2> {
             ),
           ));
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          setState(() {
+            codeError = 'Неверный код подтверждения'; // Обработка ошибки
+          });
         }
       },
       builder: (context, state) {
@@ -95,42 +93,18 @@ class ChangePasswordStep2State extends State<ChangePasswordStep2> {
                   CustomTextField(
                     labelText: 'Код',
                     controller: codeController,
+                    errorMessage: codeError, // Отображаем ошибку для кода
                   ),
                   const SizedBox(height: 32),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Center(
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Повторная отправка ',
-                              style: context.text
-                                  .bodyText16White, // Стиль текста по умолчанию
-                            ),
-                            TextSpan(
-                              text:
-                                  'кода через 00:${start.toString().padLeft(2, '0')}',
-                              // Здесь будет ваше время
-                              style: context.text.bodyText12Grey.copyWith(
-                                  fontSize: 16 // Измените цвет на нужный вам
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  TimerWidget(
+                    onTimerEnd: () {
+                      print('Timer ended');
+                    },
                   ),
                   const SizedBox(height: 29),
                   CustomButton(
                     text: 'Подтвердить',
-                    onPressed: () {
-                      context.read<AuthBloc>().add(ConfirmResetCode(
-                            email: widget.email,
-                            code: codeController.text,
-                          ));
-                    },
+                    onPressed: _onSubmit, // Обработчик нажатия с проверкой кода
                     single: true,
                   ),
                 ],

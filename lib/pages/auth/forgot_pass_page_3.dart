@@ -25,22 +25,69 @@ class ForgotPassPage3 extends StatefulWidget {
 }
 
 class _ForgotPassPage3State extends State<ForgotPassPage3> {
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  String? passwordError;
+  String? confirmPasswordError;
+  String? generalError;
+
+  bool hasNavigated = false;
+
+  void _onSubmit(BuildContext context) {
+    setState(() {
+      passwordError = null;
+      confirmPasswordError = null;
+      generalError = null;
+    });
+
+    final password = passwordController.text;
+    final confirmPassword = confirmPasswordController.text;
+    bool isValid = true;
+
+    if (password.isEmpty || password.length < 8) {
+      setState(() {
+        passwordError = 'Пароль должен содержать минимум 8 символов';
+      });
+      isValid = false;
+    }
+
+    if (confirmPassword.isEmpty) {
+      setState(() {
+        confirmPasswordError = 'Повторите пароль';
+      });
+      isValid = false;
+    }
+
+    if (password != confirmPassword) {
+      setState(() {
+        generalError = 'Пароли не совпадают';
+        isValid = false;
+      });
+    }
+
+    if (isValid) {
+      context.read<AuthBloc>().add(
+            ResetPassword(
+              code: widget.code,
+              email: widget.email,
+              newPassword: password,
+              repeatPassword: confirmPassword,
+            ),
+          );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final passwordController = TextEditingController();
-    final confirmPasswordController = TextEditingController();
-
-    bool hasNavigated = false;
-
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoading) {
-          // Показываем индикатор загрузки, если необходимо
+          // Показываем индикатор загрузки
         } else if (state is AuthAuthenticated && !hasNavigated) {
           setState(() {
             hasNavigated = true; // Помечаем, что навигация выполнена
           });
-          // Если авторизация успешна, переходим на страницу аккаунта
+          // Навигация при успешной авторизации
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => const CustomBottomNavigationBar(),
@@ -67,15 +114,16 @@ class _ForgotPassPage3State extends State<ForgotPassPage3> {
                 text: 'Создайте пароль для вашего аккаунта',
                 padding: 60,
               ),
-              const SizedBox(
-                height: 24,
-              ),
+              const SizedBox(height: 24),
               CustomTextField(
                 labelText: 'Новый пароль',
                 obscureText: true,
                 isJoined: true,
                 joinPosition: JoinPosition.top,
                 controller: passwordController,
+                errorMessage: passwordError,
+                // Отображаем ошибку пароля
+                showRedBorder: generalError != null,
               ),
               CustomTextField(
                 labelText: 'Повторите новый пароль',
@@ -83,38 +131,25 @@ class _ForgotPassPage3State extends State<ForgotPassPage3> {
                 isJoined: true,
                 joinPosition: JoinPosition.bottom,
                 controller: confirmPasswordController,
+                errorMessage: confirmPasswordError,
+                // Ошибка повторного пароля
+                showRedBorder: generalError != null,
               ),
-              const SizedBox(
-                height: 24,
-              ),
+              if (generalError != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    generalError!,
+                    style: const TextStyle(color: Colors.red, fontSize: 12.0),
+                  ),
+                ),
+              const SizedBox(height: 24),
               CustomButton(
                 text: 'Войти',
-                onPressed: () {
-                  final password = passwordController.text;
-                  final confirmPassword = confirmPasswordController.text;
-
-                  if (password == confirmPassword) {
-                    print(
-                        'Sending ResetPassword event with email: ${widget.email}, code: ${widget.code}');
-                    context.read<AuthBloc>().add(
-                          ResetPassword(
-                            code: widget.code,
-                            email: widget.email,
-                            newPassword: password,
-                            repeatPassword: confirmPassword,
-                          ),
-                        );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Пароли не совпадают")),
-                    );
-                  }
-                },
+                onPressed: () => _onSubmit(context),
                 single: true,
               ),
-              const SizedBox(
-                height: 24,
-              ),
+              const SizedBox(height: 24),
             ],
           ),
         );

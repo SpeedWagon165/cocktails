@@ -17,15 +17,37 @@ class ChangePasswordStep1 extends StatefulWidget {
 
 class ChangePasswordStep1State extends State<ChangePasswordStep1> {
   final emailController = TextEditingController();
+  String? emailError; // Для хранения ошибки email
+
+  void _onSubmit() {
+    setState(() {
+      emailError = null; // Сброс ошибки перед отправкой
+    });
+
+    final email = emailController.text;
+
+    // Валидация email
+    if (email.isEmpty) {
+      setState(() {
+        emailError = 'Введите электронную почту'; // Если email не введен
+      });
+    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+      setState(() {
+        emailError =
+            'Введите корректную электронную почту'; // Проверка формата email
+      });
+    } else {
+      // Отправка запроса на сброс пароля, если валидация прошла
+      context.read<AuthBloc>().add(RequestPasswordReset(email: email));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoading) {
-          const Center(
-            child: CircularProgressIndicator(),
-          );
+          const Center(child: CircularProgressIndicator());
         } else if (state is PasswordResetRequested) {
           Navigator.pop(context); // Закрываем диалог загрузки
           Navigator.of(context).push(MaterialPageRoute(
@@ -34,9 +56,6 @@ class ChangePasswordStep1State extends State<ChangePasswordStep1> {
           ));
         } else if (state is AuthError) {
           Navigator.pop(context); // Закрываем диалог загрузки
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
         }
       },
       builder: (context, state) {
@@ -63,14 +82,12 @@ class ChangePasswordStep1State extends State<ChangePasswordStep1> {
                   CustomTextField(
                     labelText: 'Эл. почта',
                     controller: emailController,
+                    errorMessage: emailError, // Показ ошибки под полем
                   ),
                   const SizedBox(height: 24),
                   CustomButton(
                     text: 'Отправить',
-                    onPressed: () {
-                      context.read<AuthBloc>().add(
-                          RequestPasswordReset(email: emailController.text));
-                    },
+                    onPressed: _onSubmit, // Валидация и отправка
                     single: true,
                   ),
                 ],
