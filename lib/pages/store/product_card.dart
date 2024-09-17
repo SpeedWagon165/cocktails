@@ -1,4 +1,5 @@
 import 'package:cocktails/pages/store/popups/product_page.dart';
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
@@ -53,19 +54,12 @@ class ProductCard extends StatelessWidget {
               children: [
                 Text(
                   name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: context.text.headline24White.copyWith(fontSize: 16),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'от ${price.toStringAsFixed(0)}₽',
-                  style: const TextStyle(
-                    color: Color(0xffB7B7B7),
-                    fontSize: 15,
-                  ),
+                  style: context.text.bodyText12Grey.copyWith(fontSize: 15),
                 ),
                 const SizedBox(height: 12),
                 Expanded(
@@ -86,9 +80,9 @@ class ProductCard extends StatelessWidget {
                       onPressed: () {
                         productPagePopUp(context, product);
                       },
-                      child: const Text(
+                      child: Text(
                         'Заказать',
-                        style: TextStyle(color: Colors.white),
+                        style: context.text.bodyText14White,
                       ),
                     ),
                   ),

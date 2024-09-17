@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -84,11 +85,8 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
                   ),
                   child: Text(
                     "${mediaWidgets.length + 1}/${widget.imageUrls.length + (widget.videoUrl != null ? 1 : 0)}",
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: context.text.bodyText12Grey
+                        .copyWith(fontSize: 13, color: Colors.black),
                   ),
                 ),
               ),

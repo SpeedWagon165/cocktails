@@ -1,3 +1,4 @@
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/auth/custom_auth_textfield.dart';
 import 'package:cocktails/widgets/home/create_cocktail_widgets/solid_add_photo_button.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +29,9 @@ class NewRecipePage extends StatelessWidget {
                 const SizedBox(
                   height: 27,
                 ),
-                const Text(
+                Text(
                   'Фото и видео',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  style: context.text.bodyText14White.copyWith(fontSize: 18),
                 ),
                 const SizedBox(height: 12),
                 SolidAddPhotoButton(

@@ -1,3 +1,4 @@
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -75,15 +76,9 @@ class _AccountPageState extends State<AccountPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      fullName,
-                                      maxLines: 2,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                    Text(fullName,
+                                        maxLines: 2,
+                                        style: context.text.headline24White),
                                     const SizedBox(height: 14),
                                     CustomRegistrationButton(
                                       text: 'Редактировать',

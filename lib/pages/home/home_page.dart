@@ -1,5 +1,6 @@
 import 'package:cocktails/pages/home/popups/cocktail_selection_pop_up.dart';
 import 'package:cocktails/pages/home/popups/need_registration_pop_up.dart';
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/home/info_tile_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,25 +84,15 @@ class _HomePageState extends State<HomePage> {
                                         return Text(
                                           name,
                                           maxLines: 2,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                          style: context.text.headline24White,
                                         );
                                       },
                                     );
                                   } else {
                                     // Если пользователь не авторизован
-                                    return const Text(
-                                      'Привет!',
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    );
+                                    return Text('Привет!',
+                                        maxLines: 2,
+                                        style: context.text.headline24White);
                                   }
                                 },
                               ),

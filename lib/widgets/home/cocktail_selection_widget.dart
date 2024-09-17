@@ -82,8 +82,10 @@ class CocktailSelectionViewState extends State<CocktailSelectionView> {
                   .map((item) {
             return Chip(
               backgroundColor: const Color(0xff3E3E3E),
-              label: Text(item,
-                  style: const TextStyle(color: Colors.white, fontSize: 14)),
+              label: Text(
+                item,
+                style: context.text.bodyText14White,
+              ),
               shape: const StadiumBorder(
                   side: BorderSide(color: Color(0xff343434))),
               deleteIcon: Container(

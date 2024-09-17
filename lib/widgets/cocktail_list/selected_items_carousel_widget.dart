@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,7 +29,7 @@ class SelectedItemsCarousel extends StatelessWidget {
                     backgroundColor: const Color(0xff3E3E3E),
                     label: Text(
                       item,
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                      style: context.text.bodyText14White,
                     ),
                     shape: const StadiumBorder(
                       side: BorderSide(color: Color(0xff343434)),

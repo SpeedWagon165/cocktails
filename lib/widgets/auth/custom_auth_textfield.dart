@@ -1,3 +1,4 @@
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -172,10 +173,7 @@ class CustomTextFieldState extends State<CustomTextField> {
             padding: const EdgeInsets.only(top: 4.0, left: 16.0),
             child: Text(
               widget.errorMessage!,
-              style: const TextStyle(
-                color: Colors.red,
-                fontSize: 12.0,
-              ),
+              style: context.text.bodyText12Grey.copyWith(color: Colors.red),
             ),
           )
         else if (widget.showRedBorder == true)
@@ -194,9 +192,10 @@ class CustomTextFieldState extends State<CustomTextField> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Номер реферала',
-                      style: TextStyle(fontSize: 15, color: Color(0xffF6B402)),
+                      style: context.text.bodyText12Grey.copyWith(
+                          color: const Color(0xffF6B402), fontSize: 15),
                     ),
                     const SizedBox(height: 11),
                     Text(

@@ -1,4 +1,5 @@
 import 'package:cocktails/pages/cocktail_card_page/cocktail_card_screen.dart';
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/cocktail_list_model.dart';
@@ -92,14 +93,9 @@ class _CocktailCardState extends State<CocktailCard> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: Text(
-                    widget.cocktail.name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: Text(widget.cocktail.name,
+                      style:
+                          context.text.headline24White.copyWith(fontSize: 18)),
                 ),
               ],
             ),

@@ -1,3 +1,4 @@
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -140,7 +141,8 @@ class _ForgotPassPage3State extends State<ForgotPassPage3> {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
                     generalError!,
-                    style: const TextStyle(color: Colors.red, fontSize: 12.0),
+                    style:
+                        context.text.bodyText12Grey.copyWith(color: Colors.red),
                   ),
                 ),
               const SizedBox(height: 24),

@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
               title: 'Flutter Demo',
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
-              themeMode: ThemeMode.system,
+              themeMode: ThemeMode.light,
               home: BlocBuilder<AppBloc, AppState>(
                 builder: (context, state) {
                   if (state is AppInitial) {

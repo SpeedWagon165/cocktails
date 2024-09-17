@@ -65,7 +65,7 @@ class AppTextStyles extends ThemeExtension<AppTextStyles> {
   static get light => const AppTextStyles(
         headline24White: TextStyle(
           fontSize: 24,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
         headline20White: TextStyle(
