@@ -32,10 +32,27 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
         flags: const YoutubePlayerFlags(
           autoPlay: false,
           mute: false,
-          disableDragSeek: true,
+          disableDragSeek: true, // Отключаем перетаскивание
         ),
       );
     }
+  }
+
+  // Метод для перемотки назад на 5 секунд
+  void rewind() {
+    final currentPosition = _controller?.value.position ?? Duration.zero;
+    final newPosition = currentPosition - const Duration(seconds: 5);
+    _controller
+        ?.seekTo(newPosition > Duration.zero ? newPosition : Duration.zero);
+  }
+
+  // Метод для перемотки вперед на 5 секунд
+  void fastForward() {
+    final currentPosition = _controller?.value.position ?? Duration.zero;
+    final videoDuration = _controller?.metadata.duration ?? Duration.zero;
+    final newPosition = currentPosition + const Duration(seconds: 5);
+    _controller
+        ?.seekTo(newPosition < videoDuration ? newPosition : videoDuration);
   }
 
   @override
@@ -98,9 +115,32 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
     // Добавляем YouTube-видео, если URL присутствует
     if (widget.videoUrl != null && _controller != null) {
       mediaWidgets.add(
-        YoutubePlayer(
-          controller: _controller!,
-          showVideoProgressIndicator: true,
+        Stack(
+          children: [
+            YoutubePlayer(
+              controller: _controller!,
+              showVideoProgressIndicator: true,
+            ),
+            GestureDetector(
+              // Обработка двойного нажатия на левую часть экрана для перемотки назад
+              onDoubleTapDown: (details) {
+                final box = context.findRenderObject() as RenderBox?;
+                final localPosition =
+                    box?.globalToLocal(details.globalPosition);
+                if (localPosition != null &&
+                    localPosition.dx < MediaQuery.of(context).size.width / 2) {
+                  rewind();
+                } else {
+                  fastForward();
+                }
+              },
+              child: Container(
+                color: Colors.transparent,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+            ),
+          ],
         ),
       );
     }
