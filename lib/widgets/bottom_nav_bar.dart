@@ -27,33 +27,12 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
           return WillPopScope(
             onWillPop: () async {
-              // Открываем диалоговое окно с подтверждением выхода
-              final shouldExit = await showDialog<bool>(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Вы действительно хотите выйти?'),
-                    content: const Text(
-                        'Вы уверены, что хотите закрыть приложение?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(false); // Не закрывать
-                        },
-                        child: const Text('Нет'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(true); // Закрыть приложение
-                        },
-                        child: const Text('Да'),
-                      ),
-                    ],
-                  );
-                },
-              );
-              // Если пользователь подтвердил, то приложение закроется
-              return shouldExit ?? false; // false для отмены действия "назад"
+              // Check if the current tab's Navigator can go back
+              if (navigatorKeys[currentIndex].currentState?.canPop() ?? false) {
+                navigatorKeys[currentIndex].currentState?.pop();
+                return false; // Prevent exiting the app
+              }
+              return true; // Allow app to exit
             },
             child: _buildNavigator(
                 currentIndex, navigatorKeys[currentIndex], state),

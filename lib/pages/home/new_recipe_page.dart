@@ -30,7 +30,7 @@ class NewRecipePage extends StatelessWidget {
                   height: 27,
                 ),
                 Text(
-                  'Фото и видео',
+                  'Фото',
                   style: context.text.bodyText14White.copyWith(fontSize: 18),
                 ),
                 const SizedBox(height: 12),
@@ -39,6 +39,15 @@ class NewRecipePage extends StatelessWidget {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const NewRecipePage()));
                   },
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'Видео',
+                  style: context.text.bodyText14White.copyWith(fontSize: 18),
+                ),
+                const SizedBox(height: 12),
+                const CustomTextField(
+                  labelText: 'Ссылка на YouTube видео',
                 ),
                 const SizedBox(height: 24),
                 const CustomTextField(
@@ -98,6 +107,9 @@ class NewRecipePage extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 24,
                 ),
               ],
             ),
