@@ -1,3 +1,4 @@
+import 'package:cocktails/pages/account/support_service/support_service_page.dart';
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -164,7 +165,7 @@ class _AccountPageState extends State<AccountPage> {
                             title: 'Связатся с поддержкой',
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const BonusScreen()));
+                                  builder: (context) => SupportServicePage()));
                             },
                           ),
                           const Divider(color: Color(0xff343434), height: 1),

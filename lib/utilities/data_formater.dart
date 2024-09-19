@@ -24,3 +24,20 @@ String formatErrorMessage(String error) {
     return 'Произошла ошибка. Пожалуйста, попробуйте еще раз.';
   }
 }
+
+bool isSameDay(DateTime date1, DateTime date2) {
+  return date1.year == date2.year &&
+      date1.month == date2.month &&
+      date1.day == date2.day;
+}
+
+String formatMessageDate(DateTime date) {
+  final now = DateTime.now();
+  if (isSameDay(date, now)) {
+    return "Сегодня";
+  } else if (isSameDay(date, now.subtract(const Duration(days: 1)))) {
+    return "Вчера";
+  } else {
+    return DateFormat('d MMMM').format(date); // Формат типа "17 апреля"
+  }
+}

@@ -7,6 +7,7 @@ import 'package:cocktails/provider/profile_repository.dart';
 import 'package:cocktails/theme/themes.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
 import 'package:cocktails/widgets/bottom_nav_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,12 +18,17 @@ import 'bloc/avatar_cubit/avatar_cubit.dart';
 import 'bloc/bottom_navigation_bloc/bottom_navigation_bloc.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // Разрешить только портретную ориентацию
   ]).then((_) {
-    runApp(const MyApp());
+    runApp(EasyLocalization(
+        supportedLocales: const [Locale('en', ''), Locale('ru', '')],
+        path: 'assets/translations', // Путь к JSON-файлам локализаций
+        fallbackLocale: const Locale('en', ''),
+        child: const MyApp()));
   });
 }
 
@@ -56,6 +62,9 @@ class MyApp extends StatelessWidget {
                 create: (context) =>
                     AuthBloc(AuthRepository())..add(CheckAuthStatus()),
               ),
+              // BlocProvider(
+              //   create: (context) => SupportBloc(SupportRepository()),
+              // ),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
@@ -63,6 +72,9 @@ class MyApp extends StatelessWidget {
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
               themeMode: ThemeMode.light,
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
               home: BlocBuilder<AppBloc, AppState>(
                 builder: (context, state) {
                   if (state is AppInitial) {

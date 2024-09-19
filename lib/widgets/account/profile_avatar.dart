@@ -31,7 +31,7 @@ class ProfileAvatar extends StatelessWidget {
                     height: radius * 2,
                   )
                 : Padding(
-                    padding: const EdgeInsets.all(25.0), // Отступы для SVG
+                    padding: EdgeInsets.all(radius * 0.5), // Отступы для SVG
                     child: SvgPicture.asset(
                       'assets/images/default_avatar.svg',
                       width: radius * 0.5, // Размер SVG
