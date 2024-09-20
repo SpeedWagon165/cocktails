@@ -2,6 +2,7 @@ import 'package:cocktails/pages/home/popups/cocktail_selection_pop_up.dart';
 import 'package:cocktails/pages/home/popups/need_registration_pop_up.dart';
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/home/info_tile_home.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,7 +11,6 @@ import '../../bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import '../../widgets/account/profile_avatar.dart';
 import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/custom_button.dart';
-import '../../widgets/home/search_bar_widget.dart';
 import '../auth/popups/auth_pop_up.dart';
 import '../bonus_page/bonus_screen.dart';
 import '../cocktail_list/cocktail_list_page.dart';
@@ -48,8 +48,8 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 22),
-                  const CustomSearchBar(),
+                  const SizedBox(height: 35),
+                  // const CustomSearchBar(),
                   const SizedBox(height: 20),
                   Row(
                     children: [
@@ -70,15 +70,17 @@ class _HomePageState extends State<HomePage> {
                                     return BlocBuilder<ProfileBloc,
                                         ProfileState>(
                                       builder: (context, profileState) {
-                                        String name = 'Привет!';
+                                        String name =
+                                            tr('home.greeting_default');
 
                                         if (profileState is ProfileLoaded) {
                                           final profile =
                                               profileState.profileData;
                                           final firstName =
                                               profile['first_name'] ??
-                                                  'Привет!';
-                                          name = 'Привет, $firstName!';
+                                                  tr('home.greeting_default');
+                                          name = tr('home.greeting',
+                                              namedArgs: {'name': firstName});
                                         }
 
                                         return Text(
@@ -90,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                                     );
                                   } else {
                                     // Если пользователь не авторизован
-                                    return Text('Привет!',
+                                    return Text(tr('home.greeting_default'),
                                         maxLines: 2,
                                         style: context.text.headline24White);
                                   }
@@ -101,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                                 builder: (context, state) {
                                   if (state is AuthUnauthenticated) {
                                     return CustomRegistrationButton(
-                                      text: 'Зарегистрироваться',
+                                      text: tr('home.register_button'),
                                       onTap: () {
                                         authPopUp(context);
                                       },
@@ -137,18 +139,19 @@ class _HomePageState extends State<HomePage> {
                               if (profileState is ProfileLoaded) {
                                 final profile = profileState.profileData;
                                 final points = profile['points'] ?? 0;
-                                final recipesCount = profile['recipes_count'] ??
-                                    0; // Количество рецептов
+                                final recipesCount =
+                                    profile['recipes_count'] ?? 0;
                                 final favoritesCount =
-                                    profile['favorite_recipes_count'] ??
-                                        0; // Количество избранных
+                                    profile['favorite_recipes_count'] ?? 0;
 
                                 return Column(
                                   children: [
                                     InfoTileHome(
                                       icon: 'assets/images/gift_icon.svg',
-                                      title: 'Мои баллы',
-                                      subtitle: '$points баллов',
+                                      title: tr('home.my_points'),
+                                      subtitle: tr('home.points', namedArgs: {
+                                        'count': points.toString()
+                                      }),
                                       onTap: () {
                                         Navigator.of(context)
                                             .push(MaterialPageRoute(
@@ -161,8 +164,10 @@ class _HomePageState extends State<HomePage> {
                                         color: Color(0xff343434), height: 1),
                                     InfoTileHome(
                                       icon: 'assets/images/cocktail_icon.svg',
-                                      title: 'Мои коктейли',
-                                      subtitle: '$recipesCount рецептов',
+                                      title: tr('home.my_cocktails'),
+                                      subtitle: tr('home.recipes', namedArgs: {
+                                        'count': recipesCount.toString()
+                                      }),
                                       onTap: () {
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
@@ -174,21 +179,26 @@ class _HomePageState extends State<HomePage> {
                                         color: Color(0xff343434), height: 1),
                                     InfoTileHome(
                                       icon: 'assets/images/heart_icon.svg',
-                                      title: 'Избранное',
-                                      subtitle: '$favoritesCount избранных',
+                                      title: tr('home.favorites'),
+                                      subtitle: tr('home.favorite_recipes',
+                                          namedArgs: {
+                                            'count': favoritesCount.toString()
+                                          }), // Использование namedArgs
                                       onTap: () {
                                         Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const FavoriteCocktailsPage()));
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const FavoriteCocktailsPage()),
+                                        );
                                       },
                                     ),
                                     const Divider(
                                         color: Color(0xff343434), height: 1),
                                     InfoTileHome(
                                       icon: 'assets/images/mail_icon.svg',
-                                      title: 'Уведомления',
-                                      subtitle: '3 новых',
+                                      title: tr('home.notifications'),
+                                      subtitle: tr('home.new_notifications',
+                                          namedArgs: {'count': 3.toString()}),
                                       onTap: () {
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
@@ -209,13 +219,13 @@ class _HomePageState extends State<HomePage> {
                       } else {
                         return Container(
                           height: 300,
-                        ); // Если пользователь не авторизован, не показываем карточку
+                        );
                       }
                     },
                   ),
                   const SizedBox(height: 51),
                   CustomButton(
-                    text: 'Подобрать коктейль',
+                    text: tr('home.select_cocktail_button'),
                     onPressed: () {
                       final authState = context.read<AuthBloc>().state;
                       if (authState is AuthAuthenticated) {

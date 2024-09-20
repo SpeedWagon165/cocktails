@@ -1,4 +1,283 @@
 {
-  "hello": "Привет",
-  "welcome": "Добро пожаловать"
+  "edit_profile_page": {
+    "title": "Редактирование",
+    "upload_photo": "Загрузить фото",
+    "first_name": "Имя",
+    "last_name": "Фамилия",
+    "email": "Эл. почта",
+    "gender": "Пол",
+    "date_of_birth": "Дата рождения",
+    "log_out": "Выйти из аккаунта"
+  },
+  "notifications_page": {
+    "title": "Уведомления",
+    "sms_notifications": "Разрешить текстовые сообщения на телефоне",
+    "push_notifications": "Пуш уведомления"
+  },
+  "account_page": {
+    "title": "Аккаунт",
+    "edit": "Редактировать",
+    "register": "Зарегистрироваться",
+    "language": "Язык",
+    "password": "Пароль",
+    "notifications": "Уведомления",
+    "support": "Связаться с поддержкой",
+    "about_app": "О приложении"
+  },
+  "sign_in_page": {
+    "title": "Вход",
+    "email_label": "Электронная почта",
+    "password_label": "Пароль",
+    "general_error": "Введите электронную почту и пароль",
+    "email_error": "Введите электронную почту",
+    "password_error": "Введите пароль",
+    "login_button": "Войти",
+    "forgot_password_link": "Забыли пароль?",
+    "register_link": "Зарегистрироваться",
+    "alternative_sign_in": "или с помощью",
+    "apple_id_button": "Apple ID",
+    "google_button": "Google",
+    "facebook_button": "Facebook",
+    "login_error": "Неверный логин или пароль"
+  },
+  "registration_page": {
+    "title": "Регистрация",
+    "email_label": "Эл. почта",
+    "email_error_empty": "Введите электронную почту",
+    "email_error_invalid": "Некорректный формат электронной почты",
+    "email_error_registered": "Этот email уже зарегистрирован",
+    "next_button": "Далее",
+    "alternative_sign_in": "или с помощью",
+    "apple_id_button": "Apple ID",
+    "google_button": "Google",
+    "facebook_button": "Facebook",
+    "already_have_account": "Уже есть аккаунт? ",
+    "login_link": "Войти",
+    "confirmation_code_title": "Код подтверждения",
+    "code_sent_description": "Мы отправили код на почту {email}",
+    "code_label": "Код",
+    "enter_code_error": "Введите код подтверждения",
+    "invalid_code_error": "Неверный код подтверждения",
+    "submit_button": "Подтвердить",
+    "personal_info_title": "Регистрация",
+    "first_name_label": "Имя*",
+    "last_name_label": "Фамилия",
+    "phone_label": "Номер телефона",
+    "birthdate_label": "Дата рождения*",
+    "referral_code_label": "Номер реферала",
+    "gender_label": "Ваш пол",
+    "male_option": "Мужской",
+    "female_option": "Женский",
+    "agreement_text": "Даю согласие на обработку персональных данных в соответствии с ",
+    "agreement_click_text": "пользовательским соглашением.",
+    "privacy_text": "Принимаю условия ",
+    "privacy_click_text": "политики конфиденциальности.",
+    "first_name_error": "Введите имя",
+    "birthdate_error": "Введите дату рождения",
+    "age_restriction_error": "Вам должно быть не менее 18 лет",
+    "phone_error": "Номер телефона должен содержать только цифры",
+    "agreement_error": "Необходимо принять условия соглашений",
+    "general_error": "Некорректные данные для регистрации",
+    "password_title": "Пароль",
+    "create_password_description": "Создайте пароль для вашего аккаунта",
+    "password_label": "Пароль",
+    "confirm_password_label": "Повторите пароль",
+    "password_error": "Введите пароль",
+    "password_too_short_error": "Пароль должен содержать не менее 8 символов",
+    "confirm_password_error": "Введите подтверждение пароля",
+    "password_mismatch_error": "Пароли не совпадают",
+    "register_button": "Зарегистрироваться",
+    "permissions_title": "Доступ",
+    "camera_permission_text": "Для создания и добавления фото",
+    "camera_permission_headline": "Камера",
+    "notifications_permission_text": "Чтобы не пропустить важное",
+    "notifications_permission_headline": "Уведомления",
+    "decline_button": "Отказаться",
+    "confirm_button": "Подтвердить",
+    "referral_code_description": "В данном поле нужно указать номер телефона человека, который порекомендовал вам скачать приложение"
+  },
+  "forgot_password_page": {
+    "title": "Забыли пароль?",
+    "description": "Введите электронную почту, куда выслать код подтверждения",
+    "email_label": "Эл. почта",
+    "send_button": "Отправить",
+    "enter_email_error": "Введите электронную почту",
+    "invalid_email_error": "Некорректный формат email",
+    "code_title": "Код подтверждения",
+    "code_sent_description": "Мы отправили код на почту {email}",
+    "code_label": "Код",
+    "submit_code": "Подтвердить",
+    "enter_code_error": "Введите код подтверждения",
+    "invalid_code_error": "Неверный код подтверждения",
+    "create_password_title": "Новый пароль",
+    "create_password_description": "Создайте пароль для вашего аккаунта",
+    "new_password_label": "Новый пароль",
+    "confirm_new_password_label": "Повторите новый пароль",
+    "password_error": "Пароль должен содержать минимум 8 символов",
+    "password_mismatch_error": "Пароли не совпадают",
+    "confirm_password_error": "Повторите пароль",
+    "login_button": "Войти"
+  },
+  "support_page": {
+    "title": "Тех.поддержка",
+    "write_message": "Написать сообщение...",
+    "message_date_format": "dd MMMM yyyy",
+    "sending_failed": "Ошибка отправки сообщения"
+  },
+  "catalog_page": {
+    "title": "Каталог рецептов",
+    "start_search": "Начните поиск рецептов",
+    "description": "Описание"
+  },
+  "my_cocktails_page": {
+    "title": "Мои рецепты ({count})",
+    "no_cocktails": "У вас пока нет коктейлей.",
+    "start_search": "Начните поиск рецептов"
+  },
+  "store": {
+    "title": "Магазин",
+    "empty_message": "В магазине пока пусто)",
+    "default_product_name": "Товар",
+    "description": "Описание",
+    "marketplace_yandex": "Яндекс Маркет",
+    "buy_on": "Купить на {count}",
+    "price_from": "от {count} ₽",
+    "order_now": "Заказать"
+  },
+  "change_pass_pages": {
+    "enter_your_email": "Введите электронную почту",
+    "enter_correct_email": "Введите корректную электронную почту",
+    "change_pass": "Смена пароля",
+    "enter_email_for_code": "Введите номер телефона или почту, куда выслать код подтверждения",
+    "enter_code": "Введите код подтверждения",
+    "wrong_code": "Неверный код подтверждения",
+    "email": "Эл. почта",
+    "code_sent": "Мы отправили код на почту {email}",
+    "submit_code": "Подтвердить код",
+    "resend_code": "Отправить код повторно",
+    "timer_expired": "Время вышло, попробуйте ещё раз",
+    "confirmation_code": "Код подтверждения",
+    "new_password": "Новый пароль",
+    "repeat_new_password": "Повторите новый пароль",
+    "password_saved": "Пароль изменен",
+    "create_password": "Создайте пароль для вашего аккаунта",
+    "password_mismatch": "Пароли не совпадают",
+    "password_too_short": "Пароль должен содержать минимум 8 символов"
+  },
+  "home": {
+    "greeting": "Привет, {name}!",
+    "greeting_default": "Привет!",
+    "register_button": "Зарегистрироваться",
+    "my_points": "Мои баллы",
+    "points": "{count} баллов",
+    "my_cocktails": "Мои коктейли",
+    "recipes": "{count} рецептов",
+    "favorites": "Избранное",
+    "favorite_recipes": "{count} избранных",
+    "notifications": "Уведомления",
+    "new_notifications": "{count} новых",
+    "select_cocktail_button": "Подобрать коктейль"
+  },
+  "new_recipe": {
+    "title": "Новый рецепт",
+    "photo": "Фото",
+    "video": "Видео",
+    "youtube_link": "Ссылка на YouTube видео",
+    "description": "Описание",
+    "alcoholic_drinks": "Алкогольные напитки",
+    "non_alcoholic_drinks": "Б/а напитки",
+    "ingredients": "Продукты",
+    "tools": "Инструменты",
+    "steps": "Шаги приготовления"
+  },
+  "cocktail_instructions": {
+    "title": "Приготовление",
+    "no_instructions": "Инструкции по приготовлению отсутствуют",
+    "step": "Шаг {step}"
+  },
+  "bonus_screen": {
+    "title": "Мои баллы",
+    "points": "{points} баллов",
+    "redeem_points_button": "Обменять баллы",
+    "no_points": "0 баллов",
+    "history_title": "История бонусов",
+    "history": "История"
+  },
+  "buttons": {
+    "confirm": "Подтвердить",
+    "cancel": "Отмена",
+    "back": "Назад",
+    "send": "Отправить",
+    "skip": "Пропустить",
+    "save": "Сохранить",
+    "save_changes": "Сохранить изменения",
+    "sign_out": "Выйти"
+  },
+  "errors": {
+    "empty_field": "Поле не может быть пустым",
+    "invalid_code": "Код введён неверно",
+    "email_incorrect": "Некорректный email",
+    "server_error": "Ошибка сервера"
+  },
+  "timer": {
+    "time_left": "Повторная отправка ",
+    "time_left_seconds": "кода через 00:{seconds}",
+    "timer_expired": "Время вышло, попробуйте снова отправить код."
+  },
+  "exit_account": {
+    "title": "Выход",
+    "confirmation": "Вы уверены, что хотите выйти из приложения?",
+    "cancel": "Отмена"
+  },
+  "about_app": {
+    "title": "О приложении",
+    "privacy_policy": "Политика конфиденциальности",
+    "terms_of_use": "Пользовательское соглашение",
+    "app_version": "Версия приложения"
+  },
+  "alcohol_popup": {
+    "title": "Алкогольные напитки"
+  },
+  "cocktail_selection_page": {
+    "cocktail_selection": "Подбор коктейля",
+    "choose": "Подобрать"
+  },
+  "registration_popup": {
+    "title": "Подбор коктейля",
+    "message": "Чтобы пользоваться функцией “Подобрать коктейль”, нужно быть зарегистрированным пользователем.",
+    "register_button": "Зарегистрироваться"
+  },
+  "favorite_cocktails": {
+    "title": "Избранные рецепты",
+    "no_recipes": "Нет избранных рецептов",
+    "in_favorites": "В избранном",
+    "add_to_favorites": "В избранное"
+  },
+  "ingredients_list": {
+    "title": "Ингредиенты"
+  },
+  "tools_list": {
+    "title": "Необходимые инструменты"
+  },
+  "cocktail_selection": {
+    "step_base": "Выберете основу коктейля:",
+    "additional_ingredients": "Дополнительные ингредиенты:",
+    "show_all": "Смотреть все",
+    "hide": "Скрыть",
+    "selected": "выбрано"
+  },
+  "search": {
+    "search": "Найти"
+  },
+  "step_indicator": {
+    "alcohol": "Алкоголь",
+    "additional_ingredients": "Доп. ингредиенты",
+    "selection": "Подбор"
+  },
+  "bottom_nav": {
+    "home": "Главная",
+    "catalog": "Каталог",
+    "store": "Магазин",
+    "account": "Аккаунт"
+  }
 }

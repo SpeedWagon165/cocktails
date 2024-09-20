@@ -1,5 +1,6 @@
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/base_pop_up.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,18 +48,18 @@ class _SignInPageState extends State<SignInPage> {
     // Если оба поля пусты, показываем только generalError
     if (usernameIsEmpty && passwordIsEmpty) {
       setState(() {
-        generalError = 'Введите электронную почту и пароль';
+        generalError = tr('sign_in_page.general_error');
       });
     } else {
       // Если одно из полей пусто, показываем соответствующую ошибку для поля
       if (usernameIsEmpty) {
         setState(() {
-          usernameError = 'Введите электронную почту';
+          usernameError = tr('sign_in_page.email_error');
         });
       }
       if (passwordIsEmpty) {
         setState(() {
-          passwordError = 'Введите пароль';
+          passwordError = tr('sign_in_page.password_error');
         });
       }
     }
@@ -79,7 +80,7 @@ class _SignInPageState extends State<SignInPage> {
     return BlocProvider(
       create: (context) => AuthBloc(AuthRepository()),
       child: BasePopup(
-        text: 'Вход',
+        text: tr('sign_in_page.title'),
         onPressed: () {
           Navigator.of(context).pop();
         },
@@ -94,7 +95,7 @@ class _SignInPageState extends State<SignInPage> {
                     children: [
                       CustomTextField(
                         controller: usernameController,
-                        labelText: 'Электронная почта',
+                        labelText: tr('sign_in_page.email_label'),
                         isJoined: true,
                         joinPosition: JoinPosition.top,
                         errorMessage:
@@ -105,7 +106,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       CustomTextField(
                         controller: passwordController,
-                        labelText: 'Пароль',
+                        labelText: tr('sign_in_page.password_label'),
                         obscureText: true,
                         isJoined: true,
                         joinPosition: JoinPosition.bottom,
@@ -136,11 +137,11 @@ class _SignInPageState extends State<SignInPage> {
                       TextButton(
                         onPressed: () {
                           widget.pageController.animateToPage(2,
-                              duration: const Duration(milliseconds: 3),
+                              duration: const Duration(milliseconds: 300),
                               curve: Curves.easeInOut);
                         },
                         child: Text(
-                          'Забыли пароль?',
+                          tr('sign_in_page.forgot_password_link'),
                           style: context.text.bodyText12Grey
                               .copyWith(fontSize: 14),
                         ),
@@ -172,14 +173,14 @@ class _SignInPageState extends State<SignInPage> {
                       // Если ошибка связана с неправильным логином или паролем
                       if (state.message.contains('400')) {
                         setState(() {
-                          generalError = 'Неверный логин или пароль';
+                          generalError = tr('sign_in_page.login_error');
                         });
                       }
                     }
                   },
                   builder: (context, state) {
                     return CustomButton(
-                      text: 'Войти',
+                      text: tr('sign_in_page.login_button'),
                       onPressed: () {
                         _onSubmit(context); // Валидация и отправка
                       },
@@ -188,13 +189,22 @@ class _SignInPageState extends State<SignInPage> {
                   },
                 ),
                 const SizedBox(height: 24.0),
-                const TextWithLines(text: 'или с помощью'),
+                TextWithLines(text: tr('sign_in_page.alternative_sign_in')),
                 const SizedBox(height: 24),
-                RegistrationServicesButton(text: 'Apple ID', onPressed: () {}),
+                RegistrationServicesButton(
+                  text: tr('sign_in_page.apple_id_button'),
+                  onPressed: () {},
+                ),
                 const SizedBox(height: 12),
-                RegistrationServicesButton(text: 'Google', onPressed: () {}),
+                RegistrationServicesButton(
+                  text: tr('sign_in_page.google_button'),
+                  onPressed: () {},
+                ),
                 const SizedBox(height: 12),
-                RegistrationServicesButton(text: 'Facebook', onPressed: () {}),
+                RegistrationServicesButton(
+                  text: tr('sign_in_page.facebook_button'),
+                  onPressed: () {},
+                ),
                 const SizedBox(height: 24.0),
                 TextButton(
                   onPressed: () {
@@ -202,7 +212,7 @@ class _SignInPageState extends State<SignInPage> {
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut);
                   },
-                  child: Text('Зарегистрироваться',
+                  child: Text(tr('sign_in_page.register_link'),
                       style: context.text.bodyText16White),
                 ),
               ],

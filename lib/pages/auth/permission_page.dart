@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -47,7 +48,7 @@ class RegistrationPage5 extends StatelessWidget {
       },
       builder: (context, state) {
         return BasePopup(
-          text: 'Доступ',
+          text: tr('registration_page.permissions_title'),
           arrow: false,
           onPressed: () {
             pageController.animateToPage(2,
@@ -57,15 +58,17 @@ class RegistrationPage5 extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const PermissionWidget(
-                text: 'Для создания и добавления фото',
-                headLineText: 'Камера',
+              PermissionWidget(
+                text: tr('registration_page.camera_permission_text'),
+                headLineText:
+                    tr('registration_page.camera_permission_headline'),
                 svg: 'assets/images/camera_icon.svg',
               ),
               const SizedBox(height: 24),
-              const PermissionWidget(
-                text: 'Чтобы не пропустить важное',
-                headLineText: 'Уведомления',
+              PermissionWidget(
+                text: tr('registration_page.notifications_permission_text'),
+                headLineText:
+                    tr('registration_page.notifications_permission_headline'),
                 svg: 'assets/images/notifications_icon.svg',
               ),
               const SizedBox(height: 24),
@@ -76,7 +79,7 @@ class RegistrationPage5 extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 6.0),
                       child: CustomButton(
-                        text: 'Отказаться',
+                        text: tr('registration_page.decline_button'),
                         grey: true,
                         onPressed: () {
                           context.read<AuthBloc>().add(CheckAuthStatus());
@@ -97,7 +100,7 @@ class RegistrationPage5 extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 6.0),
                       child: CustomButton(
-                        text: 'Подтвердить',
+                        text: tr('registration_page.confirm_button'),
                         onPressed: () {
                           _requestPermissions(context);
                         },

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,7 +36,8 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
 
     if (code.isEmpty) {
       setState(() {
-        codeError = 'Введите код подтверждения'; // Если поле пустое
+        codeError = tr(
+            'registration_page.enter_code_error'); // Локализованное сообщение об ошибке пустого поля кода
       });
       return;
     }
@@ -65,14 +67,15 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
         } else if (state is AuthError) {
           Navigator.pop(context); // Закрываем диалог загрузки
           setState(() {
-            codeError =
-                'Неверный код подтверждения'; // Ошибка если код неверный
+            codeError = tr(
+                'registration_page.invalid_code_error'); // Локализованное сообщение об ошибке неверного кода
           });
         }
       },
       builder: (context, state) {
         return BasePopup(
-          text: 'Код подтверждения',
+          text: tr('registration_page.confirmation_code_title'),
+          // Локализованный заголовок "Код подтверждения"
           onPressed: () {
             widget.pageController.animateToPage(0,
                 duration: const Duration(milliseconds: 300),
@@ -82,14 +85,17 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
             mainAxisSize: MainAxisSize.min,
             children: [
               CenterText(
-                text: 'Мы отправили код на почту ${widget.email}',
+                text: tr('registration_page.code_sent_description',
+                    args: [widget.email]),
+                // Локализованное сообщение о том, что код отправлен на email
                 padding: 60,
               ),
               const SizedBox(height: 24),
               CustomTextField(
-                labelText: 'Код',
+                labelText: tr('registration_page.code_label'),
+                // Локализованное поле "Код"
                 controller: codeController,
-                errorMessage: codeError, // Отображаем ошибку
+                errorMessage: codeError, // Отображение ошибки
               ),
               const SizedBox(height: 24.0),
               TimerWidget(
@@ -99,7 +105,8 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
               ),
               const SizedBox(height: 24),
               CustomButton(
-                text: 'Подтвердить',
+                text: tr('registration_page.submit_button'),
+                // Локализованная кнопка "Подтвердить"
                 onPressed: () {
                   _onSubmit(context); // Проверка и отправка
                 },

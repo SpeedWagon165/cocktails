@@ -1,6 +1,7 @@
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/auth/custom_auth_textfield.dart';
 import 'package:cocktails/widgets/home/create_cocktail_widgets/solid_add_photo_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/custom_arrowback.dart';
@@ -22,7 +23,7 @@ class NewRecipePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const CustomArrowBack(
-                  text: 'Новый рецепт',
+                  text: 'new_recipe.title', // локализованная строка
                   arrow: true,
                   onPressed: null,
                 ),
@@ -30,7 +31,7 @@ class NewRecipePage extends StatelessWidget {
                   height: 27,
                 ),
                 Text(
-                  'Фото',
+                  tr('new_recipe.photo'), // локализованная строка
                   style: context.text.bodyText14White.copyWith(fontSize: 18),
                 ),
                 const SizedBox(height: 12),
@@ -42,16 +43,16 @@ class NewRecipePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Видео',
+                  tr('new_recipe.video'), // локализованная строка
                   style: context.text.bodyText14White.copyWith(fontSize: 18),
                 ),
                 const SizedBox(height: 12),
                 const CustomTextField(
-                  labelText: 'Ссылка на YouTube видео',
+                  labelText: 'new_recipe.youtube_link', // локализованная строка
                 ),
                 const SizedBox(height: 24),
                 const CustomTextField(
-                  labelText: 'Описание',
+                  labelText: 'new_recipe.description', // локализованная строка
                   expandText: true,
                 ),
                 const SizedBox(
@@ -66,16 +67,21 @@ class NewRecipePage extends StatelessWidget {
                     ),
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
                       ChangeCocktailTile(
-                        name: 'Алкогольные напитки',
+                        name: tr('new_recipe.alcoholic_drinks'),
+                        // локализованная строка
                         onTap: () {
                           alcoChoicePopUp(context);
                         },
                       ),
-                      ChangeCocktailTile(name: 'Б/а напитки'),
-                      ChangeCocktailTile(name: 'Продукты'),
-                      ChangeCocktailTile(name: 'Инструменты'),
                       ChangeCocktailTile(
-                        name: 'Шаги приготовления',
+                          name: tr('new_recipe.non_alcoholic_drinks')),
+                      // локализованная строка
+                      ChangeCocktailTile(name: tr('new_recipe.ingredients')),
+                      // локализованная строка
+                      ChangeCocktailTile(name: tr('new_recipe.tools')),
+                      // локализованная строка
+                      ChangeCocktailTile(
+                        name: tr('new_recipe.steps'), // локализованная строка
                         border: false,
                       ),
                     ])),
@@ -87,7 +93,7 @@ class NewRecipePage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 6.0),
                         child: CustomButton(
-                          text: 'Отмена',
+                          text: tr('buttons.cancel'), // локализованная строка
                           grey: true,
                           onPressed: () {
                             Navigator.pop(context);
@@ -100,7 +106,7 @@ class NewRecipePage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 6.0),
                         child: CustomButton(
-                          text: 'Сохранить',
+                          text: tr('buttons.save'), // локализованная строка
                           onPressed: () {},
                           single: false,
                         ),

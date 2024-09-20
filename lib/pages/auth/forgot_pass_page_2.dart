@@ -1,4 +1,5 @@
 import 'package:cocktails/widgets/base_pop_up.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,13 +44,15 @@ class _ForgotPassPage2State extends State<ForgotPassPage2> {
                   curve: Curves.easeInOut);
             } else if (state is AuthError) {
               setState(() {
-                errorMessage = "Неверный код подтверждения";
+                errorMessage = tr(
+                    'forgot_password_page.invalid_code_error'); // Локализованная ошибка "Неверный код"
               });
             }
           },
           builder: (context, state) {
             return BasePopup(
-              text: 'Код подтверждения',
+              text: tr('forgot_password_page.code_title'),
+              // Локализованная строка "Код подтверждения"
               onPressed: () {
                 widget.pageController.animateToPage(0,
                     duration: const Duration(milliseconds: 300),
@@ -59,12 +62,15 @@ class _ForgotPassPage2State extends State<ForgotPassPage2> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CenterText(
-                    text: 'Мы отправили код на почту ${widget.email}',
+                    text: tr('forgot_password_page.code_sent_description',
+                        namedArgs: {'email': widget.email}),
+                    // Локализованная строка "Мы отправили код на почту {email}"
                     padding: 60,
                   ),
                   const SizedBox(height: 24),
                   CustomTextField(
-                    labelText: 'Код',
+                    labelText: tr('forgot_password_page.code_label'),
+                    // Локализованная строка "Код"
                     controller: codeController,
                     errorMessage: errorMessage, // Ошибка кода
                   ),
@@ -76,13 +82,15 @@ class _ForgotPassPage2State extends State<ForgotPassPage2> {
                   ),
                   const SizedBox(height: 24),
                   CustomButton(
-                    text: 'Подтвердить',
+                    text: tr('forgot_password_page.submit_code'),
+                    // Локализованная строка "Подтвердить"
                     onPressed: () {
                       final code = codeController.text.trim();
 
                       if (code.isEmpty) {
                         setState(() {
-                          errorMessage = 'Введите код подтверждения';
+                          errorMessage = tr(
+                              'forgot_password_page.enter_code_error'); // Локализованная ошибка "Введите код подтверждения"
                         });
                       } else {
                         setState(() {

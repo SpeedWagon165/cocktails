@@ -1,5 +1,6 @@
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/coctail_card_widgets/tool_list_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/cocktail_list_model.dart';
@@ -16,7 +17,7 @@ class ToolsListBuilder extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          "Необходимые инструменты",
+          tr('tools_list.title'), // Локализованный заголовок
           overflow: TextOverflow.clip,
           style: context.text.bodyText16White.copyWith(fontSize: 18),
         ),

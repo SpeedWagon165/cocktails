@@ -1,6 +1,6 @@
 import "package:cocktails/theme/theme_extensions.dart";
-import "package:cocktails/widgets/bonus_story_list/bonus_story_widget.dart";
 import "package:cocktails/widgets/custom_button.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -26,7 +26,7 @@ class _BonusScreenState extends State<BonusScreen> {
             children: [
               CustomArrowBack(
                 auth: true,
-                text: "Мои баллы",
+                text: tr('bonus_screen.title'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -34,13 +34,15 @@ class _BonusScreenState extends State<BonusScreen> {
               const SizedBox(height: 46.0),
               BlocBuilder<ProfileBloc, ProfileState>(
                 builder: (context, state) {
-                  String points = '0 баллов';
+                  String points = tr('bonus_screen.no_points');
 
                   if (state is ProfileLoaded) {
                     final profile = state.profileData;
-                    final pointsCount = profile['points']; // Количество баллов
+                    final pointsCount =
+                        profile['points'] ?? 0; // Количество баллов
 
-                    points = '$pointsCount баллов';
+                    points = tr('bonus_screen.points',
+                        namedArgs: {'points': pointsCount.toString()});
                   }
 
                   return Container(
@@ -56,12 +58,15 @@ class _BonusScreenState extends State<BonusScreen> {
               ),
               const SizedBox(height: 45.0),
               CustomButton(
-                  text: "Обменять баллы",
-                  single: true,
-                  onPressed: () {},
-                  gradient: true),
+                text: tr('bonus_screen.redeem_points_button'),
+                single: true,
+                onPressed: () {
+                  // Логика обмена баллов
+                },
+                gradient: true,
+              ),
               const SizedBox(height: 45.0),
-              const BonusStoryWidget(),
+              // const BonusStoryWidget(),
             ],
           ),
         ),

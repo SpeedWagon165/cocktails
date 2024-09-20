@@ -1,5 +1,6 @@
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/bonus_story_list/bonus_story_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class BonusStoryWidget extends StatefulWidget {
@@ -21,7 +22,7 @@ class _BonusStoryWidgetState extends State<BonusStoryWidget> {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              "История",
+              tr('bonus_screen.history'), // Локализуем заголовок
               textAlign: TextAlign.start,
               style:
                   context.text.buttonText18Brown.copyWith(color: Colors.white),

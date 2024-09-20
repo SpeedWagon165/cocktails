@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,7 +38,8 @@ class ChangePasswordStep2State extends State<ChangePasswordStep2> {
 
     if (code.isEmpty) {
       setState(() {
-        codeError = 'Введите код подтверждения'; // Проверка на пустое поле
+        codeError =
+            tr("change_pass_pages.enter_code"); // Локализованный текст ошибки
       });
     } else {
       // Отправка кода на сервер для подтверждения
@@ -63,7 +65,8 @@ class ChangePasswordStep2State extends State<ChangePasswordStep2> {
           ));
         } else if (state is AuthError) {
           setState(() {
-            codeError = 'Неверный код подтверждения'; // Обработка ошибки
+            codeError =
+                tr("change_pass_pages.wrong_code"); // Локализованная ошибка
           });
         }
       },
@@ -77,21 +80,24 @@ class ChangePasswordStep2State extends State<ChangePasswordStep2> {
               padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
               child: Column(
                 children: [
-                  const CustomArrowBack(
-                    text: 'Смена пароля',
+                  CustomArrowBack(
+                    text: tr("change_pass_pages.change_pass"),
+                    // Локализация текста "Смена пароля"
                     arrow: true,
                     auth: false,
                     onPressed: null,
                   ),
                   const SizedBox(height: 33),
                   CenterText(
-                    text: 'Мы отправили код на почту ${widget.email}',
+                    text: tr('change_pass_pages.code_sent',
+                        namedArgs: {'email': widget.email}),
                     padding: 60,
                     pop: false,
                   ),
                   const SizedBox(height: 24),
                   CustomTextField(
-                    labelText: 'Код',
+                    labelText: tr("change_pass_pages.confirmation_code"),
+                    // Локализация для поля "Код"
                     controller: codeController,
                     errorMessage: codeError, // Отображаем ошибку для кода
                   ),
@@ -103,8 +109,10 @@ class ChangePasswordStep2State extends State<ChangePasswordStep2> {
                   ),
                   const SizedBox(height: 29),
                   CustomButton(
-                    text: 'Подтвердить',
-                    onPressed: _onSubmit, // Обработчик нажатия с проверкой кода
+                    text: tr('buttons.confirm'),
+                    // Локализация кнопки "Подтвердить"
+                    onPressed: _onSubmit,
+                    // Обработчик нажатия с проверкой кода
                     single: true,
                   ),
                 ],

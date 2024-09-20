@@ -1,4 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,7 +16,7 @@ void exitAccount(BuildContext context) {
     backgroundColor: Colors.transparent,
     builder: (context) {
       return BasePopup(
-        text: 'Выход',
+        text: tr('exit_account.title'), // Локализованный текст "Выход"
         arrow: false,
         onPressed: () {
           Navigator.pop(context);
@@ -23,7 +24,8 @@ void exitAccount(BuildContext context) {
         child: Column(
           children: [
             Text(
-              'Вы уверены, что хотите выйти из приложения?',
+              tr('exit_account.confirmation'),
+              // Локализованный текст "Вы уверены, что хотите выйти?"
               style: context.text.bodyText12Grey
                   .copyWith(fontSize: 16, height: 1.5),
             ),
@@ -37,7 +39,8 @@ void exitAccount(BuildContext context) {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 6.0),
                     child: CustomButton(
-                      text: 'Выйти',
+                      text: tr('buttons.sign_out'),
+                      // Локализованный текст "Выйти"
                       grey: true,
                       onPressed: () {
                         BlocProvider.of<AuthBloc>(context)
@@ -57,7 +60,8 @@ void exitAccount(BuildContext context) {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 6.0),
                     child: CustomButton(
-                      text: 'Отмена',
+                      text: tr('buttons.cancel'),
+                      // Локализованный текст "Отмена"
                       onPressed: () {
                         Navigator.pop(context);
                       },

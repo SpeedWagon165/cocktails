@@ -1,4 +1,5 @@
 import 'package:cocktails/widgets/base_pop_up.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class CocktailSelectionStep1State extends State<CocktailSelectionStep1> {
   @override
   Widget build(BuildContext context) {
     return BasePopup(
-      text: 'Подбор коктейля',
+      text: tr("cocktail_selection_page.cocktail_selection"),
       onPressed: null,
       arrow: false,
       child: Column(
@@ -59,7 +60,7 @@ class CocktailSelectionStep1State extends State<CocktailSelectionStep1> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: CustomButton(
-                    text: 'Отмена',
+                    text: tr("buttons.cancel"),
                     grey: true,
                     onPressed: () {
                       Navigator.pop(context);
@@ -72,7 +73,7 @@ class CocktailSelectionStep1State extends State<CocktailSelectionStep1> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: CustomButton(
-                    text: 'Подтвердить',
+                    text: tr("buttons.confirm"),
                     onPressed: () {
                       widget.pageController.animateToPage(
                         1,

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cocktails/pages/account/popups/exit_account_pop_up.dart';
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image/image.dart' as img;
@@ -77,8 +78,9 @@ class _EditingAccountPageState extends State<EditingAccountPage> {
           child: BlocProvider(
             create: (_) => _profileBloc,
             child: Column(children: [
-              const CustomArrowBack(
-                text: 'Редактирование',
+              CustomArrowBack(
+                text: tr('edit_profile_page.title'),
+                // Локализованная строка "Редактирование"
                 arrow: true,
                 auth: false,
                 onPressed: null,
@@ -91,7 +93,8 @@ class _EditingAccountPageState extends State<EditingAccountPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 100.0),
                 child: CustomRegistrationButton(
-                  text: 'Загрузить фото',
+                  text: tr('edit_profile_page.upload_photo'),
+                  // Локализованная строка "Загрузить фото"
                   icon: 'assets/images/upload_icon.svg',
                   onTap: _pickImage,
                   haveIcon: true,
@@ -109,7 +112,7 @@ class _EditingAccountPageState extends State<EditingAccountPage> {
                   if (state is ProfileLoaded) {
                     final profile = state.profileData;
                     firstName = profile['first_name'] ?? 'Нет данных';
-                    lastName = profile['last_name'] ?? 'Нет данных';
+                    lastName = profile['last_name'] ?? '';
                     email = profile['email'] ?? 'Нет данных';
                     gender = profile['gender'] ?? 'Нет данных';
                     dateOfBirth = profile['date_of_birth'] ?? 'Нет данных';
@@ -118,31 +121,36 @@ class _EditingAccountPageState extends State<EditingAccountPage> {
                   return Column(
                     children: [
                       AccountInformationWidget(
-                        labelText: 'Имя',
+                        labelText: tr('edit_profile_page.first_name'),
+                        // Локализованная строка "Имя"
                         infoText: firstName,
                         joinPosition: JoinPosition.top,
                         isJoined: true,
                       ),
                       AccountInformationWidget(
-                        labelText: 'Фамилия',
+                        labelText: tr('edit_profile_page.last_name'),
+                        // Локализованная строка "Фамилия"
                         infoText: lastName,
                         joinPosition: JoinPosition.none,
                         isJoined: true,
                       ),
                       AccountInformationWidget(
-                        labelText: 'Эл. почта',
+                        labelText: tr('edit_profile_page.email'),
+                        // Локализованная строка "Эл. почта"
                         infoText: email,
                         joinPosition: JoinPosition.none,
                         isJoined: true,
                       ),
                       AccountInformationWidget(
-                        labelText: 'Пол',
+                        labelText: tr('edit_profile_page.gender'),
+                        // Локализованная строка "Пол"
                         infoText: gender,
                         joinPosition: JoinPosition.none,
                         isJoined: true,
                       ),
                       AccountInformationWidget(
-                        labelText: 'Дата рождения',
+                        labelText: tr('edit_profile_page.date_of_birth'),
+                        // Локализованная строка "Дата рождения"
                         infoText: dateOfBirth,
                         joinPosition: JoinPosition.bottom,
                         isJoined: true,
@@ -168,7 +176,8 @@ class _EditingAccountPageState extends State<EditingAccountPage> {
                         width: 1.3,
                       )),
                   child: Text(
-                    'Выйти из аккаунта',
+                    tr('edit_profile_page.log_out'),
+                    // Локализованная строка "Выйти из аккаунта"
                     style: context.text.bodyText16White.copyWith(fontSize: 15),
                   ),
                 ),

@@ -1,4 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,21 +48,24 @@ class _ForgotPassPage3State extends State<ForgotPassPage3> {
 
     if (password.isEmpty || password.length < 8) {
       setState(() {
-        passwordError = 'Пароль должен содержать минимум 8 символов';
+        passwordError = tr(
+            'forgot_password_page.password_error'); // Локализованная ошибка для короткого пароля
       });
       isValid = false;
     }
 
     if (confirmPassword.isEmpty) {
       setState(() {
-        confirmPasswordError = 'Повторите пароль';
+        confirmPasswordError = tr(
+            'forgot_password_page.confirm_password_error'); // Локализованная ошибка для пустого поля подтверждения
       });
       isValid = false;
     }
 
     if (password != confirmPassword) {
       setState(() {
-        generalError = 'Пароли не совпадают';
+        generalError = tr(
+            'forgot_password_page.password_mismatch_error'); // Локализованная ошибка для несовпадающих паролей
         isValid = false;
       });
     }
@@ -102,7 +106,8 @@ class _ForgotPassPage3State extends State<ForgotPassPage3> {
       },
       builder: (context, state) {
         return BasePopup(
-          text: 'Новый пароль',
+          text: tr('forgot_password_page.create_password_title'),
+          // Локализованный заголовок "Новый пароль"
           onPressed: () {
             widget.pageController.animateToPage(2,
                 duration: const Duration(milliseconds: 300),
@@ -111,29 +116,31 @@ class _ForgotPassPage3State extends State<ForgotPassPage3> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CenterText(
-                text: 'Создайте пароль для вашего аккаунта',
+              CenterText(
+                text: tr('forgot_password_page.create_password_description'),
+                // Локализованное описание
                 padding: 60,
               ),
               const SizedBox(height: 24),
               CustomTextField(
-                labelText: 'Новый пароль',
+                labelText: tr('forgot_password_page.new_password_label'),
+                // Локализованное поле "Новый пароль"
                 obscureText: true,
                 isJoined: true,
                 joinPosition: JoinPosition.top,
                 controller: passwordController,
                 errorMessage: passwordError,
-                // Отображаем ошибку пароля
                 showRedBorder: generalError != null,
               ),
               CustomTextField(
-                labelText: 'Повторите новый пароль',
+                labelText:
+                    tr('forgot_password_page.confirm_new_password_label'),
+                // Локализованное поле "Повторите новый пароль"
                 obscureText: true,
                 isJoined: true,
                 joinPosition: JoinPosition.bottom,
                 controller: confirmPasswordController,
                 errorMessage: confirmPasswordError,
-                // Ошибка повторного пароля
                 showRedBorder: generalError != null,
               ),
               if (generalError != null)
@@ -147,7 +154,8 @@ class _ForgotPassPage3State extends State<ForgotPassPage3> {
                 ),
               const SizedBox(height: 24),
               CustomButton(
-                text: 'Войти',
+                text: tr('forgot_password_page.login_button'),
+                // Локализованная кнопка "Войти"
                 onPressed: () => _onSubmit(context),
                 single: true,
               ),

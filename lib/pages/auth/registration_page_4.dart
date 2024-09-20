@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,7 +33,6 @@ class RegistrationPage4 extends StatelessWidget {
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
-    // Переменные для хранения ошибок
     String? passwordError;
     String? confirmPasswordError;
 
@@ -40,7 +40,7 @@ class RegistrationPage4 extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return BasePopup(
-          text: 'Пароль',
+          text: tr('registration_page.password_title'),
           onPressed: () {
             pageController.animateToPage(2,
                 duration: const Duration(milliseconds: 300),
@@ -51,66 +51,64 @@ class RegistrationPage4 extends StatelessWidget {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const CenterText(
-                    text: 'Создайте пароль для вашего аккаунта',
+                  CenterText(
+                    text: tr('registration_page.create_password_description'),
                     padding: 60,
                   ),
                   const SizedBox(height: 24),
                   CustomTextField(
-                    labelText: 'Пароль',
+                    labelText: tr('registration_page.password_label'),
                     obscureText: true,
                     controller: passwordController,
                     isJoined: true,
                     joinPosition: JoinPosition.top,
-                    errorMessage: passwordError, // Ошибка для пароля
+                    errorMessage: passwordError,
                   ),
                   CustomTextField(
-                    labelText: 'Повторите пароль',
+                    labelText: tr('registration_page.confirm_password_label'),
                     obscureText: true,
                     controller: confirmPasswordController,
                     isJoined: true,
                     joinPosition: JoinPosition.bottom,
-                    errorMessage:
-                        confirmPasswordError, // Ошибка для подтверждения пароля
+                    errorMessage: confirmPasswordError,
                   ),
                   const SizedBox(height: 24),
                   CustomButton(
-                    text: 'Зарегистрироваться',
+                    text: tr('registration_page.register_button'),
                     gradient: true,
                     onPressed: () {
                       final password = passwordController.text;
                       final confirmPassword = confirmPasswordController.text;
 
-                      // Сброс ошибок перед валидацией
                       setState(() {
                         passwordError = null;
                         confirmPasswordError = null;
                       });
 
-                      // Проверка пароля
                       if (password.isEmpty) {
                         setState(() {
-                          passwordError = 'Введите пароль';
+                          passwordError =
+                              tr('registration_page.password_error');
                         });
                       } else if (password.length < 8) {
                         setState(() {
                           passwordError =
-                              'Пароль должен содержать не менее 8 символов';
+                              tr('registration_page.password_too_short_error');
                         });
                       }
 
-                      // Проверка подтверждения пароля
                       if (confirmPassword.isEmpty) {
                         setState(() {
-                          confirmPasswordError = 'Введите подтверждение пароля';
+                          confirmPasswordError =
+                              tr('registration_page.confirm_password_error');
                         });
                       } else if (password != confirmPassword) {
                         setState(() {
-                          confirmPasswordError = 'Пароли не совпадают';
+                          confirmPasswordError =
+                              tr('registration_page.password_mismatch_error');
                         });
                       }
 
-                      // Если ошибок нет, регистрируем пользователя
                       if (passwordError == null &&
                           confirmPasswordError == null) {
                         context.read<AuthBloc>().add(

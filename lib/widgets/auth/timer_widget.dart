@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 
 class TimerWidget extends StatefulWidget {
@@ -53,11 +54,16 @@ class _TimerWidgetState extends State<TimerWidget> {
           text: TextSpan(
             children: [
               TextSpan(
-                text: 'Повторная отправка ',
+                text: tr('timer.time_left'), // Статичный текст
                 style: context.text.bodyText16White,
               ),
               TextSpan(
-                text: 'кода через 00:${_start.toString().padLeft(2, '0')}',
+                text: tr(
+                  'timer.time_left_seconds',
+                  namedArgs: {
+                    'seconds': _start.toString().padLeft(2, '0')
+                  }, // Передаем список
+                ),
                 style: context.text.bodyText12Grey.copyWith(fontSize: 16),
               ),
             ],

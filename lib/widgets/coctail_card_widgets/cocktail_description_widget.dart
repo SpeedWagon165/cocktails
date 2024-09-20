@@ -1,4 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class CocktailDescriptionWidget extends StatelessWidget {
@@ -22,7 +23,7 @@ class CocktailDescriptionWidget extends StatelessWidget {
       child: ExpansionTile(
         title: Text(
           textAlign: TextAlign.start,
-          "Описание",
+          tr("new_recipe.description"),
           style: context.text.bodyText16White.copyWith(fontSize: 18.0),
         ),
         expandedAlignment: Alignment.centerLeft,

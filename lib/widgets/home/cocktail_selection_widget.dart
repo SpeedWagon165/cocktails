@@ -1,4 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,8 +36,10 @@ class CocktailSelectionViewState extends State<CocktailSelectionView> {
             ),
             Text(
               widget.step
-                  ? 'Выберете основу коктейля:'
-                  : 'Дополнительные ингредиенты:',
+                  ? tr(
+                      'cocktail_selection.step_base') // Локализованный текст для шага
+                  : tr('cocktail_selection.additional_ingredients'),
+              // Локализованный текст для дополнительных ингредиентов
               style: context.text.bodyText16White,
             ),
             const SizedBox(
@@ -98,7 +101,7 @@ class CocktailSelectionViewState extends State<CocktailSelectionView> {
                 child: const Icon(
                   Icons.close_rounded,
                   color: Color(0xff3E3E3E),
-                  size: 16, // Увеличиваем размер иконки
+                  size: 16,
                 ),
               ),
               onDeleted: () {
@@ -127,7 +130,11 @@ class CocktailSelectionViewState extends State<CocktailSelectionView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    showAll ? 'Скрыть' : 'Смотреть все',
+                    showAll
+                        ? tr(
+                            'cocktail_selection.hide') // Локализованное "Скрыть"
+                        : tr('cocktail_selection.show_all'),
+                    // Локализованное "Смотреть все"
                     style: context.text.bodyText16White
                         .copyWith(color: const Color(0xffB7B7B7)),
                   ),
@@ -170,16 +177,15 @@ class CocktailSelectionViewState extends State<CocktailSelectionView> {
         ),
         child: ExpansionTile(
           title: Text(
-            '$category  (${state.selectedItems[category]?.length ?? 0} выбрано)',
+            '$category  (${state.selectedItems[category]?.length ?? 0} ${tr('cocktail_selection.selected')})',
+            // Локализованный текст с количеством выбранных
             style: context.text.bodyText16White,
           ),
-
           tilePadding:
               const EdgeInsets.symmetric(horizontal: 14.0, vertical: 4.0),
           childrenPadding: const EdgeInsets.symmetric(
             horizontal: 14.0,
           ),
-          // Увеличиваем размер категорий
           children: [
             Container(
               decoration: BoxDecoration(

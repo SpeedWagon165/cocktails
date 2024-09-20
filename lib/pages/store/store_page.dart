@@ -1,4 +1,5 @@
 import 'package:cocktails/pages/store/product_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,8 +21,8 @@ class StorePage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
             child: Column(
               children: [
-                const CustomArrowBack(
-                  text: 'Магазин',
+                CustomArrowBack(
+                  text: tr('store.title'), // локализованная строка
                   arrow: false,
                   auth: false,
                   onPressed: null,
@@ -51,7 +52,9 @@ class StorePage extends StatelessWidget {
                       } else if (state is GoodsError) {
                         return Center(child: Text(state.message));
                       }
-                      return const Center(child: Text('Нет данных'));
+                      return Center(
+                          child: Text(tr(
+                              'store.empty_message'))); // локализованная строка
                     },
                   ),
                 ),

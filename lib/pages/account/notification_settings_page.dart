@@ -1,4 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,8 +22,9 @@ class NotificationSetupPageState extends State<NotificationSetupPage> {
         child: Padding(
           padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
           child: Column(children: [
-            const CustomArrowBack(
-              text: 'Уведомления',
+            CustomArrowBack(
+              text: tr('notifications_page.title'),
+              // Локализованная строка "Уведомления"
               arrow: true,
               auth: false,
               onPressed: null,
@@ -36,25 +38,27 @@ class NotificationSetupPageState extends State<NotificationSetupPage> {
                   children: [
                     _buildCustomSwitch(
                       context,
-                      'Разрешить текстовые сообщения на телефоне',
+                      tr('notifications_page.sms_notifications'),
+                      // Локализованная строка "Разрешить текстовые сообщения на телефоне"
                       state.smsNotificationsEnabled,
                       (value) {
                         context
                             .read<NotificationSettingsBloc>()
                             .add(ToggleSmsNotificationEvent());
                       },
-                      activeColor: Color(0xFFFFBA08),
+                      activeColor: const Color(0xFFFFBA08),
                     ),
                     _buildCustomSwitch(
                       context,
-                      'Пуш уведомления',
+                      tr('notifications_page.push_notifications'),
+                      // Локализованная строка "Пуш уведомления"
                       state.pushNotificationsEnabled,
                       (value) {
                         context
                             .read<NotificationSettingsBloc>()
                             .add(TogglePushNotificationEvent());
                       },
-                      activeColor: Color(0xFF6C6C6C),
+                      activeColor: const Color(0xFF6C6C6C),
                     ),
                   ],
                 );

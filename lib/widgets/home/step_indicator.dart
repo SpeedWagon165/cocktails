@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_stepper/easy_stepper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -39,7 +39,8 @@ class StepIndicator extends StatelessWidget {
       unreachedStepBorderColor: Colors.white.withOpacity(0.2),
       steps: [
         EasyStep(
-          title: 'Алкоголь',
+          title: tr('step_indicator.alcohol'),
+          // Локализованный текст для первого шага
           customStep: activeStep <= 0
               ? Center(
                   child: Container(
@@ -58,7 +59,8 @@ class StepIndicator extends StatelessWidget {
                 ),
         ),
         EasyStep(
-          title: 'Доп. ингредиенты',
+          title: tr('step_indicator.additional_ingredients'),
+          // Локализованный текст для второго шага
           customStep: activeStep <= 1
               ? Center(
                   child: Container(
@@ -78,7 +80,8 @@ class StepIndicator extends StatelessWidget {
                 ),
         ),
         EasyStep(
-          title: 'Подбор',
+          title: tr('step_indicator.selection'),
+          // Локализованный текст для третьего шага
           customStep: activeStep <= 2
               ? Center(
                   child: Container(
@@ -99,6 +102,5 @@ class StepIndicator extends StatelessWidget {
         ),
       ],
     );
-    ;
   }
 }

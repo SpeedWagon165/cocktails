@@ -1,5 +1,6 @@
 import 'package:cocktails/pages/account/support_service/support_service_page.dart';
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,8 +39,9 @@ class _AccountPageState extends State<AccountPage> {
           padding: const EdgeInsets.only(top: 15, left: 14),
           child: Column(
             children: [
-              const CustomArrowBack(
-                text: 'Аккаунт',
+              CustomArrowBack(
+                text: tr('account_page.title'),
+                // Локализованный заголовок "Аккаунт"
                 arrow: false,
                 auth: false,
                 onPressed: null,
@@ -82,7 +84,8 @@ class _AccountPageState extends State<AccountPage> {
                                         style: context.text.headline24White),
                                     const SizedBox(height: 14),
                                     CustomRegistrationButton(
-                                      text: 'Редактировать',
+                                      text: tr('account_page.edit'),
+                                      // Локализованная строка "Редактировать"
                                       icon: 'assets/images/pen_icon.svg',
                                       onTap: () {
                                         Navigator.of(context).push(
@@ -101,7 +104,8 @@ class _AccountPageState extends State<AccountPage> {
                           } else {
                             // Если пользователь не авторизован, показываем кнопку "Зарегистрироваться"
                             return CustomRegistrationButton(
-                              text: 'Зарегистрироваться',
+                              text: tr('account_page.register'),
+                              // Локализованная строка "Зарегистрироваться"
                               onTap: () {
                                 authPopUp(context);
                               },
@@ -133,7 +137,8 @@ class _AccountPageState extends State<AccountPage> {
                         children: [
                           InfoTileAccount(
                             icon: 'assets/images/language_icon.svg',
-                            title: 'Язык',
+                            title: tr('account_page.language'),
+                            // Локализованная строка "Язык"
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const BonusScreen()));
@@ -142,7 +147,8 @@ class _AccountPageState extends State<AccountPage> {
                           const Divider(color: Color(0xff343434), height: 1),
                           InfoTileAccount(
                             icon: 'assets/images/pass_change_icon.svg',
-                            title: 'Пароль',
+                            title: tr('account_page.password'),
+                            // Локализованная строка "Пароль"
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
@@ -152,7 +158,8 @@ class _AccountPageState extends State<AccountPage> {
                           const Divider(color: Color(0xff343434), height: 1),
                           InfoTileAccount(
                             icon: 'assets/images/ion_mail-notification.svg',
-                            title: 'Уведомления',
+                            title: tr('account_page.notifications'),
+                            // Локализованная строка "Уведомления"
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
@@ -162,16 +169,36 @@ class _AccountPageState extends State<AccountPage> {
                           const Divider(color: Color(0xff343434), height: 1),
                           InfoTileAccount(
                             icon: 'assets/images/contact-support_icon.svg',
-                            title: 'Связатся с поддержкой',
+                            title: tr('account_page.support'),
+                            // Локализованная строка "Связаться с поддержкой"
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SupportServicePage()));
+                              final authState = context.read<AuthBloc>().state;
+
+                              if (authState is AuthAuthenticated) {
+                                final profileBlocState =
+                                    context.read<ProfileBloc>().state;
+
+                                if (profileBlocState is ProfileLoaded) {
+                                  final profileData =
+                                      profileBlocState.profileData;
+                                  final int userId = profileData[
+                                      'id']; // Получаем userId из профиля
+
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          SupportServicePage(userId: userId),
+                                    ),
+                                  );
+                                }
+                              }
                             },
                           ),
                           const Divider(color: Color(0xff343434), height: 1),
                           InfoTileAccount(
                             icon: 'assets/images/about_app_icon.svg',
-                            title: 'О приложении',
+                            title: tr('account_page.about_app'),
+                            // Локализованная строка "О приложении"
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const AboutAppPage()));
@@ -195,7 +222,8 @@ class _AccountPageState extends State<AccountPage> {
                         children: [
                           InfoTileAccount(
                             icon: 'assets/images/language_icon.svg',
-                            title: 'Язык',
+                            title: tr('account_page.language'),
+                            // Локализованная строка "Язык"
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const BonusScreen()));
@@ -204,7 +232,8 @@ class _AccountPageState extends State<AccountPage> {
                           const Divider(color: Color(0xff343434), height: 1),
                           InfoTileAccount(
                             icon: 'assets/images/about_app_icon.svg',
-                            title: 'О приложении',
+                            title: tr('account_page.about_app'),
+                            // Локализованная строка "О приложении"
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const AboutAppPage()));

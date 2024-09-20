@@ -1,4 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -55,7 +56,7 @@ class _CocktailCardButtonsState extends State<CocktailCardButtons> {
                     ],
                   )
                 : Text(
-                    "15 баллов",
+                    tr('bonus_screen.points', args: ['15']),
                     textAlign: TextAlign.center,
                     style:
                         context.text.buttonText18Brown.copyWith(fontSize: 14.0),
@@ -90,7 +91,9 @@ class _CocktailCardButtonsState extends State<CocktailCardButtons> {
                         ),
                   const SizedBox(width: 10.0),
                   Text(
-                    widget.isFavorite ? "В избранном" : "В избранное",
+                    widget.isFavorite
+                        ? tr('favorite_cocktails.in_favorites')
+                        : tr('favorite_cocktails.add_to_favorites'),
                     textAlign: TextAlign.center,
                     style: context.text.bodyText14White
                         .copyWith(color: Colors.white),

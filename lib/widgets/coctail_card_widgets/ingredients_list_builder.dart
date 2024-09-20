@@ -1,4 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/cocktail_list_model.dart';
@@ -16,16 +17,17 @@ class IngredientsListBuilder extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          "Ингредиенты",
+          tr('ingredients_list.title'), // Локализованный заголовок
           overflow: TextOverflow.clip,
           style: context.text.bodyText16White.copyWith(fontSize: 18),
         ),
         const SizedBox(height: 12.0),
         Container(
           decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFF343434), width: 1.0),
-              color: Colors.white.withOpacity(0.02),
-              borderRadius: BorderRadius.circular(10.0)),
+            border: Border.all(color: const Color(0xFF343434), width: 1.0),
+            color: Colors.white.withOpacity(0.02),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -39,9 +41,8 @@ class IngredientsListBuilder extends StatelessWidget {
                     type: ingredient.type,
                     title: ingredient.name,
                     count: ingredient.quantity,
-                    // Используем количество ингредиента
                     border:
-                        index == cocktail.ingredientCount! - 1 ? false : true,
+                        index == cocktail.ingredientCount - 1 ? false : true,
                   );
                 },
               ),

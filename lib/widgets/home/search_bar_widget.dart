@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,9 +27,9 @@ class CustomSearchBar extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
-              decoration: const InputDecoration(
-                hintText: 'Найти',
-                hintStyle: TextStyle(color: Colors.white54),
+              decoration: InputDecoration(
+                hintText: tr("search.search"),
+                hintStyle: const TextStyle(color: Colors.white54),
                 border: InputBorder.none,
               ),
               style: const TextStyle(color: Colors.white),
@@ -71,7 +72,6 @@ class CustomSearchBar extends StatelessWidget {
               },
             ),
           ),
-          const Icon(Icons.mic, color: Colors.white54),
         ],
       ),
     );

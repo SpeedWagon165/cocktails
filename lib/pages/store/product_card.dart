@@ -1,5 +1,6 @@
 import 'package:cocktails/pages/store/popups/product_page.dart';
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
@@ -58,7 +59,9 @@ class ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'от ${price.toStringAsFixed(0)}₽',
+                  tr('store.price_from',
+                      namedArgs: {'count': price.toStringAsFixed(0)}),
+                  // Локализованная строка
                   style: context.text.bodyText12Grey.copyWith(fontSize: 15),
                 ),
                 const SizedBox(height: 12),
@@ -81,7 +84,7 @@ class ProductCard extends StatelessWidget {
                         productPagePopUp(context, product);
                       },
                       child: Text(
-                        'Заказать',
+                        tr('store.order_now'), // Локализованная строка
                         style: context.text.bodyText14White,
                       ),
                     ),

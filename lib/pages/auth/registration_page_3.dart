@@ -49,7 +49,6 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
   bool isAgreementChecked = false;
   bool isPrivacyChecked = false;
 
-  // Функция для проверки возраста (18 лет)
   bool _isUser18OrOlder(String birthdate) {
     try {
       final birthDate = DateFormat('dd.MM.yyyy').parse(birthdate);
@@ -67,7 +66,6 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
     return phoneRegExp.hasMatch(phone);
   }
 
-  // Функция для отправки формы
   void _onSubmit() {
     setState(() {
       firstNameError = null;
@@ -82,42 +80,38 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
 
     bool isValid = true;
 
-    // Проверка на пустое имя
     if (firstName.isEmpty) {
       setState(() {
-        firstNameError = 'Введите имя';
+        firstNameError = tr('registration_page.first_name_error');
       });
       isValid = false;
     }
 
-    // Проверка на пустую дату рождения и возраст
     if (birthdate.isEmpty) {
       setState(() {
-        birthdateError = 'Введите дату рождения';
+        birthdateError = tr('registration_page.birthdate_error');
       });
       isValid = false;
     } else if (!_isUser18OrOlder(birthdate)) {
       setState(() {
-        birthdateError = 'Вам должно быть не менее 18 лет';
+        birthdateError = tr('registration_page.age_restriction_error');
       });
       isValid = false;
     }
     if (phoneNumber.isNotEmpty && !_isPhoneNumberValid(phoneNumber)) {
       setState(() {
-        phoneError = 'Номер телефона должен содержать только цифры';
+        phoneError = tr('registration_page.phone_error');
       });
       isValid = false;
     }
 
-    // Проверка, что согласия приняты
     if (!isAgreementChecked || !isPrivacyChecked) {
       setState(() {
-        generalError = 'Необходимо принять условия соглашений';
+        generalError = tr('registration_page.agreement_error');
       });
       isValid = false;
     }
 
-    // Если все поля валидны
     if (isValid) {
       widget.onPersonalInfoEntered(
         _firstNameController.text,
@@ -152,13 +146,13 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
         } else if (state is AuthError) {
           Navigator.pop(context);
           setState(() {
-            generalError = 'Некорректные данные для регистрации';
+            generalError = tr('registration_page.general_error');
           });
         }
       },
       builder: (context, state) {
         return BasePopup(
-          text: 'Регистрация',
+          text: tr('registration_page.personal_info_title'),
           onPressed: () {
             widget.pageController.animateToPage(1,
                 duration: const Duration(milliseconds: 300),
@@ -168,20 +162,20 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
             mainAxisSize: MainAxisSize.min,
             children: [
               CustomTextField(
-                labelText: 'Имя*',
+                labelText: tr('registration_page.first_name_label'),
                 controller: _firstNameController,
                 isJoined: true,
                 joinPosition: JoinPosition.top,
-                errorMessage: firstNameError, // Отображаем ошибку имени
+                errorMessage: firstNameError,
               ),
               CustomTextField(
-                labelText: 'Фамилия',
+                labelText: tr('registration_page.last_name_label'),
                 controller: _lastNameController,
                 isJoined: true,
                 joinPosition: JoinPosition.none,
               ),
               CustomTextField(
-                labelText: 'Номер телефона',
+                labelText: tr('registration_page.phone_label'),
                 controller: _phoneController,
                 isJoined: true,
                 phoneNumber: true,
@@ -189,15 +183,15 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
                 errorMessage: phoneError,
               ),
               CustomTextField(
-                labelText: 'Дата рождения*',
+                labelText: tr('registration_page.birthdate_label'),
                 controller: _birthdateController,
                 isJoined: true,
                 isDate: true,
                 joinPosition: JoinPosition.none,
-                errorMessage: birthdateError, // Отображаем ошибку даты рождения
+                errorMessage: birthdateError,
               ),
-              const CustomTextField(
-                labelText: 'Номер реферала',
+              CustomTextField(
+                labelText: tr('registration_page.referral_code_label'),
                 isJoined: true,
                 isReferral: true,
                 joinPosition: JoinPosition.bottom,
@@ -206,21 +200,20 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Ваш пол',
+                  tr('registration_page.gender_label'),
                   style: context.text.bodyText16White,
                 ),
               ),
               const SizedBox(height: 12),
               GradientBorderSwitch(
                 onGenderChanged: (gender) {
-                  _selectedGender = gender; // Обновляем выбранный пол
+                  _selectedGender = gender;
                 },
               ),
               const SizedBox(height: 24),
               UserAgreement(
-                text:
-                    'Даю согласие на обработку персональных данных в соответствии с ',
-                clickText: 'пользовательским соглашением.',
+                text: tr('registration_page.agreement_text'),
+                clickText: tr('registration_page.agreement_click_text'),
                 onCheckChanged: (checked) {
                   setState(() {
                     isAgreementChecked = checked;
@@ -229,8 +222,8 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
               ),
               const SizedBox(height: 12),
               UserAgreement(
-                text: 'Принимаю условия ',
-                clickText: 'политики конфиденциальности.',
+                text: tr('registration_page.privacy_text'),
+                clickText: tr('registration_page.privacy_click_text'),
                 onCheckChanged: (checked) {
                   setState(() {
                     isPrivacyChecked = checked;
@@ -247,8 +240,8 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
                 ),
               const SizedBox(height: 24),
               CustomButton(
-                text: 'Далее',
-                onPressed: _onSubmit, // Валидация и отправка данных
+                text: tr('registration_page.next_button'),
+                onPressed: _onSubmit,
                 single: true,
               ),
               const SizedBox(height: 15),

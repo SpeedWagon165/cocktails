@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,7 +14,8 @@ void productPagePopUp(BuildContext context, Map<String, dynamic> product) {
     backgroundColor: Colors.transparent,
     builder: (context) {
       return BasePopup(
-        text: product['name'] ?? 'Товар',
+        text: product['name'] ?? tr('store.default_product_name'),
+        // Локализованная строка
         onPressed: () {
           Navigator.pop(context);
         },
@@ -45,7 +47,7 @@ void productPagePopUp(BuildContext context, Map<String, dynamic> product) {
             ),
             ExpandableTextWidget(
               text: product['description'],
-              titleText: 'Описание',
+              titleText: tr('store.description'), // Локализованная строка
             ),
             const SizedBox(
               height: 24,
@@ -62,7 +64,8 @@ void productPagePopUp(BuildContext context, Map<String, dynamic> product) {
                     marketplaceName = 'Ozon';
                     break;
                   case 'yandex':
-                    marketplaceName = 'Яндекс Маркет';
+                    marketplaceName =
+                        tr('store.marketplace_yandex'); // Локализованная строка
                     break;
                   default:
                     marketplaceName = entry.key;
@@ -71,7 +74,9 @@ void productPagePopUp(BuildContext context, Map<String, dynamic> product) {
                 return Column(
                   children: [
                     RegistrationServicesButton(
-                      text: 'Купить на $marketplaceName',
+                      text: tr('store.buy_on',
+                          namedArgs: {'count': marketplaceName}),
+                      // Локализованная строка с аргументом
                       trailingText: '  ${entry.value['price']} ₽',
                       onPressed: () {
                         final url = entry.value['link'];

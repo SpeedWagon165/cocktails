@@ -1,7 +1,7 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 
 enum JoinPosition { none, top, bottom }
 
@@ -193,13 +193,15 @@ class CustomTextFieldState extends State<CustomTextField> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Номер реферала',
+                      tr('registration_page.referral_code_label'),
+                      // Локализованный текст
                       style: context.text.bodyText12Grey.copyWith(
                           color: const Color(0xffF6B402), fontSize: 15),
                     ),
                     const SizedBox(height: 11),
                     Text(
-                      'В данном поле нужно указать номер телефона человека, который порекомендовал вам скачать приложение',
+                      tr('registration_page.referral_code_description'),
+                      // Локализованное описание
                       style: TextStyle(
                           color: Colors.white.withOpacity(0.8), height: 1.5),
                     ),

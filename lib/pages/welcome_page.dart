@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/bottom_nav_bar.dart';
@@ -34,7 +35,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: CustomButton(
-                        text: 'Пропустить',
+                        text: tr("buttons.skip"),
                         transper: true,
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
@@ -49,7 +50,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: CustomButton(
-                        text: 'Войти',
+                        text: tr("sign_in_page.title"),
                         onPressed: () {
                           authPopUp(context);
                         },

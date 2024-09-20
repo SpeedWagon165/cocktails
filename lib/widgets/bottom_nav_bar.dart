@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -85,22 +86,26 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 items: [
                   _buildBottomNavigationBarItem(
                     icon: 'assets/images/home_icon.svg',
-                    label: 'Главная',
+                    label: tr('bottom_nav.home'),
+                    // Локализованный заголовок для главной страницы
                     isSelected: state is HomePageState,
                   ),
                   _buildBottomNavigationBarItem(
                     icon: 'assets/images/book_icon.svg',
-                    label: 'Каталог',
+                    label: tr('bottom_nav.catalog'),
+                    // Локализованный заголовок для каталога
                     isSelected: state is CatalogPageState,
                   ),
                   _buildBottomNavigationBarItem(
                     icon: 'assets/images/store_icon.svg',
-                    label: 'Магазин',
+                    label: tr('bottom_nav.store'),
+                    // Локализованный заголовок для магазина
                     isSelected: state is StorePageState,
                   ),
                   _buildBottomNavigationBarItem(
                     icon: 'assets/images/account_icon.svg',
-                    label: 'Аккаунт',
+                    label: tr('bottom_nav.account'),
+                    // Локализованный заголовок для аккаунта
                     isSelected: state is AccountPageState,
                   ),
                 ],

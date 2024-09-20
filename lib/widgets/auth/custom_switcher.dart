@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
@@ -19,8 +20,10 @@ class GradientBorderSwitchState extends State<GradientBorderSwitch> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded(child: _buildButton(0, 'Мужской')),
-        Expanded(child: _buildButton(1, 'Женский')),
+        Expanded(child: _buildButton(0, tr('registration_page.male_option'))),
+        // Локализованный текст
+        Expanded(child: _buildButton(1, tr('registration_page.female_option'))),
+        // Локализованный текст
       ],
     );
   }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../widgets/base_pop_up.dart';
@@ -10,7 +11,7 @@ void alcoChoicePopUp(BuildContext context) {
     backgroundColor: Colors.transparent,
     builder: (context) {
       return BasePopup(
-        text: 'Алкогольные напитки',
+        text: tr('alcohol_popup.title'), // Локализация заголовка
         onPressed: () {
           Navigator.pop(context);
         },

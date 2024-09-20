@@ -1,5 +1,6 @@
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/base_pop_up.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,10 +24,10 @@ class RegistrationPage1 extends StatefulWidget {
   });
 
   @override
-  _RegistrationPage1State createState() => _RegistrationPage1State();
+  RegistrationPage1State createState() => RegistrationPage1State();
 }
 
-class _RegistrationPage1State extends State<RegistrationPage1> {
+class RegistrationPage1State extends State<RegistrationPage1> {
   final emailController = TextEditingController();
   String? emailError; // Для хранения ошибки email
 
@@ -46,14 +47,16 @@ class _RegistrationPage1State extends State<RegistrationPage1> {
 
     if (email.isEmpty) {
       setState(() {
-        emailError = 'Введите электронную почту';
+        emailError = tr(
+            'registration_page.email_error_empty'); // Локализованное сообщение об ошибке пустого email
       });
       return;
     }
 
     if (!_isValidEmail(email)) {
       setState(() {
-        emailError = 'Некорректный формат электронной почты';
+        emailError = tr(
+            'registration_page.email_error_invalid'); // Локализованное сообщение о некорректном email
       });
       return;
     }
@@ -76,14 +79,16 @@ class _RegistrationPage1State extends State<RegistrationPage1> {
         } else if (state is AuthError) {
           if (state.message.contains('400')) {
             setState(() {
-              emailError = 'Этот email уже зарегистрирован';
+              emailError = tr(
+                  'registration_page.email_error_registered'); // Локализованное сообщение, если email уже зарегистрирован
             });
           }
         }
       },
       builder: (context, state) {
         return BasePopup(
-          text: 'Регистрация',
+          text: tr('registration_page.title'),
+          // Локализованный заголовок "Регистрация"
           onPressed: () {
             widget.mainPageController.animateToPage(0,
                 duration: const Duration(milliseconds: 300),
@@ -93,36 +98,53 @@ class _RegistrationPage1State extends State<RegistrationPage1> {
             mainAxisSize: MainAxisSize.min,
             children: [
               CustomTextField(
-                labelText: 'Эл. почта',
+                labelText: tr('registration_page.email_label'),
+                // Локализованное поле "Эл. почта"
                 controller: emailController,
                 errorMessage: emailError, // Отображение ошибки
               ),
               const SizedBox(height: 24),
               CustomButton(
-                text: 'Далее',
+                text: tr('registration_page.next_button'),
+                // Локализованная кнопка "Далее"
                 onPressed: () {
                   _onSubmit(context); // Валидация и отправка
                 },
                 single: true,
               ),
               const SizedBox(height: 24.0),
-              const TextWithLines(text: 'или с помощью'),
+              TextWithLines(text: tr('registration_page.alternative_sign_in')),
+              // Локализованный текст "или с помощью"
               const SizedBox(height: 24),
-              RegistrationServicesButton(text: 'Apple ID', onPressed: () {}),
+              RegistrationServicesButton(
+                text: tr('registration_page.apple_id_button'),
+                // Локализованная кнопка "Apple ID"
+                onPressed: () {},
+              ),
               const SizedBox(height: 12),
-              RegistrationServicesButton(text: 'Google', onPressed: () {}),
+              RegistrationServicesButton(
+                text: tr('registration_page.google_button'),
+                // Локализованная кнопка "Google"
+                onPressed: () {},
+              ),
               const SizedBox(height: 12),
-              RegistrationServicesButton(text: 'Facebook', onPressed: () {}),
+              RegistrationServicesButton(
+                text: tr('registration_page.facebook_button'),
+                // Локализованная кнопка "Facebook"
+                onPressed: () {},
+              ),
               const SizedBox(height: 24.0),
               RichText(
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Уже есть аккаунт? ',
+                      text: tr('registration_page.already_have_account'),
+                      // Локализованный текст "Уже есть аккаунт?"
                       style: context.text.bodyText12Grey.copyWith(fontSize: 16),
                     ),
                     TextSpan(
-                      text: 'Войти',
+                      text: tr('registration_page.login_link'),
+                      // Локализованная ссылка "Войти"
                       style: context.text.bodyText16White,
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {

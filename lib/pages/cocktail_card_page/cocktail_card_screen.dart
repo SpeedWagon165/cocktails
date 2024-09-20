@@ -2,6 +2,7 @@ import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/coctail_card_widgets/cocktail_card_buttons.dart';
 import 'package:cocktails/widgets/coctail_card_widgets/cocktail_card_slider.dart';
 import 'package:cocktails/widgets/coctail_card_widgets/ingredients_list_builder.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/cocktail_list_model.dart';
@@ -83,7 +84,7 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                         const SizedBox(height: 24.0),
                         ExpandableTextWidget(
                           text: widget.cocktail.description,
-                          titleText: 'Описание',
+                          titleText: tr("catalog_page.description"),
                         ),
                         const SizedBox(height: 24.0),
                         IngredientsListBuilder(cocktail: widget.cocktail),

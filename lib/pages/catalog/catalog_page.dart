@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,16 +23,14 @@ class CatalogPage extends StatelessWidget {
             child: Column(
               children: [
                 CustomArrowBack(
-                  text: 'Каталог рецептов',
+                  text: tr('catalog_page.title'), // Локализация заголовка
                   onPressed: null,
                   secondIcon: true,
                   onSecondIconTap: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 const CustomSearchBar(),
                 const SizedBox(height: 16),
                 Expanded(
@@ -44,14 +43,19 @@ class CatalogPage extends StatelessWidget {
                           itemCount: state.cocktails.length,
                           itemBuilder: (context, index) {
                             return CocktailCard(
-                                cocktail: state.cocktails[index]);
+                              cocktail: state.cocktails[index],
+                            );
                           },
                         );
                       } else if (state is CocktailError) {
-                        return Center(child: Text(state.message));
+                        return Center(
+                            child: Text(tr(
+                                'errors.server_error'))); // Локализация ошибок
                       }
-                      return const Center(
-                          child: Text('Начните поиск рецептов'));
+                      return Center(
+                        child: Text(tr(
+                            'catalog_page.start_search')), // Локализация сообщения
+                      );
                     },
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/coctail_card_widgets/cocktail_instruction_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/cocktail_list_model.dart';
@@ -31,7 +32,7 @@ class _CocktailInstructionBuilderState
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              "Приготовление",
+              tr('cocktail_instructions.title'),
               overflow: TextOverflow.clip,
               style: context.text.bodyText16White.copyWith(fontSize: 18),
             ),
@@ -58,7 +59,7 @@ class _CocktailInstructionBuilderState
                 : Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Text(
-                      'Инструкции по приготовлению отсутствуют',
+                      tr('cocktail_instructions.no_instructions'),
                       style: context.text.bodyText14White,
                     ),
                   ),

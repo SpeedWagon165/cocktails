@@ -1,4 +1,5 @@
 import 'package:cocktails/widgets/home/create_cocktail_widgets/gradient_add_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,8 +70,9 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
                 cocktailCount = state.cocktails.length;
 
                 if (state.cocktails.isEmpty) {
-                  content = const Center(
-                    child: Text('У вас пока нет коктейлей.'),
+                  content = Center(
+                    child: Text(tr(
+                        'my_cocktails_page.no_cocktails')), // Локализация сообщения
                   );
                 } else {
                   content = RefreshIndicator(
@@ -88,9 +90,14 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
                   );
                 }
               } else if (state is CocktailError) {
-                content = Center(child: Text(state.message));
+                content = Center(
+                    child:
+                        Text(tr('errors.server_error'))); // Локализация ошибки
               } else {
-                content = const Center(child: Text('Начните поиск рецептов'));
+                content = Center(
+                  child: Text(tr(
+                      'my_cocktails_page.start_search')), // Локализация сообщения
+                );
               }
 
               return Padding(
@@ -98,7 +105,9 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
                 child: Column(
                   children: [
                     CustomArrowBack(
-                      text: 'Мои рецепты ($cocktailCount)',
+                      text: tr('my_cocktails_page.title',
+                          namedArgs: {'count': cocktailCount.toString()}),
+                      // Локализация заголовка
                       onPressed: null,
                     ),
                     SizedBox(

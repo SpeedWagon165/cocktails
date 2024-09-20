@@ -26,8 +26,10 @@ void main() async {
   ]).then((_) {
     runApp(EasyLocalization(
         supportedLocales: const [Locale('en', ''), Locale('ru', '')],
-        path: 'assets/translations', // Путь к JSON-файлам локализаций
+        path: 'assets/translations',
+        // Путь к JSON-файлам локализаций
         fallbackLocale: const Locale('en', ''),
+        startLocale: const Locale('ru', ''),
         child: const MyApp()));
   });
 }

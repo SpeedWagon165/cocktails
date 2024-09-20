@@ -1,4 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/custom_arrowback.dart';
@@ -13,8 +14,8 @@ class TermsUsePage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
           child: Column(children: [
-            const CustomArrowBack(
-              text: 'Пользовательское соглашение',
+            CustomArrowBack(
+              text: tr('about_app.terms_of_use'),
               arrow: true,
               auth: false,
               onPressed: null,

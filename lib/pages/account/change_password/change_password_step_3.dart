@@ -1,4 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,21 +45,23 @@ class ChangePasswordStep3State extends State<ChangePasswordStep3> {
 
     if (password.isEmpty || password.length < 8) {
       setState(() {
-        passwordError = 'Пароль должен содержать минимум 8 символов';
+        passwordError =
+            tr('change_pass_pages.password_too_short'); // Локализация
       });
       isValid = false;
     }
 
     if (confirmPassword.isEmpty) {
       setState(() {
-        confirmPasswordError = 'Повторите пароль';
+        confirmPasswordError =
+            tr('change_pass_pages.repeat_new_password'); // Локализация
       });
       isValid = false;
     }
 
     if (password != confirmPassword) {
       setState(() {
-        generalError = 'Пароли не совпадают';
+        generalError = tr('change_pass_pages.password_mismatch'); // Локализация
         isValid = false;
       });
     }
@@ -84,11 +87,12 @@ class ChangePasswordStep3State extends State<ChangePasswordStep3> {
             hasNavigated = true;
           });
 
-          // После успешной смены пароля проверяем авторизацию
           context.read<AuthBloc>().add(CheckAuthStatus());
 
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Пароль изменен')),
+            SnackBar(
+                content: Text(
+                    tr('change_pass_pages.password_saved'))), // Локализация
           );
           int count = 0;
           Navigator.of(context).popUntil((route) {
@@ -107,21 +111,23 @@ class ChangePasswordStep3State extends State<ChangePasswordStep3> {
               padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
               child: Column(
                 children: [
-                  const CustomArrowBack(
-                    text: 'Новый пароль',
+                  CustomArrowBack(
+                    text: tr('change_pass_pages.new_password'), // Локализация
                     arrow: true,
                     auth: false,
                     onPressed: null,
                   ),
                   const SizedBox(height: 33),
-                  const CenterText(
-                    text: 'Создайте пароль для вашего аккаунта',
+                  CenterText(
+                    text: tr('change_pass_pages.create_password'),
+                    // Локализация
                     padding: 60,
                     pop: false,
                   ),
                   const SizedBox(height: 24),
                   CustomTextField(
-                    labelText: 'Новый пароль',
+                    labelText: tr('change_pass_pages.new_password'),
+                    // Локализация
                     obscureText: true,
                     isJoined: true,
                     joinPosition: JoinPosition.top,
@@ -130,7 +136,8 @@ class ChangePasswordStep3State extends State<ChangePasswordStep3> {
                     showRedBorder: generalError != null,
                   ),
                   CustomTextField(
-                    labelText: 'Повторите новый пароль',
+                    labelText: tr('change_pass_pages.repeat_new_password'),
+                    // Локализация
                     obscureText: true,
                     isJoined: true,
                     joinPosition: JoinPosition.bottom,
@@ -149,7 +156,7 @@ class ChangePasswordStep3State extends State<ChangePasswordStep3> {
                     ),
                   const SizedBox(height: 24),
                   CustomButton(
-                    text: 'Сохранить изменения',
+                    text: tr('buttons.save_changes'), // Локализация
                     onPressed: () => _onSubmit(context),
                     single: true,
                   ),

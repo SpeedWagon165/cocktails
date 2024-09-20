@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,7 +25,7 @@ class FavoriteCocktailsPage extends StatelessWidget {
             child: Column(
               children: [
                 CustomArrowBack(
-                  text: 'Избранные рецепты',
+                  text: tr('favorite_cocktails.title'), // Локализация заголовка
                   onPressed: null,
                   secondIcon: false,
                   onSecondIconTap: () {
@@ -46,8 +47,10 @@ class FavoriteCocktailsPage extends StatelessWidget {
                       } else if (state is CocktailLoaded) {
                         // Проверяем, есть ли избранные рецепты
                         if (state.cocktails.isEmpty) {
-                          return const Center(
-                              child: Text('Нет избранных рецептов'));
+                          return Center(
+                            child: Text(tr(
+                                'favorite_cocktails.no_recipes')), // Локализация текста, если рецептов нет
+                          );
                         }
 
                         return ListView.builder(
@@ -60,8 +63,10 @@ class FavoriteCocktailsPage extends StatelessWidget {
                       } else if (state is CocktailError) {
                         return Center(child: Text(state.message));
                       }
-                      return const Center(
-                          child: Text('Нет избранных рецептов'));
+                      return Center(
+                        child: Text(tr(
+                            'favorite_cocktails.no_recipes')), // Локализация текста, если рецептов нет
+                      );
                     },
                   ),
                 ),

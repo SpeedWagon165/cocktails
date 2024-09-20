@@ -1,4 +1,5 @@
 import 'package:cocktails/widgets/base_pop_up.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,11 +18,11 @@ class CocktailSelectionStep3 extends StatefulWidget {
 class CocktailSelectionStep3State extends State<CocktailSelectionStep3> {
   @override
   Widget build(BuildContext context) {
-    return const BasePopup(
-      text: 'Подбор коктейля',
+    return BasePopup(
+      text: tr("cocktail_selection_page.cocktail_selection"),
       onPressed: null,
       arrow: false,
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           StepIndicator(

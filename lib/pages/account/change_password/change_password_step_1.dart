@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,12 +30,13 @@ class ChangePasswordStep1State extends State<ChangePasswordStep1> {
     // Валидация email
     if (email.isEmpty) {
       setState(() {
-        emailError = 'Введите электронную почту'; // Если email не введен
+        emailError =
+            tr("change_pass_pages.enter_your_email"); // Если email не введен
       });
     } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
       setState(() {
-        emailError =
-            'Введите корректную электронную почту'; // Проверка формата email
+        emailError = tr(
+            "change_pass_pages.enter_correct_email"); // Проверка формата email
       });
     } else {
       // Отправка запроса на сброс пароля, если валидация прошла
@@ -65,28 +67,27 @@ class ChangePasswordStep1State extends State<ChangePasswordStep1> {
               padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
               child: Column(
                 children: [
-                  const CustomArrowBack(
-                    text: 'Смена пароля',
+                  CustomArrowBack(
+                    text: tr("change_pass_pages.change_pass"),
                     arrow: true,
                     auth: false,
                     onPressed: null,
                   ),
                   const SizedBox(height: 33),
-                  const CenterText(
-                    text:
-                        'Введите номер телефона или почту, куда выслать код подтверждения',
+                  CenterText(
+                    text: tr("change_pass_pages.enter_email_for_code"),
                     padding: 60,
                     pop: false,
                   ),
                   const SizedBox(height: 24),
                   CustomTextField(
-                    labelText: 'Эл. почта',
+                    labelText: tr("change_pass_pages.email"),
                     controller: emailController,
                     errorMessage: emailError, // Показ ошибки под полем
                   ),
                   const SizedBox(height: 24),
                   CustomButton(
-                    text: 'Отправить',
+                    text: tr("buttons.send"),
                     onPressed: _onSubmit, // Валидация и отправка
                     single: true,
                   ),
