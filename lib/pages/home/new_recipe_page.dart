@@ -22,8 +22,8 @@ class NewRecipePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CustomArrowBack(
-                  text: 'new_recipe.title', // локализованная строка
+                CustomArrowBack(
+                  text: tr('new_recipe.title'), // локализованная строка
                   arrow: true,
                   onPressed: null,
                 ),
@@ -47,12 +47,14 @@ class NewRecipePage extends StatelessWidget {
                   style: context.text.bodyText14White.copyWith(fontSize: 18),
                 ),
                 const SizedBox(height: 12),
-                const CustomTextField(
-                  labelText: 'new_recipe.youtube_link', // локализованная строка
+                CustomTextField(
+                  labelText:
+                      tr('new_recipe.youtube_link'), // локализованная строка
                 ),
                 const SizedBox(height: 24),
-                const CustomTextField(
-                  labelText: 'new_recipe.description', // локализованная строка
+                CustomTextField(
+                  labelText: tr('new_recipe.description'),
+                  // локализованная строка
                   expandText: true,
                 ),
                 const SizedBox(

@@ -30,23 +30,6 @@ class CocktailSelectionStep2State extends State<CocktailSelectionStep2> {
             activeStep: 1,
           ),
           const CocktailSelectionView(
-            categories: [
-              {
-                'Б/а напитки': [
-                  'Тоник',
-                  'Кока-кола',
-                  'Спрайт',
-                  'Фанта',
-                ]
-              },
-              {
-                'Продукты': [
-                  'Лёд',
-                  'Лимон',
-                  'Лайм',
-                ]
-              },
-            ],
             step: false,
           ),
           const SizedBox(height: 20),

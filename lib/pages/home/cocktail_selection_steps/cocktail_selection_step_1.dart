@@ -30,29 +30,9 @@ class CocktailSelectionStep1State extends State<CocktailSelectionStep1> {
             activeStep: 0,
           ),
           const CocktailSelectionView(
-            categories: [
-              {
-                'Вино': [
-                  'Вино красное',
-                  'Вино белое',
-                  'Вино розовое',
-                  'Вино десертное',
-                  'Вино алое',
-                ]
-              },
-              {
-                'Водка': ['Водка']
-              },
-              {
-                'Виски': ['Виски']
-              },
-              {
-                'Шампанское': ['Шампанское']
-              }
-            ],
             step: true,
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -87,7 +67,7 @@ class CocktailSelectionStep1State extends State<CocktailSelectionStep1> {
               ),
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
         ],
       ),
     );

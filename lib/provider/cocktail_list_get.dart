@@ -4,15 +4,14 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/cocktail_list_model.dart';
+import '../models/ingredient_category_model.dart';
 
 class CocktailRepository {
   final String baseUrl = 'http://109.71.246.251:8000/api';
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: 'http://109.71.246.251:8000/api',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json', 'User-Language': 'rus'},
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
       sendTimeout: const Duration(seconds: 30),
@@ -265,6 +264,20 @@ class CocktailRepository {
       log('Ошибка при получении избранных коктейлей',
           error: e, stackTrace: stacktrace);
       throw Exception('Ошибка при загрузке избранных коктейлей: $e');
+    }
+  }
+
+  Future<List<Section>> fetchSections() async {
+    try {
+      final response = await dio.get('/recipe/section/');
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
+        return data.map((json) => Section.fromJson(json)).toList();
+      } else {
+        throw Exception('Ошибка при загрузке секций: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Ошибка при загрузке данных: $e');
     }
   }
 }

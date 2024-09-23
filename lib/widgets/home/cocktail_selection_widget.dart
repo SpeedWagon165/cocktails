@@ -7,11 +7,10 @@ import '../../bloc/cocktail_setup_bloc/cocktail_setup_bloc.dart';
 import '../custom_checkbox.dart';
 
 class CocktailSelectionView extends StatefulWidget {
-  final List<Map<String, List<String>>> categories;
-  final bool step;
+  final bool
+      step; // Это флаг, чтобы знать, какой шаг мы показываем: алкогольный или безалкогольный
 
-  const CocktailSelectionView(
-      {super.key, required this.categories, required this.step});
+  const CocktailSelectionView({super.key, required this.step});
 
   @override
   CocktailSelectionViewState createState() => CocktailSelectionViewState();
@@ -21,42 +20,69 @@ class CocktailSelectionViewState extends State<CocktailSelectionView> {
   bool showAll = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Fetch sections from the server
+    context.read<CocktailSelectionBloc>().add(LoadCategoriesEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cocktailBloc = BlocProvider.of<CocktailSelectionBloc>(context);
 
     return BlocBuilder<CocktailSelectionBloc, CocktailSelectionState>(
       builder: (context, state) {
+        if (state.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state.errorMessage != null) {
+          return Center(
+            child: Text('Ошибка: ${state.errorMessage}',
+                style: const TextStyle(color: Colors.red)),
+          );
+        }
+
+        // Step 1: Show only "Алкогольные напитки"
+        // Step 2: Show only "Б/а напитки" and "Продукты"
+        final sections = widget.step
+            ? state.sections.where((section) => section.id == 1).toList()
+            : state.sections.where((section) => section.id != 1).toList();
+
+        final categories =
+            sections.expand((section) => section.categories).toList();
+
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             buildSelectedTags(context, cocktailBloc, state),
-            const SizedBox(
-              height: 24,
-            ),
+            const SizedBox(height: 24),
             Text(
               widget.step
-                  ? tr(
-                      'cocktail_selection.step_base') // Локализованный текст для шага
+                  ? tr('cocktail_selection.step_base')
                   : tr('cocktail_selection.additional_ingredients'),
-              // Локализованный текст для дополнительных ингредиентов
               style: context.text.bodyText16White,
             ),
-            const SizedBox(
-              height: 12,
-            ),
+            const SizedBox(height: 12),
             SizedBox(
               height: 300,
-              child: ListView(
-                children: widget.categories.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  String category = entry.value.keys.first;
-                  List<String> items = entry.value.values.first;
+              child: ListView.builder(
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
                   return buildExpansionTile(
-                      context, cocktailBloc, state, category, items,
-                      isFirst: index == 0,
-                      isLast: index == widget.categories.length - 1);
-                }).toList(),
+                    context,
+                    cocktailBloc,
+                    state,
+                    category.name,
+                    category.ingredients
+                        .map((ingredients) => ingredients.name)
+                        .toList(),
+                    isFirst: index == 0,
+                    isLast: index == categories.length - 1,
+                  );
+                },
               ),
             ),
           ],
@@ -176,10 +202,25 @@ class CocktailSelectionViewState extends State<CocktailSelectionView> {
           dividerColor: Colors.transparent, // Убираем разделитель
         ),
         child: ExpansionTile(
-          title: Text(
-            '$category  (${state.selectedItems[category]?.length ?? 0} ${tr('cocktail_selection.selected')})',
-            // Локализованный текст с количеством выбранных
-            style: context.text.bodyText16White,
+          title: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: '$category  ',
+                  style:
+                      context.text.bodyText16White, // Стиль текста по умолчанию
+                ),
+                TextSpan(
+                  text:
+                      '(${state.selectedItems[category]?.length ?? 0} ${tr('cocktail_selection.selected')})',
+                  // Здесь будет ваше время
+                  style: context.text.bodyText12Grey
+                      .copyWith(fontSize: 16 // Измените цвет на нужный вам
+                          ),
+                ),
+              ],
+            ),
           ),
           tilePadding:
               const EdgeInsets.symmetric(horizontal: 14.0, vertical: 4.0),
@@ -197,7 +238,7 @@ class CocktailSelectionViewState extends State<CocktailSelectionView> {
               child: SizedBox(
                 height: 150, // Ограничиваем высоту виджета
                 child: Scrollbar(
-                  radius: Radius.circular(30),
+                  radius: const Radius.circular(30),
                   controller: scrollController,
                   thumbVisibility: true,
                   thickness: 4,

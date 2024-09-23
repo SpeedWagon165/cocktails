@@ -3,6 +3,7 @@ import 'package:cocktails/bloc/notification_settings_bloc/notification_settings_
 import 'package:cocktails/bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import 'package:cocktails/pages/welcome_page.dart';
 import 'package:cocktails/provider/cocktail_auth_repository.dart';
+import 'package:cocktails/provider/cocktail_list_get.dart';
 import 'package:cocktails/provider/profile_repository.dart';
 import 'package:cocktails/theme/themes.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
@@ -46,7 +47,9 @@ class MyApp extends StatelessWidget {
         });
         return MultiBlocProvider(
             providers: [
-              BlocProvider(create: (context) => CocktailSelectionBloc()),
+              BlocProvider(
+                  create: (context) =>
+                      CocktailSelectionBloc(CocktailRepository())),
               BlocProvider(
                 create: (context) =>
                     AppBloc(AuthRepository())..add(AppStarted()),

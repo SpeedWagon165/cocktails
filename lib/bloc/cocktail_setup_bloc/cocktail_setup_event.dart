@@ -14,3 +14,5 @@ class ClearSelectionEvent extends CocktailSelectionEvent {
 
   ClearSelectionEvent(this.category);
 }
+
+class LoadCategoriesEvent extends CocktailSelectionEvent {}

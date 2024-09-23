@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../pages/cocktail_list/cocktail_list_page.dart';
+import '../../pages/home/search_cocktail_page.dart';
 
 class AnimatedProgressBarPage extends StatefulWidget {
   const AnimatedProgressBarPage({super.key});
@@ -26,7 +26,7 @@ class AnimatedProgressBarPageState extends State<AnimatedProgressBarPage>
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => MyCocktailsListPage(),
+                builder: (context) => const SearchCocktailPage(),
               ),
             );
           });

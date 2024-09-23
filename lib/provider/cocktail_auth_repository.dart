@@ -15,8 +15,6 @@ class AuthRepository {
           headers: {
             'Content-Type': 'application/json',
             'accept': 'application/json',
-            'X-CSRFToken':
-                'W5nOpCdcuuCYNNYSjmt10MLTNZ3yHrYKtiWAV67rNEKddGlUbsx9RXOfWegmqVvb',
           },
         ),
       );
