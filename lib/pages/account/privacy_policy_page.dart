@@ -14,7 +14,7 @@ class PrivacyPolicyPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
           child: Column(children: [
-            CustomArrowBack(
+            CustomAppBar(
               text: tr('about_app.privacy_policy'),
               arrow: true,
               auth: false,

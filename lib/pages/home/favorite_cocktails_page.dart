@@ -24,7 +24,7 @@ class FavoriteCocktailsPage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
             child: Column(
               children: [
-                CustomArrowBack(
+                CustomAppBar(
                   text: tr('favorite_cocktails.title'), // Локализация заголовка
                   onPressed: null,
                   secondIcon: false,

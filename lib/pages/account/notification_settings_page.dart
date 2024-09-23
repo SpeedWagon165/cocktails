@@ -22,7 +22,7 @@ class NotificationSetupPageState extends State<NotificationSetupPage> {
         child: Padding(
           padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
           child: Column(children: [
-            CustomArrowBack(
+            CustomAppBar(
               text: tr('notifications_page.title'),
               // Локализованная строка "Уведомления"
               arrow: true,

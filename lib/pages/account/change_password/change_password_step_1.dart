@@ -67,7 +67,7 @@ class ChangePasswordStep1State extends State<ChangePasswordStep1> {
               padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
               child: Column(
                 children: [
-                  CustomArrowBack(
+                  CustomAppBar(
                     text: tr("change_pass_pages.change_pass"),
                     arrow: true,
                     auth: false,

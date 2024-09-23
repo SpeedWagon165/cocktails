@@ -100,7 +100,7 @@ class CocktailRepository {
   }
 
   Future<List<Cocktail>> searchCocktails({
-    required String query,
+    String? query,
     String? ingredients,
     String? tools,
     String? ordering,
@@ -139,7 +139,7 @@ class CocktailRepository {
   }
 
   Future<List<Cocktail>> searchFavoriteCocktails({
-    required String query,
+    String? query,
     String? ingredients,
     String? tools,
     String? ordering,

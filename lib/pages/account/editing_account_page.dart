@@ -78,7 +78,7 @@ class _EditingAccountPageState extends State<EditingAccountPage> {
           child: BlocProvider(
             create: (_) => _profileBloc,
             child: Column(children: [
-              CustomArrowBack(
+              CustomAppBar(
                 text: tr('edit_profile_page.title'),
                 // Локализованная строка "Редактирование"
                 arrow: true,

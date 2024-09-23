@@ -24,7 +24,7 @@ class _BonusScreenState extends State<BonusScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             children: [
-              CustomArrowBack(
+              CustomAppBar(
                 auth: true,
                 text: tr('bonus_screen.title'),
                 onPressed: () {

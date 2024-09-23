@@ -80,7 +80,7 @@ class ChangePasswordStep2State extends State<ChangePasswordStep2> {
               padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
               child: Column(
                 children: [
-                  CustomArrowBack(
+                  CustomAppBar(
                     text: tr("change_pass_pages.change_pass"),
                     // Локализация текста "Смена пароля"
                     arrow: true,

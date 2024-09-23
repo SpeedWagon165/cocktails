@@ -9,10 +9,12 @@ class SelectedItemsCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Получаем доступ к CocktailSelectionBloc
     final cocktailBloc = BlocProvider.of<CocktailSelectionBloc>(context);
 
     return BlocBuilder<CocktailSelectionBloc, CocktailSelectionState>(
       builder: (context, state) {
+        // Извлекаем выбранные элементы из состояния блока
         final selectedItems = state.selectedItems.entries
             .expand((entry) => entry.value.map((item) => item))
             .toList();
@@ -44,13 +46,17 @@ class SelectedItemsCarousel extends StatelessWidget {
                       child: const Icon(
                         Icons.close_rounded,
                         color: Color(0xff3E3E3E),
-                        size: 16, // Увеличиваем размер иконки
+                        size: 16,
                       ),
                     ),
+                    // Обработка удаления ингредиента
                     onDeleted: () {
+                      // Находим категорию, к которой относится элемент
                       final category = state.selectedItems.entries
                           .firstWhere((entry) => entry.value.contains(item))
                           .key;
+
+                      // Отправляем событие удаления ингредиента в блок
                       cocktailBloc.add(ToggleSelectionEvent(category, item));
                     },
                   ),

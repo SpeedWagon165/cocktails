@@ -111,7 +111,7 @@ class ChangePasswordStep3State extends State<ChangePasswordStep3> {
               padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
               child: Column(
                 children: [
-                  CustomArrowBack(
+                  CustomAppBar(
                     text: tr('change_pass_pages.new_password'), // Локализация
                     arrow: true,
                     auth: false,

@@ -39,7 +39,7 @@ class _AccountPageState extends State<AccountPage> {
           padding: const EdgeInsets.only(top: 15, left: 14),
           child: Column(
             children: [
-              CustomArrowBack(
+              CustomAppBar(
                 text: tr('account_page.title'),
                 // Локализованный заголовок "Аккаунт"
                 arrow: false,

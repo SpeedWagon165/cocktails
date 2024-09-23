@@ -2,7 +2,7 @@ import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CustomArrowBack extends StatelessWidget {
+class CustomAppBar extends StatelessWidget {
   final String text;
   final bool arrow;
   final bool auth;
@@ -10,7 +10,7 @@ class CustomArrowBack extends StatelessWidget {
   final dynamic onPressed;
   final Function()? onSecondIconTap;
 
-  const CustomArrowBack({
+  const CustomAppBar({
     super.key,
     required this.text,
     this.auth = false,

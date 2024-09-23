@@ -141,7 +141,7 @@ class SupportServicePageState extends State<SupportServicePage> {
           padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
           child: Column(
             children: [
-              CustomArrowBack(
+              CustomAppBar(
                 text: tr('support_page.title'), // Локализация "Тех.поддержка"
                 arrow: true,
                 auth: false,

@@ -13,8 +13,8 @@ import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/custom_button.dart';
 import '../auth/popups/auth_pop_up.dart';
 import '../bonus_page/bonus_screen.dart';
-import '../cocktail_list/cocktail_list_page.dart';
 import 'favorite_cocktails_page.dart';
+import 'my_cocktail_list_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

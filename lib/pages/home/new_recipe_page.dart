@@ -22,7 +22,7 @@ class NewRecipePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomArrowBack(
+                CustomAppBar(
                   text: tr('new_recipe.title'), // локализованная строка
                   arrow: true,
                   onPressed: null,

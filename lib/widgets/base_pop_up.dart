@@ -57,7 +57,7 @@ class BasePopup extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  CustomArrowBack(
+                  CustomAppBar(
                     auth: true,
                     text: text,
                     arrow: arrow,

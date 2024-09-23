@@ -211,7 +211,8 @@
     "skip": "Skip",
     "save": "Save",
     "save_changes": "Save Changes",
-    "sign_out": "Sign Out"
+    "sign_out": "Sign Out",
+    "change": "Edit"
   },
   "errors": {
     "empty_field": "Field cannot be empty",
@@ -264,7 +265,12 @@
     "additional_ingredients": "Additional ingredients:",
     "show_all": "Show all",
     "hide": "Hide",
-    "selected": "selected"
+    "selected": "selected",
+    "recipes": "recipes",
+    "no_cocktails": "No cocktails found",
+    "current_selection": "Current selection",
+    "description": "You can remove some ingredients from the list here or proceed to full selection editing by clicking “Edit“",
+    "cocktail_base": "Base of the cocktail"
   },
   "search": {
     "search": "Search"

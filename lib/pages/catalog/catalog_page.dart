@@ -22,7 +22,7 @@ class CatalogPage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
             child: Column(
               children: [
-                CustomArrowBack(
+                CustomAppBar(
                   text: tr('catalog_page.title'), // Локализация заголовка
                   onPressed: null,
                   secondIcon: true,

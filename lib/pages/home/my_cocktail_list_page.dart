@@ -9,7 +9,7 @@ import '../../provider/cocktail_list_get.dart';
 import '../../widgets/cocktail_list/cocktail_card.dart';
 import '../../widgets/custom_arrowback.dart';
 import '../../widgets/home/search_bar_widget.dart';
-import '../home/new_recipe_page.dart';
+import 'new_recipe_page.dart';
 
 class MyCocktailsListPage extends StatefulWidget {
   const MyCocktailsListPage({super.key});
@@ -104,7 +104,7 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
                 padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
                 child: Column(
                   children: [
-                    CustomArrowBack(
+                    CustomAppBar(
                       text: tr('my_cocktails_page.title',
                           namedArgs: {'count': cocktailCount.toString()}),
                       // Локализация заголовка

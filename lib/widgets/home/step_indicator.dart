@@ -5,10 +5,12 @@ import 'package:flutter_svg/svg.dart';
 
 class StepIndicator extends StatelessWidget {
   final int activeStep;
+  final bool thirdStep;
 
   const StepIndicator({
     super.key,
     required this.activeStep,
+    this.thirdStep = true,
   });
 
   @override
@@ -18,7 +20,9 @@ class StepIndicator extends StatelessWidget {
       lineStyle: LineStyle(
         lineType: LineType.normal,
         lineWidth: 1,
-        lineLength: MediaQuery.of(context).size.width * 0.3,
+        lineLength: thirdStep
+            ? MediaQuery.of(context).size.width * 0.3
+            : MediaQuery.of(context).size.width * 0.6,
         finishedLineColor: const Color(0xff68C248),
         unreachedLineColor: Colors.white.withOpacity(0.2),
         activeLineColor: Colors.white,
@@ -79,27 +83,28 @@ class StepIndicator extends StatelessWidget {
                   width: 10,
                 ),
         ),
-        EasyStep(
-          title: tr('step_indicator.selection'),
-          // Локализованный текст для третьего шага
-          customStep: activeStep <= 2
-              ? Center(
-                  child: Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color:
-                          activeStep == 2 ? Colors.white : Colors.transparent,
+        if (thirdStep)
+          EasyStep(
+            title: tr('step_indicator.selection'),
+            // Локализованный текст для третьего шага
+            customStep: activeStep <= 2
+                ? Center(
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:
+                            activeStep == 2 ? Colors.white : Colors.transparent,
+                      ),
                     ),
+                  )
+                : SvgPicture.asset(
+                    'assets/images/check_icon.svg',
+                    height: 10,
+                    width: 10,
                   ),
-                )
-              : SvgPicture.asset(
-                  'assets/images/check_icon.svg',
-                  height: 10,
-                  width: 10,
-                ),
-        ),
+          ),
       ],
     );
   }
