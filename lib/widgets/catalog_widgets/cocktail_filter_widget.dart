@@ -22,7 +22,7 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
   @override
   void initState() {
     super.initState();
-    // Fetch sections from the server
+    // Загружаем категории
     context.read<IngredientSelectionBloc>().add(LoadCategoriesEvent());
   }
 
@@ -38,33 +38,27 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
 
         if (state.errorMessage != null) {
           return Center(
-            child: Text('Ошибка: ${state.errorMessage}',
-                style: const TextStyle(color: Colors.red)),
+            child: Text(
+              'Ошибка: ${state.errorMessage}',
+              style: const TextStyle(color: Colors.red),
+            ),
           );
         }
 
-        List<Section> sections;
-        if (widget.step == 1) {
-          sections = state.sections
-              .where((section) => section.id == 1)
-              .toList(); // Алкогольные
-        } else if (widget.step == 2) {
-          sections = state.sections
-              .where((section) => section.id == 2)
-              .toList(); // Безалкогольные
-        } else {
-          sections = state.sections
-              .where((section) => section.id == 3)
-              .toList(); // Продукты
-        }
+        // Фильтруем секции по переданному шагу
+        List<Section> sections = state.sections
+            .where((section) => section.id == widget.step)
+            .toList();
+
+        // Собираем категории для отображения
         final categories =
             sections.expand((section) => section.categories).toList();
 
         return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            buildSelectedTags(context, cocktailBloc, state),
+            // Отображаем выбранные теги (ингредиенты) как Chip
+            buildSelectedTags(context, cocktailBloc, state, widget.step),
             const SizedBox(height: 24),
             Text(
               widget.step == 1
@@ -73,6 +67,7 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
               style: context.text.bodyText16White,
             ),
             const SizedBox(height: 12),
+            // Список категорий и ингредиентов
             SizedBox(
               height: 300,
               child: ListView.builder(
@@ -83,9 +78,10 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
                     context,
                     cocktailBloc,
                     state,
+                    category.id,
                     category.name,
                     category.ingredients
-                        .map((ingredients) => ingredients.name)
+                        .map((ingredient) => ingredient.name)
                         .toList(),
                     isFirst: index == 0,
                     isLast: index == categories.length - 1,
@@ -99,11 +95,16 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
     );
   }
 
-  Widget buildSelectedTags(BuildContext context,
-      IngredientSelectionBloc cocktailBloc, IngredientSelectionState state) {
-    final selectedItems = state.selectedItems.entries
-        .expand((entry) => entry.value.map((item) => item))
-        .toList();
+  Widget buildSelectedTags(
+    BuildContext context,
+    IngredientSelectionBloc cocktailBloc,
+    IngredientSelectionState state,
+    int sectionId,
+  ) {
+    final selectedItems = state.selectedItems[sectionId]?.entries
+            .expand((entry) => entry.value)
+            .toList() ??
+        [];
 
     const int maxVisibleItems = 4;
     bool shouldShowMoreButton = selectedItems.length > maxVisibleItems;
@@ -139,10 +140,11 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
                 ),
               ),
               onDeleted: () {
-                final category = state.selectedItems.entries
+                final category = state.selectedItems[sectionId]?.entries
                     .firstWhere((entry) => entry.value.contains(item))
                     .key;
-                cocktailBloc.add(ToggleSelectionEvent(category, item));
+                cocktailBloc
+                    .add(ToggleSelectionEvent(sectionId, category!, item));
               },
             );
           }).toList(),
@@ -191,11 +193,16 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
       BuildContext context,
       IngredientSelectionBloc cocktailBloc,
       IngredientSelectionState state,
+      int categoryId,
       String category,
       List<String> items,
       {bool isFirst = false,
       bool isLast = false}) {
     final ScrollController scrollController = ScrollController();
+
+    // Получаем выбранные ингредиенты для данной категории и секции
+    final selectedIngredients =
+        state.selectedItems[categoryId]?[category] ?? [];
 
     return Container(
       decoration: BoxDecoration(
@@ -221,7 +228,7 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
                 ),
                 TextSpan(
                   text:
-                      '(${state.selectedItems[category]?.length ?? 0} ${tr('cocktail_selection.selected')})',
+                      '(${selectedIngredients.length} ${tr('cocktail_selection.selected')})',
                   // Здесь будет ваше время
                   style: context.text.bodyText12Grey
                       .copyWith(fontSize: 16 // Измените цвет на нужный вам
@@ -253,13 +260,14 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
                   child: ListView(
                     controller: scrollController,
                     children: items.map((item) {
+                      final selectedIngredients =
+                          state.selectedItems[categoryId]?[category] ?? [];
                       return CustomCheckboxListTile(
                         title: item,
-                        value: state.selectedItems[category]?.contains(item) ??
-                            false,
+                        value: selectedIngredients.contains(item),
                         onChanged: (bool? selected) {
-                          cocktailBloc
-                              .add(ToggleSelectionEvent(category, item));
+                          cocktailBloc.add(ToggleSelectionEvent(
+                              widget.step, categoryId.toString(), item));
                         },
                       );
                     }).toList(),
