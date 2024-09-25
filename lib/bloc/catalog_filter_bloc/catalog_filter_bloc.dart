@@ -21,20 +21,24 @@ class IngredientSelectionBloc
   List<int> getSelectedIngredientIds() {
     final selectedIngredients = <int>[];
 
-    state.selectedItems.forEach((category, items) {
-      for (var item in items) {
-        final categoryData = state.sections
-            .expand((section) => section.categories)
-            .firstWhere((cat) => cat.name == category);
-        final ingredient = categoryData.ingredients
-            .firstWhere((ingredient) => ingredient.name == item);
-        selectedIngredients.add(ingredient.id);
-      }
+    // Проходим по секциям и категориям, чтобы найти выбранные ингредиенты
+    state.selectedItems.forEach((sectionId, categories) {
+      categories.forEach((category, items) {
+        for (var item in items) {
+          final categoryData = state.sections
+              .expand((section) => section.categories)
+              .firstWhere((cat) => cat.name == category);
+          final ingredient = categoryData.ingredients
+              .firstWhere((ingredient) => ingredient.name == item);
+          selectedIngredients.add(ingredient.id);
+        }
+      });
     });
 
     return selectedIngredients;
   }
 
+  // Загружаем категории
   void _loadCategories(
       LoadCategoriesEvent event, Emitter<IngredientSelectionState> emit) async {
     emit(state.copyWith(isLoading: true));
@@ -47,9 +51,12 @@ class IngredientSelectionBloc
     }
   }
 
+  // Обрабатываем выбор ингредиента
   void _toggleSelectionEvent(ToggleSelectionEvent event,
       Emitter<IngredientSelectionState> emit) async {
-    final currentSelection = state.selectedItems[event.category] ?? [];
+    // Получаем текущие выбранные ингредиенты для категории
+    final currentSelection =
+        state.selectedItems[event.sectionId]?[event.category] ?? [];
     final updatedSelection = List<String>.from(currentSelection);
 
     if (updatedSelection.contains(event.item)) {
@@ -58,16 +65,29 @@ class IngredientSelectionBloc
       updatedSelection.add(event.item);
     }
 
+    // Обновляем только если изменилось количество выбранных элементов
     if (updatedSelection.length != currentSelection.length) {
-      final updatedItems = Map<String, List<String>>.from(state.selectedItems)
-        ..[event.category] = updatedSelection;
+      final updatedItems =
+          Map<int, Map<String, List<String>>>.from(state.selectedItems);
+      updatedItems[event.sectionId] = {
+        ...updatedItems[event.sectionId] ?? {},
+        event.category: updatedSelection
+      };
 
+      // Обновляем состояние с новым выбором
       emit(state.copyWith(selectedItems: updatedItems));
     }
   }
 
+  // Очищаем выбранные элементы в определенной секции и категории
   void _clearSelectionEvent(
       ClearSelectionEvent event, Emitter<IngredientSelectionState> emit) async {
-    emit(state.copyWith(selectedItems: {event.category: []}));
+    final updatedItems =
+        Map<int, Map<String, List<String>>>.from(state.selectedItems);
+
+    // Очищаем выбранные ингредиенты для конкретной секции и категории
+    updatedItems[event.sectionId]?.remove(event.category);
+
+    emit(state.copyWith(selectedItems: updatedItems));
   }
 }

@@ -14,11 +14,12 @@ class CocktailLoading extends CocktailListState {}
 
 class CocktailLoaded extends CocktailListState {
   final List<Cocktail> cocktails;
+  final String currentSortOption; // Текущая опция сортировки
 
-  const CocktailLoaded(this.cocktails);
+  const CocktailLoaded(this.cocktails, this.currentSortOption);
 
   @override
-  List<Object> get props => [cocktails];
+  List<Object> get props => [cocktails, currentSortOption];
 }
 
 class CocktailError extends CocktailListState {

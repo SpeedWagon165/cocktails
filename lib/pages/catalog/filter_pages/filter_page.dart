@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/catalog_filter_bloc/catalog_filter_bloc.dart';
-import '../../../models/ingredient_category_model.dart';
+import '../../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 import '../../../widgets/base_pop_up.dart';
 import '../../../widgets/catalog_widgets/catalog_selected_wrap.dart';
+import '../../../widgets/catalog_widgets/sort_expansion_tile.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/home/create_cocktail_widgets/change_cocktail_tile.dart';
 import 'alcoholic_page.dart';
@@ -33,19 +34,23 @@ class FilterMainPage extends StatelessWidget {
           final productsCount =
               _getSelectedCount(state, 3); // id категории "Продукты"
 
+          // Собираем все выбранные ингредиенты в виде строки, готовой для передачи в API
+          final selectedIngredients = _getSelectedIngredients(state);
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DropdownButton<String>(
-                value: 'По популярности',
-                items: ['По популярности', 'По новизне'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value,
-                        style: const TextStyle(color: Colors.white)),
+              BlocBuilder<CocktailListBloc, CocktailListState>(
+                builder: (context, state) {
+                  if (state is CocktailLoaded) {
+                    return SortExpansionTile(
+                      currentSortOption: state.currentSortOption,
+                    );
+                  }
+                  return const SortExpansionTile(
+                    currentSortOption: 'title',
                   );
-                }).toList(),
-                onChanged: (_) {},
+                },
               ),
               const SizedBox(height: 16),
               const CatalogSelectedItemsWrap(),
@@ -119,6 +124,22 @@ class FilterMainPage extends StatelessWidget {
                       child: CustomButton(
                         text: tr("buttons.confirm"),
                         onPressed: () {
+                          // Передаем ингредиенты и сортировку через блок
+                          final currentSortOption = context
+                                  .read<CocktailListBloc>()
+                                  .state is CocktailLoaded
+                              ? (context.read<CocktailListBloc>().state
+                                      as CocktailLoaded)
+                                  .currentSortOption
+                              : 'title';
+
+                          context.read<CocktailListBloc>().add(
+                                SearchCocktails(
+                                  ordering: currentSortOption,
+                                  ingredients:
+                                      selectedIngredients, // Передаем выбранные ингредиенты
+                                ),
+                              );
                           Navigator.pop(context);
                         },
                         single: false,
@@ -134,15 +155,34 @@ class FilterMainPage extends StatelessWidget {
     );
   }
 
-  // Функция для получения количества выбранных ингредиентов в категории по id
-  int _getSelectedCount(IngredientSelectionState state, int categoryId) {
-    final section = state.sections.firstWhere(
-      (section) => section.id == categoryId,
-      orElse: () => Section(id: 0, name: '', categories: []),
-    );
+  String _getSelectedIngredients(IngredientSelectionState state) {
+    final selectedItems = state.selectedItems;
+    List<String> selectedIngredientsIds = [];
 
-    return section.categories.fold<int>(0, (prev, category) {
-      return prev + (state.selectedItems[category.id.toString()]?.length ?? 0);
+    // Проходим по всем секциям
+    selectedItems.forEach((sectionId, categories) {
+      categories.forEach((categoryId, ingredients) {
+        print(ingredients); // Посмотрите, что содержится в ingredients
+      });
+    });
+
+    // Возвращаем строку с идентификаторами ингредиентов через запятую
+    return selectedIngredientsIds.join(',');
+  }
+
+  // Функция для получения количества выбранных ингредиентов в категории по id
+  int _getSelectedCount(IngredientSelectionState state, int sectionId) {
+    // Проверяем, есть ли в состоянии секция с указанным ID
+    final section = state.selectedItems[sectionId];
+
+    if (section == null) {
+      // Если секция отсутствует, возвращаем 0
+      return 0;
+    }
+
+    // Подсчитываем все выбранные ингредиенты в каждой категории секции
+    return section.entries.fold<int>(0, (total, categoryEntry) {
+      return total + categoryEntry.value.length;
     });
   }
 }

@@ -78,7 +78,7 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
                     context,
                     cocktailBloc,
                     state,
-                    category.id,
+                    widget.step,
                     category.name,
                     category.ingredients
                         .map((ingredient) => ingredient.name)
@@ -229,19 +229,14 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
                 TextSpan(
                   text:
                       '(${selectedIngredients.length} ${tr('cocktail_selection.selected')})',
-                  // Здесь будет ваше время
-                  style: context.text.bodyText12Grey
-                      .copyWith(fontSize: 16 // Измените цвет на нужный вам
-                          ),
+                  style: context.text.bodyText12Grey.copyWith(fontSize: 16),
                 ),
               ],
             ),
           ),
           tilePadding:
               const EdgeInsets.symmetric(horizontal: 14.0, vertical: 4.0),
-          childrenPadding: const EdgeInsets.symmetric(
-            horizontal: 14.0,
-          ),
+          childrenPadding: const EdgeInsets.symmetric(horizontal: 14.0),
           children: [
             Container(
               decoration: BoxDecoration(
@@ -267,7 +262,10 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
                         value: selectedIngredients.contains(item),
                         onChanged: (bool? selected) {
                           cocktailBloc.add(ToggleSelectionEvent(
-                              widget.step, categoryId.toString(), item));
+                            widget.step, // ID секции (шаг)
+                            category, // Имя категории
+                            item,
+                          ));
                         },
                       );
                     }).toList(),

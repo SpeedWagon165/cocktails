@@ -41,22 +41,12 @@ class CustomSearchBar extends StatelessWidget {
                           SearchFavoriteCocktails(
                             query: query,
                             // Передача дополнительных параметров
-                            ingredients: null,
-                            tools: null,
-                            ordering: '-title',
-                            page: null,
-                            pageSize: null,
                           ),
                         );
                   } else {
                     context.read<CocktailListBloc>().add(
                           SearchCocktails(
                             query: query,
-                            ingredients: null,
-                            tools: null,
-                            ordering: '-title',
-                            page: null,
-                            pageSize: null,
                           ),
                         );
                   }

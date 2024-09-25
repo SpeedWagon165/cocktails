@@ -22,9 +22,17 @@ class _CatalogSelectedItemsWrapState extends State<CatalogSelectedItemsWrap> {
 
     return BlocBuilder<IngredientSelectionBloc, IngredientSelectionState>(
       builder: (context, state) {
-        final selectedItems = state.selectedItems.entries
-            .expand((entry) => entry.value.map((item) => item))
-            .toList();
+        // Собираем все выбранные ингредиенты из всех секций и категорий
+        final selectedItems =
+            state.selectedItems.entries.expand((sectionEntry) {
+          return sectionEntry.value.entries.expand((categoryEntry) {
+            return categoryEntry.value.map((item) => {
+                  'sectionId': sectionEntry.key,
+                  'category': categoryEntry.key,
+                  'ingredient': item
+                });
+          });
+        }).toList();
 
         const int maxVisibleItems = 7;
         bool shouldShowMoreButton = selectedItems.length > maxVisibleItems;
@@ -38,11 +46,15 @@ class _CatalogSelectedItemsWrapState extends State<CatalogSelectedItemsWrap> {
               children: (showAll
                       ? selectedItems
                       : selectedItems.take(maxVisibleItems))
-                  .map((item) {
+                  .map((itemData) {
+                final sectionId = itemData['sectionId'] as int;
+                final category = itemData['category'] as String;
+                final ingredient = itemData['ingredient'] as String;
+
                 return Chip(
                   backgroundColor: const Color(0xff3E3E3E),
                   label: Text(
-                    item,
+                    ingredient,
                     style: context.text.bodyText14White,
                   ),
                   shape: const StadiumBorder(
@@ -62,11 +74,9 @@ class _CatalogSelectedItemsWrapState extends State<CatalogSelectedItemsWrap> {
                     ),
                   ),
                   onDeleted: () {
-                    final category = state.selectedItems.entries
-                        .firstWhere((entry) => entry.value.contains(item))
-                        .key;
-
-                    cocktailBloc.add(ToggleSelectionEvent(category, item));
+                    // Удаление ингредиента с указанием секции и категории
+                    cocktailBloc.add(
+                        ToggleSelectionEvent(sectionId, category, ingredient));
                   },
                 );
               }).toList(),
@@ -92,9 +102,10 @@ class _CatalogSelectedItemsWrapState extends State<CatalogSelectedItemsWrap> {
                             ? tr(
                                 'cocktail_selection.hide') // Локализованное "Скрыть"
                             : tr('cocktail_selection.show_all'),
-                        // Локализованное "Смотреть все"
-                        style: context.text.bodyText16White
-                            .copyWith(color: const Color(0xffB7B7B7)),
+                        // Локализованное "Показать все"
+                        style: context.text.bodyText16White.copyWith(
+                          color: const Color(0xffB7B7B7),
+                        ),
                       ),
                       const SizedBox(
                         width: 15,

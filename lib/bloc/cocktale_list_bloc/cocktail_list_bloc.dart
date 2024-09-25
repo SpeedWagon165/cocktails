@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../models/cocktail_list_model.dart';
 import '../../provider/cocktail_list_get.dart';
@@ -26,7 +27,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
     emit(CocktailLoading());
     try {
       final cocktails = await repository.fetchCocktails();
-      emit(CocktailLoaded(cocktails));
+      emit(CocktailLoaded(cocktails, 'title'));
     } catch (e, stacktrace) {
       log('Error fetching cocktail', error: e, stackTrace: stacktrace);
       emit(CocktailError('Failed to fetch cocktails: ${e.toString()}'));
@@ -39,7 +40,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
     emit(CocktailLoading());
     try {
       final cocktails = await repository.fetchUserCocktails(event.token);
-      emit(CocktailLoaded(cocktails));
+      emit(CocktailLoaded(cocktails, 'title'));
     } catch (e, stacktrace) {
       log('Error fetching user cocktails', error: e, stackTrace: stacktrace);
       log(e.toString());
@@ -59,7 +60,8 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         page: event.page,
         pageSize: event.pageSize,
       );
-      emit(CocktailLoaded(cocktails));
+      debugPrint('Current sort option: ${event.ordering ?? 'title'}');
+      emit(CocktailLoaded(cocktails, event.ordering ?? 'title'));
     } catch (e, stacktrace) {
       log('Error searching cocktails: $e', error: e, stackTrace: stacktrace);
       throw Exception('Failed to search cocktails: $e');
@@ -71,7 +73,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
     emit(CocktailLoading());
     try {
       final favoriteCocktails = await repository.fetchFavoriteCocktails();
-      emit(CocktailLoaded(favoriteCocktails));
+      emit(CocktailLoaded(favoriteCocktails, 'title'));
     } catch (e) {
       emit(CocktailError(
           'Не удалось загрузить избранные рецепты: ${e.toString()}'));
@@ -90,7 +92,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         page: event.page,
         pageSize: event.pageSize,
       );
-      emit(CocktailLoaded(cocktails));
+      emit(CocktailLoaded(cocktails, 'title'));
     } catch (e) {
       emit(CocktailError(e.toString()));
     }

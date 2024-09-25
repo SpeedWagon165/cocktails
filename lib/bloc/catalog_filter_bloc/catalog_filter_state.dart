@@ -3,20 +3,21 @@ part of 'catalog_filter_bloc.dart';
 @immutable
 class IngredientSelectionState {
   final List<Section> sections;
-  final Map<String, List<String>> selectedItems;
+  final Map<int, Map<String, List<String>>>
+      selectedItems; // Map для секций, категорий и ингредиентов
   final bool isLoading;
   final String? errorMessage;
 
   const IngredientSelectionState({
     required this.sections,
-    required this.selectedItems,
+    required this.selectedItems, // Обновляем выбранные ингредиенты для каждой секции и категории
     this.isLoading = false,
     this.errorMessage,
   });
 
   IngredientSelectionState copyWith({
     List<Section>? sections,
-    Map<String, List<String>>? selectedItems,
+    Map<int, Map<String, List<String>>>? selectedItems,
     bool? isLoading,
     String? errorMessage,
   }) {

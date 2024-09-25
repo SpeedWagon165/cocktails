@@ -111,7 +111,7 @@ class CocktailRepository {
       final response = await dio.get(
         '/recipe/',
         queryParameters: {
-          'q': query,
+          if (query != null) 'q': query,
           if (ingredients != null) 'ingredients': ingredients,
           if (tools != null) 'tools': tools,
           if (ordering != null) 'ordering': ordering,
