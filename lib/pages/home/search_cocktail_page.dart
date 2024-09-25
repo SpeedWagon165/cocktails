@@ -95,9 +95,9 @@ class SearchCocktailPageState extends State<SearchCocktailPage> {
                     );
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 6),
                 const SelectedItemsCarousel(),
-                const SizedBox(height: 16),
+                const SizedBox(height: 6),
                 Expanded(
                   child: BlocBuilder<CocktailListBloc, CocktailListState>(
                     builder: (context, state) {

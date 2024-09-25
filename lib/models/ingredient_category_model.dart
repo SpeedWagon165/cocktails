@@ -3,20 +3,23 @@ class Ingredients {
   final String name;
   final String description;
   final bool isAlcoholic;
+  final int sectionId; // Добавляем sectionId для каждого ингредиента
 
   Ingredients({
     required this.id,
     required this.name,
     required this.description,
     required this.isAlcoholic,
+    required this.sectionId, // Требуется при создании объекта
   });
 
-  factory Ingredients.fromJson(Map<String, dynamic> json) {
+  factory Ingredients.fromJson(Map<String, dynamic> json, int sectionId) {
     return Ingredients(
       id: json['id'],
       name: json['name'],
       description: json['description'],
       isAlcoholic: json['is_alcoholic'],
+      sectionId: sectionId, // Передаем sectionId при создании
     );
   }
 }
@@ -37,7 +40,8 @@ class Section {
       id: json['id'],
       name: json['name'],
       categories: (json['categories'] as List)
-          .map((categoryJson) => Category.fromJson(categoryJson))
+          .map((categoryJson) => Category.fromJson(categoryJson,
+              json['id'])) // Передаем id секции при создании категории
           .toList(),
     );
   }
@@ -58,14 +62,15 @@ class Category {
     required this.ingredients,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) {
+  factory Category.fromJson(Map<String, dynamic> json, int sectionId) {
     return Category(
       id: json['id'],
       name: json['name'],
       isMain: json['is_main'],
       isAlcoholic: json['is_alcoholic'],
       ingredients: (json['ingredients'] as List)
-          .map((ingredientJson) => Ingredients.fromJson(ingredientJson))
+          .map((ingredientJson) => Ingredients.fromJson(ingredientJson,
+              sectionId)) // Передаем sectionId при создании ингредиента
           .toList(),
     );
   }

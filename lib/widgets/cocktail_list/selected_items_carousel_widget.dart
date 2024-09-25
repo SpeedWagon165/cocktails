@@ -20,7 +20,7 @@ class SelectedItemsCarousel extends StatelessWidget {
             .toList();
 
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(

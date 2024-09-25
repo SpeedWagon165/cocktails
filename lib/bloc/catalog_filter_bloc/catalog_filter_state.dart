@@ -1,0 +1,30 @@
+part of 'catalog_filter_bloc.dart';
+
+@immutable
+class IngredientSelectionState {
+  final List<Section> sections;
+  final Map<String, List<String>> selectedItems;
+  final bool isLoading;
+  final String? errorMessage;
+
+  const IngredientSelectionState({
+    required this.sections,
+    required this.selectedItems,
+    this.isLoading = false,
+    this.errorMessage,
+  });
+
+  IngredientSelectionState copyWith({
+    List<Section>? sections,
+    Map<String, List<String>>? selectedItems,
+    bool? isLoading,
+    String? errorMessage,
+  }) {
+    return IngredientSelectionState(
+      sections: sections ?? this.sections,
+      selectedItems: selectedItems ?? this.selectedItems,
+      isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+}

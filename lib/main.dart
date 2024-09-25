@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'bloc/app_start_bloc/app_start_bloc.dart';
 import 'bloc/avatar_cubit/avatar_cubit.dart';
 import 'bloc/bottom_navigation_bloc/bottom_navigation_bloc.dart';
+import 'bloc/catalog_filter_bloc/catalog_filter_bloc.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 void main() async {
@@ -47,6 +48,9 @@ class MyApp extends StatelessWidget {
         });
         return MultiBlocProvider(
             providers: [
+              BlocProvider(
+                  create: (context) =>
+                      IngredientSelectionBloc(CocktailRepository())),
               BlocProvider(
                   create: (context) =>
                       CocktailSelectionBloc(CocktailRepository())),

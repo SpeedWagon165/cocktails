@@ -1,3 +1,4 @@
+import 'package:cocktails/pages/catalog/pop_up/filter_pop_up.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +28,7 @@ class CatalogPage extends StatelessWidget {
                   onPressed: null,
                   secondIcon: true,
                   onSecondIconTap: () {
-                    Navigator.of(context).pop();
+                    openFilterModal(context);
                   },
                 ),
                 const SizedBox(height: 10),

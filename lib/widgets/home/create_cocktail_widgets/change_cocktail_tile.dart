@@ -1,4 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -6,11 +7,13 @@ class ChangeCocktailTile extends StatelessWidget {
   final String name;
   final bool border;
   final Function()? onTap;
+  final int selectedCount;
 
   const ChangeCocktailTile({
     super.key,
     this.border = true,
     required this.name,
+    this.selectedCount = 0,
     this.onTap,
   });
 
@@ -25,10 +28,26 @@ class ChangeCocktailTile extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8),
             child: ListTile(
-              title: Text(
-                name,
-                style: context.text.buttonText18Brown
-                    .copyWith(color: Colors.white),
+              title: RichText(
+                textAlign: TextAlign.start,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '$name  ',
+                      style: context
+                          .text.bodyText16White, // Стиль текста по умолчанию
+                    ),
+                    TextSpan(
+                      text: selectedCount > 0
+                          ? '($selectedCount ${tr('cocktail_selection.selected')})'
+                          : '',
+                      // Здесь будет ваше время
+                      style: context.text.bodyText12Grey
+                          .copyWith(fontSize: 16 // Измените цвет на нужный вам
+                              ),
+                    ),
+                  ],
+                ),
               ),
               trailing: Container(
                 width: 32,
