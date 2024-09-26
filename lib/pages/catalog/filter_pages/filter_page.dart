@@ -21,7 +21,7 @@ class FilterMainPage extends StatelessWidget {
     final cocktailBloc = BlocProvider.of<IngredientSelectionBloc>(context);
 
     return BasePopup(
-      text: "Фильтр",
+      text: tr("catalog_page.filter"),
       onPressed: null,
       arrow: false,
       child: BlocBuilder<IngredientSelectionBloc, IngredientSelectionState>(
@@ -112,7 +112,7 @@ class FilterMainPage extends StatelessWidget {
                         text: tr("buttons.cancel"),
                         grey: true,
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.of(context, rootNavigator: true).pop();
                         },
                         single: false,
                       ),
@@ -124,7 +124,6 @@ class FilterMainPage extends StatelessWidget {
                       child: CustomButton(
                         text: tr("buttons.confirm"),
                         onPressed: () {
-                          // Передаем ингредиенты и сортировку через блок
                           final currentSortOption = context
                                   .read<CocktailListBloc>()
                                   .state is CocktailLoaded
@@ -133,6 +132,11 @@ class FilterMainPage extends StatelessWidget {
                                   .currentSortOption
                               : 'title';
 
+                          final selectedIngredients = _getSelectedIngredients(
+                              context
+                                  .read<IngredientSelectionBloc>()
+                                  .state); // Получаем выбранные ингредиенты
+
                           context.read<CocktailListBloc>().add(
                                 SearchCocktails(
                                   ordering: currentSortOption,
@@ -140,7 +144,7 @@ class FilterMainPage extends StatelessWidget {
                                       selectedIngredients, // Передаем выбранные ингредиенты
                                 ),
                               );
-                          Navigator.pop(context);
+                          Navigator.of(context, rootNavigator: true).pop();
                         },
                         single: false,
                       ),
@@ -159,10 +163,12 @@ class FilterMainPage extends StatelessWidget {
     final selectedItems = state.selectedItems;
     List<String> selectedIngredientsIds = [];
 
-    // Проходим по всем секциям
+    // Проходим по всем секциям и категориям
     selectedItems.forEach((sectionId, categories) {
       categories.forEach((categoryId, ingredients) {
-        print(ingredients); // Посмотрите, что содержится в ingredients
+        // Собираем идентификаторы ингредиентов
+        selectedIngredientsIds
+            .addAll(ingredients.map((ingredient) => ingredient.id.toString()));
       });
     });
 

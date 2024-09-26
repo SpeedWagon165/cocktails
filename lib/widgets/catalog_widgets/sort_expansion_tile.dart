@@ -1,4 +1,5 @@
 import 'package:cocktails/theme/theme_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,10 +21,20 @@ class SortExpansionTile extends StatefulWidget {
 class SortExpansionTileState extends State<SortExpansionTile> {
   late String selectedSortOption;
 
-  final List<String> sortOptions = [
-    'По алфавиту (А-Я, A-Z)',
-    'По алфавиту (Я-А, Z-A)',
-    'По наличию видео',
+  // Эти названия должны быть синхронизированы с API-параметрами
+  final List<Map<String, String>> sortOptions = [
+    {
+      'label': 'catalog_page.sort_alphabet_asc',
+      'apiField': 'title',
+    },
+    {
+      'label': 'catalog_page.sort_alphabet_desc',
+      'apiField': '-title',
+    },
+    {
+      'label': 'catalog_page.sort_by_video',
+      'apiField': 'video_url',
+    },
   ];
 
   @override
@@ -35,26 +46,11 @@ class SortExpansionTileState extends State<SortExpansionTile> {
 
   // Получаем отображаемый заголовок для текущей сортировки
   String _getSortTitle() {
-    switch (selectedSortOption) {
-      case '-title':
-        return 'По алфавиту (Я-А)';
-      case 'video_url':
-        return 'По наличию видео';
-      default:
-        return 'По алфавиту (А-Я)';
-    }
-  }
-
-  // Преобразование отображаемого варианта сортировки в API параметр
-  String _mapSortOptionToApiField(String option) {
-    switch (option) {
-      case 'По алфавиту (Я-А, Z-A)':
-        return '-title'; // Обратный порядок
-      case 'По наличию видео':
-        return 'video_url'; // Сортировка по наличию видео
-      default:
-        return 'title'; // По алфавиту
-    }
+    final selectedOption = sortOptions.firstWhere(
+      (option) => option['apiField'] == selectedSortOption,
+      orElse: () => sortOptions.first,
+    );
+    return tr(selectedOption['label']!); // Локализация для текущей сортировки
   }
 
   @override
@@ -97,21 +93,19 @@ class SortExpansionTileState extends State<SortExpansionTile> {
                   itemBuilder: (context, index) {
                     final option = sortOptions[index];
                     return CustomCheckboxListTile(
-                      title: option,
-                      value: selectedSortOption ==
-                          _mapSortOptionToApiField(option),
+                      title: tr(option['label']!), // Локализуем заголовок
+                      value: selectedSortOption == option['apiField'],
                       // Устанавливаем галочку на текущем выбранном значении
                       onChanged: (bool? selected) {
                         if (selected == true) {
                           setState(() {
-                            selectedSortOption = _mapSortOptionToApiField(
-                                option); // Обновляем выбранное значение
+                            selectedSortOption = option[
+                                'apiField']!; // Обновляем выбранное значение
                           });
                           // Отправляем событие сортировки через блок
-                          final sortField = _mapSortOptionToApiField(option);
                           context.read<CocktailListBloc>().add(
                                 SearchCocktails(
-                                  ordering: sortField,
+                                  ordering: selectedSortOption,
                                 ),
                               );
                         }

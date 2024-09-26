@@ -127,7 +127,11 @@
   "catalog_page": {
     "title": "Каталог рецептов",
     "start_search": "Начните поиск рецептов",
-    "description": "Описание"
+    "description": "Описание",
+    "filter": "Фильтр",
+    "sort_alphabet_asc": "По алфавиту (А-Я)",
+    "sort_alphabet_desc": "По алфавиту (Я-А)",
+    "sort_by_video": "По наличию видео"
   },
   "my_cocktails_page": {
     "title": "Мои рецепты ({count})",

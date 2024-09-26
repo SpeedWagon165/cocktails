@@ -127,7 +127,11 @@
   "catalog_page": {
     "title": "Recipe Catalog",
     "start_search": "Start searching for recipes",
-    "description": "Description"
+    "description": "Description",
+    "filter": "Filter",
+    "sort_alphabet_asc": "Alphabetically (A-Z)",
+    "sort_alphabet_desc": "Alphabetically (Z-A)",
+    "sort_by_video": "By video availability"
   },
   "my_cocktails_page": {
     "title": "My Recipes ({count})",

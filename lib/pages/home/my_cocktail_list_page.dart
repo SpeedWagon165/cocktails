@@ -9,7 +9,7 @@ import '../../provider/cocktail_list_get.dart';
 import '../../widgets/cocktail_list/cocktail_card.dart';
 import '../../widgets/custom_arrowback.dart';
 import '../../widgets/home/search_bar_widget.dart';
-import 'new_recipe_page.dart';
+import 'new_recipe/new_recipe_page.dart';
 
 class MyCocktailsListPage extends StatefulWidget {
   const MyCocktailsListPage({super.key});

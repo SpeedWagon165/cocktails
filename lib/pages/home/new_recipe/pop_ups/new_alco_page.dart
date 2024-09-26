@@ -1,41 +1,34 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/catalog_filter_bloc/catalog_filter_bloc.dart';
-import '../../../widgets/base_pop_up.dart';
-import '../../../widgets/catalog_widgets/cocktail_filter_widget.dart';
-import '../../../widgets/custom_button.dart';
+import '../../../../widgets/base_pop_up.dart';
+import '../../../../widgets/custom_button.dart';
+import '../../../../widgets/home/create_cocktail_widgets/create_cocktail_chose_widget.dart';
 
-class ProductsPage extends StatefulWidget {
-  const ProductsPage({super.key});
+class NewRecipeAlcoholicPage extends StatefulWidget {
+  const NewRecipeAlcoholicPage({super.key});
 
   @override
-  State<ProductsPage> createState() => _ProductsPageState();
+  NewRecipeAlcoholicPageState createState() => NewRecipeAlcoholicPageState();
 }
 
-class _ProductsPageState extends State<ProductsPage> {
+class NewRecipeAlcoholicPageState extends State<NewRecipeAlcoholicPage> {
   @override
   void initState() {
     super.initState();
-
-    // Запрашиваем категории (алкогольные напитки)
-    context.read<IngredientSelectionBloc>().add(LoadCategoriesEvent());
   }
 
   @override
   Widget build(BuildContext context) {
     return BasePopup(
-      text: tr("new_recipe.ingredients"),
+      text: tr("new_recipe.alcoholic_drinks"),
       onPressed: null,
-      arrow: false,
+      arrow: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Добавляем выбранные ингредиенты в виде Chip
-          const CocktailFilterView(
-            step: 3,
-          ),
+          // Отображаем ингредиенты
+          const NewCocktailView(step: 1),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

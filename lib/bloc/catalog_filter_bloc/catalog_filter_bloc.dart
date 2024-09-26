@@ -57,24 +57,30 @@ class IngredientSelectionBloc
     // Получаем текущие выбранные ингредиенты для категории
     final currentSelection =
         state.selectedItems[event.sectionId]?[event.category] ?? [];
-    final updatedSelection = List<String>.from(currentSelection);
+    final updatedSelection = List<Ingredients>.from(currentSelection);
 
-    if (updatedSelection.contains(event.item)) {
-      updatedSelection.remove(event.item);
+    final category = state.sections
+        .firstWhere((section) => section.id == event.sectionId)
+        .categories
+        .firstWhere((cat) => cat.name == event.category);
+
+    final ingredient =
+        category.ingredients.firstWhere((ing) => ing.name == event.item);
+
+    if (updatedSelection.contains(ingredient)) {
+      updatedSelection.remove(ingredient);
     } else {
-      updatedSelection.add(event.item);
+      updatedSelection.add(ingredient);
     }
 
-    // Обновляем только если изменилось количество выбранных элементов
     if (updatedSelection.length != currentSelection.length) {
       final updatedItems =
-          Map<int, Map<String, List<String>>>.from(state.selectedItems);
+          Map<int, Map<String, List<Ingredients>>>.from(state.selectedItems);
       updatedItems[event.sectionId] = {
         ...updatedItems[event.sectionId] ?? {},
-        event.category: updatedSelection
+        event.category: updatedSelection,
       };
 
-      // Обновляем состояние с новым выбором
       emit(state.copyWith(selectedItems: updatedItems));
     }
   }
@@ -83,7 +89,10 @@ class IngredientSelectionBloc
   void _clearSelectionEvent(
       ClearSelectionEvent event, Emitter<IngredientSelectionState> emit) async {
     final updatedItems =
-        Map<int, Map<String, List<String>>>.from(state.selectedItems);
+        Map<int, Map<String, List<Ingredients>>>.from(state.selectedItems);
+    updatedItems[event.sectionId] = {
+      ...updatedItems[event.sectionId] ?? {},
+    };
 
     // Очищаем выбранные ингредиенты для конкретной секции и категории
     updatedItems[event.sectionId]?.remove(event.category);

@@ -3,17 +3,20 @@ import 'package:cocktails/widgets/auth/custom_auth_textfield.dart';
 import 'package:cocktails/widgets/home/create_cocktail_widgets/solid_add_photo_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../widgets/custom_arrowback.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/home/create_cocktail_widgets/change_cocktail_tile.dart';
-import 'change_cocktail_popups/alco_pop_up.dart';
+import '../../../bloc/create_cocktail_bloc/create_cocktail_bloc.dart';
+import '../../../widgets/custom_arrowback.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/home/create_cocktail_widgets/change_cocktail_tile.dart';
+import '../../../widgets/home/create_cocktail_widgets/new_recipe_pop_up.dart';
 
 class NewRecipePage extends StatelessWidget {
   const NewRecipePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cocktailBloc = BlocProvider.of<CocktailCreationBloc>(context);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -72,16 +75,24 @@ class NewRecipePage extends StatelessWidget {
                         name: tr('new_recipe.alcoholic_drinks'),
                         // локализованная строка
                         onTap: () {
-                          alcoChoicePopUp(context);
+                          openAlcoholicModal(context);
                         },
                       ),
                       ChangeCocktailTile(
-                          name: tr('new_recipe.non_alcoholic_drinks')),
-                      // локализованная строка
-                      ChangeCocktailTile(name: tr('new_recipe.ingredients')),
-                      // локализованная строка
+                        name: tr('new_recipe.non_alcoholic_drinks'),
+                        selectedCount: 1,
+                        // cocktailBloc.state.getSelectedCountForSection(1),
+                        onTap: () {
+                          openNonAlcoholicModal(context);
+                        },
+                      ),
+                      ChangeCocktailTile(
+                        name: tr('new_recipe.ingredients'),
+                        onTap: () {
+                          openProductModal(context);
+                        },
+                      ),
                       ChangeCocktailTile(name: tr('new_recipe.tools')),
-                      // локализованная строка
                       ChangeCocktailTile(
                         name: tr('new_recipe.steps'), // локализованная строка
                         border: false,

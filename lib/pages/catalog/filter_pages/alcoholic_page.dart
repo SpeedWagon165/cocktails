@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +26,7 @@ class AlcoholicPageState extends State<AlcoholicPage> {
   @override
   Widget build(BuildContext context) {
     return BasePopup(
-      text: "Алкогольные напитки",
+      text: tr("new_recipe.alcoholic_drinks"),
       onPressed: null,
       arrow: false,
       child: Column(
@@ -42,7 +43,7 @@ class AlcoholicPageState extends State<AlcoholicPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: CustomButton(
-                    text: "Отмена",
+                    text: tr("buttons.cancel"),
                     grey: true,
                     onPressed: () {
                       Navigator.pop(context);
@@ -55,7 +56,7 @@ class AlcoholicPageState extends State<AlcoholicPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: CustomButton(
-                    text: "Подтвердить",
+                    text: tr("buttons.confirm"),
                     onPressed: () {
                       Navigator.pop(context);
                     },

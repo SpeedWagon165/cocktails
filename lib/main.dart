@@ -19,6 +19,7 @@ import 'bloc/avatar_cubit/avatar_cubit.dart';
 import 'bloc/bottom_navigation_bloc/bottom_navigation_bloc.dart';
 import 'bloc/catalog_filter_bloc/catalog_filter_bloc.dart';
 import 'bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
+import 'bloc/create_cocktail_bloc/create_cocktail_bloc.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 void main() async {
@@ -49,6 +50,9 @@ class MyApp extends StatelessWidget {
         });
         return MultiBlocProvider(
             providers: [
+              BlocProvider(
+                  create: (context) =>
+                      CocktailCreationBloc(CocktailRepository())),
               BlocProvider(
                   create: (context) =>
                       IngredientSelectionBloc(CocktailRepository())),

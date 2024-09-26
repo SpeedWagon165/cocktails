@@ -7,12 +7,14 @@ class FilterNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      onGenerateRoute: (RouteSettings settings) {
-        return MaterialPageRoute(
-          builder: (context) => const FilterMainPage(),
-        );
-      },
+    return IntrinsicHeight(
+      child: Navigator(
+        onGenerateRoute: (RouteSettings settings) {
+          return MaterialPageRoute(
+            builder: (context) => const FilterMainPage(),
+          );
+        },
+      ),
     );
   }
 }

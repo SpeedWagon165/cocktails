@@ -39,7 +39,7 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
         if (state.errorMessage != null) {
           return Center(
             child: Text(
-              'Ошибка: ${state.errorMessage}',
+              tr("errors.server_error"),
               style: const TextStyle(color: Colors.red),
             ),
           );
@@ -80,9 +80,7 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
                     state,
                     widget.step,
                     category.name,
-                    category.ingredients
-                        .map((ingredient) => ingredient.name)
-                        .toList(),
+                    category.ingredients,
                     isFirst: index == 0,
                     isLast: index == categories.length - 1,
                   );
@@ -121,7 +119,7 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
             return Chip(
               backgroundColor: const Color(0xff3E3E3E),
               label: Text(
-                item,
+                item.name,
                 style: context.text.bodyText14White,
               ),
               shape: const StadiumBorder(
@@ -144,7 +142,7 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
                     .firstWhere((entry) => entry.value.contains(item))
                     .key;
                 cocktailBloc
-                    .add(ToggleSelectionEvent(sectionId, category!, item));
+                    .add(ToggleSelectionEvent(sectionId, category!, item.name));
               },
             );
           }).toList(),
@@ -195,7 +193,7 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
       IngredientSelectionState state,
       int categoryId,
       String category,
-      List<String> items,
+      List<Ingredients> items,
       {bool isFirst = false,
       bool isLast = false}) {
     final ScrollController scrollController = ScrollController();
@@ -258,13 +256,13 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
                       final selectedIngredients =
                           state.selectedItems[categoryId]?[category] ?? [];
                       return CustomCheckboxListTile(
-                        title: item,
+                        title: item.name,
                         value: selectedIngredients.contains(item),
                         onChanged: (bool? selected) {
                           cocktailBloc.add(ToggleSelectionEvent(
                             widget.step, // ID секции (шаг)
                             category, // Имя категории
-                            item,
+                            item.name,
                           ));
                         },
                       );

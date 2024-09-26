@@ -29,7 +29,7 @@ class _CatalogSelectedItemsWrapState extends State<CatalogSelectedItemsWrap> {
             return categoryEntry.value.map((item) => {
                   'sectionId': sectionEntry.key,
                   'category': categoryEntry.key,
-                  'ingredient': item
+                  'ingredient': item.name
                 });
           });
         }).toList();
