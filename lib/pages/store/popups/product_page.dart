@@ -1,3 +1,4 @@
+import 'package:cocktails/models/store_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -6,7 +7,7 @@ import '../../../widgets/auth/custom_registration_button.dart';
 import '../../../widgets/base_pop_up.dart';
 import '../../../widgets/store/expandable_text.dart';
 
-void productPagePopUp(BuildContext context, Map<String, dynamic> product) {
+void productPagePopUp(BuildContext context, Product product) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -14,7 +15,7 @@ void productPagePopUp(BuildContext context, Map<String, dynamic> product) {
     backgroundColor: Colors.transparent,
     builder: (context) {
       return BasePopup(
-        text: product['name'] ?? tr('store.default_product_name'),
+        text: product.name ?? tr('store.default_product_name'),
         // Локализованная строка
         onPressed: () {
           Navigator.pop(context);
@@ -25,9 +26,9 @@ void productPagePopUp(BuildContext context, Map<String, dynamic> product) {
               borderRadius: const BorderRadius.all(Radius.circular(11)),
               child: AspectRatio(
                 aspectRatio: 1,
-                child: product['photo'] != null
+                child: product.photo != null
                     ? Image.network(
-                        product['photo'],
+                        product.photo!,
                         fit: BoxFit.cover,
                       )
                     : Container(
@@ -46,15 +47,15 @@ void productPagePopUp(BuildContext context, Map<String, dynamic> product) {
               height: 24,
             ),
             ExpandableTextWidget(
-              text: product['description'],
+              text: product.description ?? "Нет описания",
               titleText: tr('store.description'), // Локализованная строка
             ),
             const SizedBox(
               height: 24,
             ),
             // Создание кнопок для маркетплейсов
-            if (product['links'] != null)
-              ...product['links'].entries.map((entry) {
+            if (product.links != null)
+              ...product.links!.entries.map((entry) {
                 String marketplaceName;
                 switch (entry.key) {
                   case 'wildberries':
@@ -64,20 +65,23 @@ void productPagePopUp(BuildContext context, Map<String, dynamic> product) {
                     marketplaceName = 'Ozon';
                     break;
                   case 'yandex':
-                    marketplaceName =
-                        tr('store.marketplace_yandex'); // Локализованная строка
+                    marketplaceName = tr('store.marketplace_yandex');
                     break;
                   default:
                     marketplaceName = entry.key;
                 }
+                final price = entry.value != null &&
+                        entry.value is Map &&
+                        entry.value['price'] != null
+                    ? entry.value['price'].toString()
+                    : 'N/A';
 
                 return Column(
                   children: [
                     RegistrationServicesButton(
                       text: tr('store.buy_on',
                           namedArgs: {'count': marketplaceName}),
-                      // Локализованная строка с аргументом
-                      trailingText: '  ${entry.value['price']} ₽',
+                      trailingText: '  $price ₽',
                       onPressed: () {
                         final url = entry.value['link'];
                         if (url != null) {
@@ -85,9 +89,7 @@ void productPagePopUp(BuildContext context, Map<String, dynamic> product) {
                         }
                       },
                     ),
-                    const SizedBox(
-                      height: 12,
-                    )
+                    const SizedBox(height: 12),
                   ],
                 );
               }).toList(),

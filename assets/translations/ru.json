@@ -192,7 +192,12 @@
     "non_alcoholic_drinks": "Б/а напитки",
     "ingredients": "Продукты",
     "tools": "Инструменты",
-    "steps": "Шаги приготовления"
+    "steps": "Шаги приготовления",
+    "name": "Название коктейля*",
+    "error_title": "Введите название",
+    "error_ingredients": "Выберите хотя бы 1 ингредиент",
+    "error_tools": "Выберите хотя бы 1 инструмент",
+    "cocktail_created": "Коктейль создан"
   },
   "cocktail_instructions": {
     "title": "Приготовление",

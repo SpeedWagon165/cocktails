@@ -13,7 +13,7 @@ class GoodsInitial extends GoodsState {}
 class GoodsLoading extends GoodsState {}
 
 class GoodsLoaded extends GoodsState {
-  final List<dynamic> goods;
+  final List<Product> goods;
 
   const GoodsLoaded(this.goods);
 

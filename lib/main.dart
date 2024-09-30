@@ -9,6 +9,7 @@ import 'package:cocktails/theme/themes.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
 import 'package:cocktails/widgets/bottom_nav_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,9 +22,13 @@ import 'bloc/catalog_filter_bloc/catalog_filter_bloc.dart';
 import 'bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 import 'bloc/create_cocktail_bloc/create_cocktail_bloc.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await EasyLocalization.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // Разрешить только портретную ориентацию
@@ -31,7 +36,6 @@ void main() async {
     runApp(EasyLocalization(
         supportedLocales: const [Locale('en', ''), Locale('ru', '')],
         path: 'assets/translations',
-        // Путь к JSON-файлам локализаций
         fallbackLocale: const Locale('en', ''),
         startLocale: const Locale('ru', ''),
         child: const MyApp()));

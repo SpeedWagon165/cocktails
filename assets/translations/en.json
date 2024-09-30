@@ -192,7 +192,12 @@
     "non_alcoholic_drinks": "Non-Alcoholic Drinks",
     "ingredients": "Ingredients",
     "tools": "Tools",
-    "steps": "Preparation Steps"
+    "steps": "Preparation Steps",
+    "name": "Cocktail name*",
+    "error_title": "Enter a title",
+    "error_ingredients": "Select at least 1 ingredient",
+    "error_tools": "Select at least 1 tool",
+    "cocktail_created": "Cocktail created"
   },
   "cocktail_instructions": {
     "title": "Preparation",

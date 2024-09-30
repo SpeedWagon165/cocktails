@@ -23,7 +23,8 @@ class CocktailInstructionCard extends StatelessWidget {
         children: [
           Text(
             textAlign: TextAlign.start,
-            tr('cocktail_instruction.step', args: [index.toString()]),
+            tr('cocktail_instructions.step',
+                namedArgs: {'step': index.toString()}),
             style: context.text.bodyText14White.copyWith(
               fontSize: 15.0,
               color: const Color(0xFFF6B402),

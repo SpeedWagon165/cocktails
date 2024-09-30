@@ -11,10 +11,10 @@ import '../../widgets/account/profile_avatar.dart';
 import '../../widgets/auth/custom_registration_button.dart';
 import '../../widgets/custom_arrowback.dart';
 import '../auth/popups/auth_pop_up.dart';
-import '../bonus_page/bonus_screen.dart';
 import 'about_app_page.dart';
 import 'change_password/change_password_step_1.dart';
 import 'editing_account_page.dart';
+import 'language.dart';
 import 'notification_settings_page.dart';
 
 class AccountPage extends StatefulWidget {
@@ -141,7 +141,8 @@ class _AccountPageState extends State<AccountPage> {
                             // Локализованная строка "Язык"
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const BonusScreen()));
+                                  builder: (context) =>
+                                      const LanguageSelectionPage()));
                             },
                           ),
                           const Divider(color: Color(0xff343434), height: 1),
@@ -226,7 +227,8 @@ class _AccountPageState extends State<AccountPage> {
                             // Локализованная строка "Язык"
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const BonusScreen()));
+                                  builder: (context) =>
+                                      const LanguageSelectionPage()));
                             },
                           ),
                           const Divider(color: Color(0xff343434), height: 1),

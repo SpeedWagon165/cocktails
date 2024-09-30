@@ -5,13 +5,27 @@ class CocktailCreationState {
   final Map<int, Map<String, List<IngredientItem>>> selectedItems;
   final List<IngredientItem>
       ingredientItems; // Ингредиенты с количеством и типом
+  final List<Tool> tools; // Инструменты
+  final List<Tool> selectedTools; // Выбранные инструменты
+  final List<RecipeStep> steps;
+  final File? photo;
+  final String title;
+  final String description;
+  final String videoUrl;
   final bool isLoading;
   final String? errorMessage;
 
   const CocktailCreationState({
     required this.sections,
     required this.selectedItems,
-    required this.ingredientItems, // Добавляем список IngredientItem
+    required this.ingredientItems,
+    required this.tools,
+    required this.selectedTools,
+    required this.steps,
+    this.title = '',
+    this.description = '',
+    this.videoUrl = '',
+    this.photo,
     this.isLoading = false,
     this.errorMessage,
   });
@@ -19,7 +33,14 @@ class CocktailCreationState {
   CocktailCreationState copyWith({
     List<Section>? sections,
     Map<int, Map<String, List<IngredientItem>>>? selectedItems,
-    List<IngredientItem>? ingredientItems, // Для копирования IngredientItem
+    List<IngredientItem>? ingredientItems,
+    List<Tool>? tools,
+    List<Tool>? selectedTools,
+    List<RecipeStep>? steps,
+    File? photo,
+    String? title,
+    String? description,
+    String? videoUrl,
     bool? isLoading,
     String? errorMessage,
   }) {
@@ -27,6 +48,13 @@ class CocktailCreationState {
       sections: sections ?? this.sections,
       selectedItems: selectedItems ?? this.selectedItems,
       ingredientItems: ingredientItems ?? this.ingredientItems,
+      tools: tools ?? this.tools,
+      selectedTools: selectedTools ?? this.selectedTools,
+      steps: steps ?? this.steps,
+      photo: photo ?? this.photo,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      videoUrl: videoUrl ?? this.videoUrl,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
     );

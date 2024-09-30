@@ -14,6 +14,16 @@ class IngredientsListCard extends StatelessWidget {
   final String count;
   final bool border;
 
+  String formatCount(String count) {
+    final double? value = double.tryParse(count);
+    if (value != null && value == value.toInt()) {
+      // Если число целое, выводим его без десятичных знаков
+      return value.toInt().toString();
+    }
+    // В противном случае выводим исходное число
+    return count;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,7 +38,7 @@ class IngredientsListCard extends StatelessWidget {
                 style: context.text.headline20White
                     .copyWith(color: Colors.white, fontSize: 15.0),
               ),
-              Text("$count $type",
+              Text("${formatCount(count)} $type",
                   style: context.text.headline20White.copyWith(
                       color: const Color(0xFFB7B7B7), fontSize: 15.0)),
             ],

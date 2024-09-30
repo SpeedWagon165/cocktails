@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "256071808776",
+    "project_id": "cocktail-5490e",
+    "storage_bucket": "cocktail-5490e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256071808776:android:529a4748835c1796c7debd",
+        "android_client_info": {
+          "package_name": "com.example.cocktails"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "256071808776-rpt6r31625sb5vl4ol2lpt5vo98tmnon.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cocktails",
+            "certificate_hash": "ab295b3b242cdc8478cdbf3185cd276940fb414f"
+          }
+        },
+        {
+          "client_id": "256071808776-5gheg3m90ulc6li0t1e2esg1g374h6n5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwK_OWAL1tTvw4A-SAQ45kH_5VxXPZSNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "256071808776-5gheg3m90ulc6li0t1e2esg1g374h6n5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "256071808776-kvio2va88l1pnvgs9bc8mupnkkabai0d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cocktails"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256071808776:android:739d94da64a8aa15c7debd",
+        "android_client_info": {
+          "package_name": "com.example.yourapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "256071808776-5gheg3m90ulc6li0t1e2esg1g374h6n5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwK_OWAL1tTvw4A-SAQ45kH_5VxXPZSNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "256071808776-5gheg3m90ulc6li0t1e2esg1g374h6n5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "256071808776-kvio2va88l1pnvgs9bc8mupnkkabai0d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cocktails"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

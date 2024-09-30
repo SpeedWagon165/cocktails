@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 
+import '../../models/cocktail_list_model.dart';
 import '../../models/create_cocktail_model.dart';
 import '../../models/ingredient_category_model.dart';
 import '../../provider/cocktail_list_get.dart';
+import '../../provider/profile_repository.dart';
 
 part 'create_cocktail_event.dart';
 part 'create_cocktail_state.dart';
@@ -14,13 +19,29 @@ class CocktailCreationBloc
 
   CocktailCreationBloc(this.repository)
       : super(const CocktailCreationState(
-            sections: [], selectedItems: {}, ingredientItems: [])) {
+          sections: [],
+          selectedItems: {},
+          ingredientItems: [],
+          tools: [],
+          selectedTools: [],
+          steps: [],
+        )) {
     on<LoadCategoriesEvent>(_loadCategories);
-    on<ToggleSelectionEvent>(_toggleSelection);
     on<AddIngredientEvent>(_addIngredient);
     on<RemoveIngredientEvent>(_removeIngredient);
     on<UpdateIngredientQuantityEvent>(_updateIngredientQuantity);
     on<UpdateIngredientTypeEvent>(_updateIngredientType);
+    on<LoadToolsEvent>(_loadTools);
+    on<AddToolEvent>(_addTool);
+    on<RemoveToolEvent>(_removeTool);
+    on<AddStepEvent>(_onAddStep);
+    on<UpdateStepEvent>(_onUpdateStep);
+    on<RemoveStepEvent>(_onRemoveStep);
+    on<UpdatePhotoEvent>(_onUpdatePhoto);
+    on<UpdateRecipeTitleEvent>(_onUpdateRecipeTitle);
+    on<UpdateRecipeDescriptionEvent>(_onUpdateRecipeDescription);
+    on<UpdateRecipeVideoUrlEvent>(_onUpdateRecipeVideoUrl);
+    on<SubmitRecipeEvent>(_onSubmitRecipe);
   }
 
   // Загрузка категорий и секций
@@ -28,38 +49,14 @@ class CocktailCreationBloc
       LoadCategoriesEvent event, Emitter<CocktailCreationState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
+      print('Loading categories...');
       final sections = await repository.fetchSections();
+      print('Loaded sections: $sections');
       emit(state.copyWith(sections: sections, isLoading: false));
     } catch (e) {
+      print('Error loading categories: $e');
       emit(state.copyWith(errorMessage: e.toString(), isLoading: false));
     }
-  }
-
-  // Обработка выбора/удаления ингредиента
-  void _toggleSelection(
-    ToggleSelectionEvent event,
-    Emitter<CocktailCreationState> emit,
-  ) {
-    // Текущие выбранные ингредиенты для категории
-    final currentSelection =
-        state.selectedItems[event.sectionId]?[event.category] ?? [];
-    final updatedSelection = List<IngredientItem>.from(currentSelection);
-
-    if (updatedSelection.contains(event.ingredientItem)) {
-      updatedSelection.remove(event.ingredientItem); // Удаляем ингредиент
-    } else {
-      updatedSelection.add(event.ingredientItem); // Добавляем ингредиент
-    }
-
-    // Обновляем состояние с новой информацией о выбранных ингредиентах
-    final updatedItems =
-        Map<int, Map<String, List<IngredientItem>>>.from(state.selectedItems);
-    updatedItems[event.sectionId] = {
-      ...updatedItems[event.sectionId] ?? {},
-      event.category: updatedSelection,
-    };
-
-    emit(state.copyWith(selectedItems: updatedItems));
   }
 
   // Добавляем ингредиент как IngredientItem с секцией и категорией
@@ -67,25 +64,64 @@ class CocktailCreationBloc
     AddIngredientEvent event,
     Emitter<CocktailCreationState> emit,
   ) {
+    print(
+        'Adding ingredient to general list: ${event.ingredientItem.ingredient.name}');
+
+    // Обновляем список ингредиентов
     final updatedIngredients = List<IngredientItem>.from(state.ingredientItems)
-      ..add(IngredientItem(
-        ingredient: event.ingredientItem.ingredient,
-        // ingredientItem теперь используется
-        quantity: event.ingredientItem.quantity,
-        type: event.ingredientItem.type,
-        sectionId: event.ingredientItem.sectionId,
-        // Секция
-        category: event.ingredientItem.category, // Категория
-      ));
-    emit(state.copyWith(ingredientItems: updatedIngredients));
+      ..add(event.ingredientItem);
+    print('Updated ingredientItems: $updatedIngredients');
+
+    // Обновляем selectedItems по секциям и категориям
+    final currentSelection = state.selectedItems[event.ingredientItem.sectionId]
+            ?[event.ingredientItem.category] ??
+        [];
+    final updatedSelection = List<IngredientItem>.from(currentSelection)
+      ..add(event.ingredientItem);
+
+    final updatedItems =
+        Map<int, Map<String, List<IngredientItem>>>.from(state.selectedItems);
+    updatedItems[event.ingredientItem.sectionId] = {
+      ...updatedItems[event.ingredientItem.sectionId] ?? {},
+      event.ingredientItem.category: updatedSelection,
+    };
+
+    print(
+        'Updated selection for section ${event.ingredientItem.sectionId}, category ${event.ingredientItem.category}: ${updatedItems[event.ingredientItem.sectionId]}');
+
+    emit(state.copyWith(
+      ingredientItems: updatedIngredients,
+      selectedItems: updatedItems,
+    ));
   }
 
   // Удаляем ингредиент
   void _removeIngredient(
       RemoveIngredientEvent event, Emitter<CocktailCreationState> emit) {
+    print('Removing ingredient: ${event.ingredientItem.ingredient.name}');
+
+    // Обновляем список ингредиентов
     final updatedIngredients = List<IngredientItem>.from(state.ingredientItems)
       ..remove(event.ingredientItem);
-    emit(state.copyWith(ingredientItems: updatedIngredients));
+
+    // Обновляем selectedItems по секциям и категориям
+    final currentSelection = state.selectedItems[event.ingredientItem.sectionId]
+            ?[event.ingredientItem.category] ??
+        [];
+    final updatedSelection = List<IngredientItem>.from(currentSelection)
+      ..remove(event.ingredientItem);
+
+    final updatedItems =
+        Map<int, Map<String, List<IngredientItem>>>.from(state.selectedItems);
+    updatedItems[event.ingredientItem.sectionId] = {
+      ...updatedItems[event.ingredientItem.sectionId] ?? {},
+      event.ingredientItem.category: updatedSelection,
+    };
+
+    emit(state.copyWith(
+      ingredientItems: updatedIngredients,
+      selectedItems: updatedItems,
+    ));
   }
 
   // Обновляем количество ингредиента
@@ -108,5 +144,129 @@ class CocktailCreationBloc
           : ingredientItem;
     }).toList();
     emit(state.copyWith(ingredientItems: updatedIngredients));
+  }
+
+  void _loadTools(
+      LoadToolsEvent event, Emitter<CocktailCreationState> emit) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      print('Loading tools...');
+      final tools = await repository.fetchTools();
+      print('Loaded tools: $tools');
+      emit(state.copyWith(tools: tools, isLoading: false));
+    } catch (e) {
+      print('Error loading tools: $e');
+      emit(state.copyWith(errorMessage: e.toString(), isLoading: false));
+    }
+  }
+
+  // Добавляем инструмент
+  void _addTool(AddToolEvent event, Emitter<CocktailCreationState> emit) {
+    print('Adding tool: ${event.tool.name}');
+    final updatedTools = List<Tool>.from(state.selectedTools)..add(event.tool);
+    emit(state.copyWith(selectedTools: updatedTools));
+  }
+
+  // Удаляем инструмент
+  void _removeTool(RemoveToolEvent event, Emitter<CocktailCreationState> emit) {
+    print('Removing tool: ${event.tool.name}');
+    final updatedTools = List<Tool>.from(state.selectedTools)
+      ..remove(event.tool);
+    emit(state.copyWith(selectedTools: updatedTools));
+  }
+
+  void _onAddStep(AddStepEvent event, Emitter<CocktailCreationState> emit) {
+    final updatedSteps = List<RecipeStep>.from(state.steps)..add(event.step);
+    emit(state.copyWith(steps: updatedSteps));
+  }
+
+  void _onUpdateStep(
+      UpdateStepEvent event, Emitter<CocktailCreationState> emit) {
+    final updatedSteps = state.steps.map((step) {
+      return step.number == event.step.number ? event.step : step;
+    }).toList();
+    emit(state.copyWith(steps: updatedSteps));
+  }
+
+  void _onRemoveStep(
+      RemoveStepEvent event, Emitter<CocktailCreationState> emit) {
+    final updatedSteps =
+        state.steps.where((step) => step.number != event.stepNumber).toList();
+    emit(state.copyWith(steps: updatedSteps));
+  }
+
+  Future<void> _onUpdatePhoto(
+      UpdatePhotoEvent event, Emitter<CocktailCreationState> emit) async {
+    emit(state.copyWith(photo: event.photo));
+  }
+
+  void _onUpdateRecipeTitle(
+      UpdateRecipeTitleEvent event, Emitter<CocktailCreationState> emit) {
+    emit(state.copyWith(title: event.title));
+  }
+
+  void _onUpdateRecipeDescription(
+      UpdateRecipeDescriptionEvent event, Emitter<CocktailCreationState> emit) {
+    emit(state.copyWith(description: event.description));
+  }
+
+  void _onUpdateRecipeVideoUrl(
+      UpdateRecipeVideoUrlEvent event, Emitter<CocktailCreationState> emit) {
+    emit(state.copyWith(videoUrl: event.videoUrl));
+  }
+
+  void _onSubmitRecipe(
+      SubmitRecipeEvent event, Emitter<CocktailCreationState> emit) async {
+    try {
+      // Устанавливаем состояние загрузки
+      emit(state.copyWith(isLoading: true));
+
+      // Преобразуем ингредиенты в строку
+      final ingredients = state.ingredientItems.map((ingredient) {
+        return '{"ingredient":${ingredient.ingredient.id},"quantity":"${ingredient.quantity}","type":"${ingredient.type}"}';
+      }).join(',');
+
+      // Преобразуем список инструментов в строку, разделённую запятыми
+      final tools = state.selectedTools.map((tool) => tool.id).join(',');
+
+      final instructions = <String, String>{};
+      for (var step in state.steps) {
+        instructions[step.number.toString()] = step.description;
+      }
+
+      final profileRepository = ProfileRepository();
+
+      // Получаем данные профиля из кэша через экземпляр
+      final profileData = await profileRepository.getProfileFromCache();
+      if (profileData == null) {
+        throw Exception('Profile not found in cache');
+      }
+
+      final userId = profileData['id'];
+
+      // Собираем все данные для отправки
+      final Map<String, dynamic> data = {
+        "title": state.title, // Используем данные из состояния
+        "description": state.description, // Используем данные из состояния
+        "ingredients": ingredients, // Ингредиенты в виде строки
+        "tools": tools, // Инструменты в виде строки
+        "instructions": instructions,
+        "video_url": state.videoUrl, // Используем данные из состояния
+        "user": userId,
+      };
+
+      if (state.photo != null) {
+        data['photo'] = await MultipartFile.fromFile(state.photo!.path);
+      }
+
+      // Отправляем запрос на сервер через репозиторий
+      await repository.createRecipe(data);
+
+      // Если запрос успешен, отключаем индикатор загрузки
+      emit(state.copyWith(isLoading: false));
+    } catch (e) {
+      // В случае ошибки сохраняем сообщение об ошибке
+      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+    }
   }
 }

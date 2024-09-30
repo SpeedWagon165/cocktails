@@ -198,7 +198,9 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 12),
                 RegistrationServicesButton(
                   text: tr('sign_in_page.google_button'),
-                  onPressed: () {},
+                  onPressed: () {
+                    AuthRepository().signInWithGoogle(context);
+                  },
                 ),
                 const SizedBox(height: 12),
                 RegistrationServicesButton(

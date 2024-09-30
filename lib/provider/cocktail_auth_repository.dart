@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/cocktail_auth_response_model.dart';
@@ -206,6 +208,61 @@ class AuthRepository {
     } catch (e) {
       print('Ошибка во время сброса пароля: $e');
       throw Exception('Ошибка во время сброса пароля: $e');
+    }
+  }
+
+  Future<void> signInWithGoogle(BuildContext context) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: ['email'],
+    );
+    try {
+      // Авторизация через Google
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) {
+        // Пользователь отменил авторизацию
+        return;
+      }
+
+      // Получение токена
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final idToken = googleAuth.idToken;
+
+      // Отправка токена на сервер
+      await sendTokenToServer(idToken);
+
+      // Сохранение токена в SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', idToken!);
+
+      print("Google Sign-In successful: $idToken");
+    } catch (e) {
+      print("Error signing in with Google: $e");
+    }
+  }
+
+  // Метод для отправки токена на сервер
+  Future<void> sendTokenToServer(String? idToken) async {
+    try {
+      final response = await _dio.post(
+        'http://109.71.246.251:8000/api/auth/token/',
+        data: {'token': idToken},
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json',
+          },
+        ),
+      );
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        print('Token successfully sent to server');
+      } else {
+        print('Failed to send token to server: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending token to server: $e');
     }
   }
 }

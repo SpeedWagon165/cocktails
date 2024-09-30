@@ -117,8 +117,6 @@ class Ingredient {
 
 class Tool {
   int id;
-  DateTime createdAt;
-  DateTime updatedAt;
   String name;
   String? description;
   String? history;
@@ -128,8 +126,6 @@ class Tool {
 
   Tool({
     required this.id,
-    required this.createdAt,
-    required this.updatedAt,
     required this.name,
     this.description,
     this.history,
@@ -141,21 +137,17 @@ class Tool {
   factory Tool.fromJson(Map<String, dynamic> json) {
     return Tool(
       id: json["id"],
-      createdAt: DateTime.parse(json["created_at"]),
-      updatedAt: DateTime.parse(json["updated_at"]),
-      name: json["name"] ?? '',
-      description: json["description"],
-      history: json["history"],
-      howToUse: json["how_to_use"],
-      photo: json["photo"],
-      links: json["links"] != null ? List<dynamic>.from(json["links"]) : null,
+      name: json["name"] ?? 'Unknown Tool',
+      description: json["description"] ?? '',
+      history: json["history"] ?? '',
+      howToUse: json["how_to_use"] ?? '',
+      photo: json["photo"] ?? '',
+      links: json["links"] != null ? List<dynamic>.from(json["links"]) : [],
     );
   }
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
         "name": name,
         "description": description,
         "history": history,

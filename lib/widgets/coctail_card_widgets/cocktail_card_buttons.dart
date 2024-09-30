@@ -56,7 +56,7 @@ class _CocktailCardButtonsState extends State<CocktailCardButtons> {
                     ],
                   )
                 : Text(
-                    tr('bonus_screen.points', args: ['15']),
+                    tr('bonus_screen.points', namedArgs: {'points': '15'}),
                     textAlign: TextAlign.center,
                     style:
                         context.text.buttonText18Brown.copyWith(fontSize: 14.0),

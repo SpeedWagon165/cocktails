@@ -15,8 +15,9 @@ class CustomTextField extends StatefulWidget {
   final bool isReferral;
   final bool isDate;
   final String? errorMessage;
-  final bool expandText; // Новое поле для расширения текста
+  final bool expandText;
   final bool showRedBorder;
+  final ValueChanged<String>? onChanged; // Добавляем параметр onChanged
 
   const CustomTextField({
     super.key,
@@ -30,7 +31,8 @@ class CustomTextField extends StatefulWidget {
     this.isDate = false,
     this.errorMessage,
     this.expandText = false,
-    this.showRedBorder = false, // По умолчанию поле не расширяется
+    this.showRedBorder = false,
+    this.onChanged, // Инициализируем onChanged
   });
 
   @override
@@ -102,8 +104,7 @@ class CustomTextFieldState extends State<CustomTextField> {
             borderRadius: borderRadius,
             border: Border.all(
               color: (widget.errorMessage != null || widget.showRedBorder)
-                  ? Colors
-                      .red // Красная граница в случае ошибки или общей ошибки
+                  ? Colors.red
                   : const Color(0xFF343434),
               width: 1,
             ),
@@ -119,13 +120,10 @@ class CustomTextFieldState extends State<CustomTextField> {
                     controller: widget.controller,
                     obscureText: _obscureText,
                     maxLines: widget.expandText ? null : 1,
-                    // Управляем расширением текста
                     minLines: 1,
-                    // Минимальная линия - одна
                     keyboardType: widget.phoneNumber
                         ? TextInputType.phone
                         : TextInputType.multiline,
-                    // Включаем multiline
                     decoration: InputDecoration(
                       labelText: widget.labelText,
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -134,6 +132,7 @@ class CustomTextFieldState extends State<CustomTextField> {
                       contentPadding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     style: const TextStyle(color: Colors.white),
+                    onChanged: widget.onChanged,
                     onTap: widget.isDate ? () => _selectDate(context) : null,
                   ),
                 ),
@@ -194,14 +193,12 @@ class CustomTextFieldState extends State<CustomTextField> {
                   children: [
                     Text(
                       tr('registration_page.referral_code_label'),
-                      // Локализованный текст
                       style: context.text.bodyText12Grey.copyWith(
                           color: const Color(0xffF6B402), fontSize: 15),
                     ),
                     const SizedBox(height: 11),
                     Text(
                       tr('registration_page.referral_code_description'),
-                      // Локализованное описание
                       style: TextStyle(
                           color: Colors.white.withOpacity(0.8), height: 1.5),
                     ),

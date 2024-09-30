@@ -40,10 +40,11 @@ class StorePage extends StatelessWidget {
                           itemCount: state.goods.length,
                           itemBuilder: (context, index) {
                             final product = state.goods[index];
-                            final minPrice = _getMinPrice(product['links']);
+                            final minPrice = _getMinPrice(product.links);
                             return ProductCard(
-                              name: product['name'],
-                              imageUrl: product['photo'] ?? '',
+                              name: product.name ??
+                                  tr("store.default_product_name"),
+                              imageUrl: product.photo ?? '',
                               price: minPrice,
                               product: product,
                             );
@@ -52,9 +53,7 @@ class StorePage extends StatelessWidget {
                       } else if (state is GoodsError) {
                         return Center(child: Text(state.message));
                       }
-                      return Center(
-                          child: Text(tr(
-                              'store.empty_message'))); // локализованная строка
+                      return Center(child: Text(tr('store.empty_message')));
                     },
                   ),
                 ),
@@ -66,10 +65,22 @@ class StorePage extends StatelessWidget {
     );
   }
 
-  double _getMinPrice(Map<String, dynamic> links) {
+  double _getMinPrice(Map<String, dynamic>? links) {
+    if (links == null || links.isEmpty) {
+      return 0.0; // Если ссылки пусты или null, возвращаем 0
+    }
+
     final prices = links.values
-        .map((link) => double.tryParse(link['price']) ?? 0)
+        .where((link) =>
+            link is Map<String, dynamic> && // Проверяем, что link - это Map
+            link.containsKey('price') && // Проверяем наличие ключа 'price'
+            link['price'] != null && // Проверяем, что значение не null
+            double.tryParse(link['price'].toString()) !=
+                null) // Проверяем корректность данных
+        .map((link) =>
+            double.parse(link['price'].toString())) // Преобразуем в double
         .toList();
+
     prices.sort();
     return prices.isNotEmpty ? prices.first : 0.0;
   }

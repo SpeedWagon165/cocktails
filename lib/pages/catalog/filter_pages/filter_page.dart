@@ -18,8 +18,6 @@ class FilterMainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cocktailBloc = BlocProvider.of<IngredientSelectionBloc>(context);
-
     return BasePopup(
       text: tr("catalog_page.filter"),
       onPressed: null,

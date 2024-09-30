@@ -42,3 +42,10 @@ class IngredientItem {
     };
   }
 }
+
+class RecipeStep {
+  final int number;
+  final String description;
+
+  RecipeStep({required this.number, required this.description});
+}

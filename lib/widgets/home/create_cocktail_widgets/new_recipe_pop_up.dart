@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../../pages/home/new_recipe/pop_ups/new_non_alco_page.dart';
 import '../../../pages/home/new_recipe/pop_ups/new_product_page.dart';
+import '../../../pages/home/new_recipe/pop_ups/new_steps_page.dart';
+import '../../../pages/home/new_recipe/pop_ups/new_tool_page.dart';
 
 void openIngredientModal(BuildContext context, Widget ingredientPage) {
   showModalBottomSheet(
@@ -10,9 +12,12 @@ void openIngredientModal(BuildContext context, Widget ingredientPage) {
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (context) {
-      return SingleChildScrollView(
-        child: IntrinsicHeight(
-          child: ingredientPage, // Отображаем нужную страницу с ингредиентами
+      return Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.85, // Limit height
+        ),
+        child: SingleChildScrollView(
+          child: ingredientPage,
         ),
       );
     },
@@ -30,4 +35,12 @@ void openNonAlcoholicModal(BuildContext context) {
 // Открытие продуктов
 void openProductModal(BuildContext context) {
   openIngredientModal(context, const NewRecipeProductPage());
+}
+
+void openToolModal(BuildContext context) {
+  openIngredientModal(context, const NewToolPage());
+}
+
+void openStepsModal(BuildContext context) {
+  openIngredientModal(context, const NewStepsPage());
 }

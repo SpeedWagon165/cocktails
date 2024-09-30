@@ -8,15 +8,42 @@ import '../models/ingredient_category_model.dart';
 
 class CocktailRepository {
   final String baseUrl = 'http://109.71.246.251:8000/api';
-  final Dio dio = Dio(
-    BaseOptions(
-      baseUrl: 'http://109.71.246.251:8000/api',
-      headers: {'Content-Type': 'application/json', 'User-Language': 'rus'},
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      sendTimeout: const Duration(seconds: 30),
-    ),
-  );
+  final Dio dio;
+
+  CocktailRepository()
+      : dio = Dio(
+          BaseOptions(
+            baseUrl: 'http://109.71.246.251:8000/api',
+            headers: {
+              'Content-Type': 'application/json',
+              'User-Language': 'rus'
+            },
+          ),
+        ) {
+    // Добавляем интерсептор для автоматического добавления токена
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final token = await _getToken();
+        if (token != null) {
+          options.headers['Authorization'] = 'Token $token';
+        }
+        return handler.next(options); // Продолжаем с обновленными опциями
+      },
+      onResponse: (response, handler) {
+        // Обработка ответа
+        return handler.next(response);
+      },
+      onError: (DioError e, handler) {
+        // Обработка ошибок
+        return handler.next(e);
+      },
+    ));
+  }
+
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
 
   // Метод для получения коктейлей
   Future<List<Cocktail>> fetchCocktails() async {
@@ -196,11 +223,6 @@ class CocktailRepository {
     }
   }
 
-  Future<String?> _getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
-  }
-
   // Метод для добавления/удаления рецепта в избранное
   Future<void> toggleFavorite(int recipeId, bool isFavorite) async {
     final token = await _getToken();
@@ -278,6 +300,49 @@ class CocktailRepository {
       }
     } catch (e) {
       throw Exception('Ошибка при загрузке данных: $e');
+    }
+  }
+
+  Future<List<Tool>> fetchTools() async {
+    try {
+      final response = await dio.get('/recipe/tool/');
+      print(response.statusCode);
+      print(response.data);
+      if (response.statusCode == 200) {
+        List<dynamic> data = response.data;
+        return data.map((json) => Tool.fromJson(json)).toList();
+      } else {
+        throw Exception(
+            'Ошибка при загрузке инструментов: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Ошибка при загрузке данных: $e');
+    }
+  }
+
+  Future<void> createRecipe(Map<String, dynamic> data) async {
+    try {
+      final formData = FormData.fromMap(data);
+      print("Request data: $data");
+
+      final response = await dio.post(
+        'http://109.71.246.251:8000/api/recipe/',
+        data: formData,
+        options: Options(
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Recipe created successfully!");
+      } else {
+        throw Exception('Failed to create recipe: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error creating recipe: $e');
+      throw e;
     }
   }
 }

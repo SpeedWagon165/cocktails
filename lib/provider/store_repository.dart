@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import '../models/store_model.dart';
+
 class GoodsRepository {
   final Dio dio = Dio(
     BaseOptions(
@@ -10,11 +12,12 @@ class GoodsRepository {
     ),
   );
 
-  Future<List<dynamic>> fetchGoods() async {
+  Future<List<Product>> fetchGoods() async {
     try {
       final response = await dio.get('/goods/');
       if (response.statusCode == 200) {
-        return response.data['results'];
+        final List<dynamic> results = response.data['results'];
+        return results.map((json) => Product.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load goods');
       }

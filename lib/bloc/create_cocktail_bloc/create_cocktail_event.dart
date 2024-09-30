@@ -5,14 +5,6 @@ abstract class CocktailCreationEvent {}
 
 class LoadCategoriesEvent extends CocktailCreationEvent {}
 
-class ToggleSelectionEvent extends CocktailCreationEvent {
-  final int sectionId;
-  final String category;
-  final IngredientItem ingredientItem; // Используем IngredientItem
-
-  ToggleSelectionEvent(this.sectionId, this.category, this.ingredientItem);
-}
-
 class AddIngredientEvent extends CocktailCreationEvent {
   final IngredientItem ingredientItem; // Изменили на IngredientItem
 
@@ -38,3 +30,61 @@ class UpdateIngredientTypeEvent extends CocktailCreationEvent {
 
   UpdateIngredientTypeEvent(this.ingredientItem, this.newType);
 }
+
+class LoadToolsEvent extends CocktailCreationEvent {}
+
+class AddToolEvent extends CocktailCreationEvent {
+  final Tool tool;
+
+  AddToolEvent(this.tool);
+}
+
+class RemoveToolEvent extends CocktailCreationEvent {
+  final Tool tool;
+
+  RemoveToolEvent(this.tool);
+}
+
+class AddStepEvent extends CocktailCreationEvent {
+  final RecipeStep step;
+
+  AddStepEvent(this.step);
+}
+
+class UpdateStepEvent extends CocktailCreationEvent {
+  final RecipeStep step;
+
+  UpdateStepEvent(this.step);
+}
+
+class RemoveStepEvent extends CocktailCreationEvent {
+  final int stepNumber;
+
+  RemoveStepEvent(this.stepNumber);
+}
+
+class UpdatePhotoEvent extends CocktailCreationEvent {
+  final File photo;
+
+  UpdatePhotoEvent(this.photo);
+}
+
+class UpdateRecipeTitleEvent extends CocktailCreationEvent {
+  final String title;
+
+  UpdateRecipeTitleEvent(this.title);
+}
+
+class UpdateRecipeDescriptionEvent extends CocktailCreationEvent {
+  final String description;
+
+  UpdateRecipeDescriptionEvent(this.description);
+}
+
+class UpdateRecipeVideoUrlEvent extends CocktailCreationEvent {
+  final String videoUrl;
+
+  UpdateRecipeVideoUrlEvent(this.videoUrl);
+}
+
+class SubmitRecipeEvent extends CocktailCreationEvent {}

@@ -1,3 +1,4 @@
+import 'package:cocktails/models/store_model.dart';
 import 'package:cocktails/pages/store/popups/product_page.dart';
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,7 +8,7 @@ class ProductCard extends StatelessWidget {
   final String name;
   final String imageUrl;
   final double price;
-  final Map<String, dynamic> product; // Передаем весь продукт для переходов
+  final Product product; // Передаем весь продукт для переходов
 
   const ProductCard({
     super.key,
