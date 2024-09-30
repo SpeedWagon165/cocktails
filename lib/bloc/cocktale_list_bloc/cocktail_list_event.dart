@@ -90,3 +90,19 @@ class SearchFavoriteCocktails extends CocktailListEvent {
         pageSize ?? 10,
       ];
 }
+
+class ToggleFavoriteCocktail extends CocktailListEvent {
+  final int cocktailId; // ID коктейля
+  final bool isFavorite; // Текущее состояние избранного
+  final bool favoritePage;
+
+  const ToggleFavoriteCocktail(
+      this.cocktailId, this.isFavorite, this.favoritePage);
+
+  @override
+  List<Object> get props => [cocktailId, isFavorite, favoritePage];
+}
+
+class RefreshFavoriteCocktails extends CocktailListEvent {
+  const RefreshFavoriteCocktails();
+}

@@ -14,7 +14,7 @@ import '../../widgets/store/expandable_text.dart';
 class CocktailCardScreen extends StatefulWidget {
   final Cocktail cocktail;
   final bool isFavorite;
-  final Function onToggleFavorite; // Колбэк для изменения состояния
+  final Function(bool) onToggleFavorite; // Обновленный тип колбэка
 
   const CocktailCardScreen({
     super.key,
@@ -29,19 +29,20 @@ class CocktailCardScreen extends StatefulWidget {
 
 class _CocktailCardScreenState extends State<CocktailCardScreen> {
   late bool isFavorite;
-  bool isCocked = false;
 
   @override
   void initState() {
     super.initState();
-    isFavorite = widget.isFavorite;
+    isFavorite = widget.isFavorite; // Инициализация состояния избранного
   }
 
+  // Обновленный метод для переключения избранного
   void _toggleFavorite() {
     setState(() {
-      isFavorite = !isFavorite;
+      isFavorite = !isFavorite; // Локальное изменение состояния
     });
-    widget.onToggleFavorite(); // Вызываем метод для изменения в карточке
+    widget
+        .onToggleFavorite(isFavorite); // Вызов колбэка для изменения в карточке
   }
 
   @override
@@ -71,9 +72,10 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CocktailCardButtons(
-                          isCocked: isCocked,
+                          isCocked: false,
+                          // Измените в зависимости от вашей логики
                           isFavorite: isFavorite,
-                          changeState: _toggleFavorite,
+                          changeState: _toggleFavorite, // Обновленный метод
                         ),
                         const SizedBox(height: 24.0),
                         Text(

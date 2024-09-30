@@ -19,6 +19,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
     on<SearchCocktails>(_onSearchCocktails);
     on<FetchFavoriteCocktails>(_onFetchFavoriteCocktails);
     on<SearchFavoriteCocktails>(_onSearchFavoriteCocktails);
+    on<ToggleFavoriteCocktail>(_onToggleFavoriteCocktail);
   }
 
   // Получение всех коктейлей (без аутентификации)
@@ -95,6 +96,41 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
       emit(CocktailLoaded(cocktails, 'title'));
     } catch (e) {
       emit(CocktailError(e.toString()));
+    }
+  }
+
+  void _onToggleFavoriteCocktail(
+      ToggleFavoriteCocktail event, Emitter<CocktailListState> emit) async {
+    final currentState = state;
+
+    if (currentState is CocktailLoaded) {
+      final updatedLoadingStates =
+          Map<int, bool>.from(currentState.loadingStates);
+      updatedLoadingStates[event.cocktailId] =
+          true; // Устанавливаем состояние загрузки для конкретного коктейля
+
+      emit(CocktailLoaded(
+          currentState.cocktails, currentState.currentSortOption,
+          loadingStates: updatedLoadingStates));
+
+      try {
+        await repository.toggleFavorite(event.cocktailId, event.isFavorite);
+
+        updatedLoadingStates[event.cocktailId] =
+            false; // Сбрасываем состояние загрузки
+
+        // После изменения избранного обновляем список избранных коктейлей
+        if (event.favoritePage) {
+          add(const FetchFavoriteCocktails()); // Повторный запрос избранных коктейлей
+        } else {
+          final cocktails = await repository.fetchCocktails();
+          emit(CocktailLoaded(cocktails, currentState.currentSortOption,
+              loadingStates: updatedLoadingStates));
+        }
+      } catch (e) {
+        emit(CocktailError(
+            'Не удалось изменить статус избранного: ${e.toString()}'));
+      }
     }
   }
 }

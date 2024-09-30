@@ -104,3 +104,5 @@ class ResetPassword extends AuthEvent {
   @override
   List<Object> get props => [email, newPassword, repeatPassword, code];
 }
+
+class SignInWithGoogleRequested extends AuthEvent {}

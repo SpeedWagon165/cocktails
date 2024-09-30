@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<RequestPasswordReset>(_onRequestPasswordReset);
     on<ConfirmResetCode>(_onConfirmResetCode);
     on<ResetPassword>(_onResetPassword);
+    on<SignInWithGoogleRequested>(_onSignInWithGoogleRequested);
   }
 
   Future<void> _onSignInRequested(
@@ -44,7 +46,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
       if (token != null && token.isNotEmpty) {
-        final authResponse = AuthResponse(token: token, roles: []);
+        final authResponse = AuthResponse(token: token);
         emit(AuthAuthenticated(authResponse));
       } else {
         emit(AuthUnauthenticated());
@@ -149,6 +151,42 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await authRepository.signIn(event.email, event.newPassword);
       emit(AuthAuthenticated(authResponse));
       emit(PasswordResetSuccess());
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<void> _onSignInWithGoogleRequested(
+      SignInWithGoogleRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+
+    try {
+      final googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser == null) {
+        emit(AuthUnauthenticated());
+        return;
+      }
+
+      final googleAuth = await googleUser.authentication;
+      final idToken = googleAuth.idToken;
+      final accessToken = googleAuth.accessToken;
+
+      if (idToken != null && accessToken != null) {
+        // Вызов метода для отправки токенов на сервер
+        final authResponse =
+            await AuthRepository().sendTokensToServer(idToken, accessToken);
+
+        if (authResponse != null) {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('token', authResponse.token);
+          emit(AuthAuthenticated(AuthResponse(token: authResponse.token)));
+        } else {
+          emit(AuthError('Ошибка авторизации через Google.'));
+        }
+      } else {
+        emit(AuthError('Отсутствуют токены Google.'));
+      }
     } catch (e) {
       emit(AuthError(e.toString()));
     }

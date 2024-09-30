@@ -57,7 +57,9 @@ class FavoriteCocktailsPage extends StatelessWidget {
                           itemCount: state.cocktails.length,
                           itemBuilder: (context, index) {
                             return CocktailCard(
-                                cocktail: state.cocktails[index]);
+                              cocktail: state.cocktails[index],
+                              favoritePage: true,
+                            );
                           },
                         );
                       } else if (state is CocktailError) {

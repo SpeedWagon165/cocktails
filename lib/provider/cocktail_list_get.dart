@@ -235,18 +235,37 @@ class CocktailRepository {
         : '/profile/favorite/'; // Добавление в избранное
 
     try {
-      final response = await dio.post(
-        url,
-        data: {'recipe': recipeId},
-        options: Options(
-          headers: {
-            'Authorization': 'Token $token',
-          },
-        ),
-      );
+      Response response;
+      if (isFavorite) {
+        // Удаление из избранного
+        response = await dio.post(
+          url,
+          data: {'recipe': recipeId},
+          options: Options(
+            headers: {
+              'Authorization': 'Token $token',
+            },
+          ),
+        );
+      } else {
+        // Добавление в избранное
+        response = await dio.post(
+          url,
+          data: {'recipe': recipeId},
+          options: Options(
+            headers: {
+              'Authorization': 'Token $token',
+            },
+          ),
+        );
+      }
 
-      if (response.statusCode != 200 && response.statusCode != 204) {
-        throw Exception('Failed to update favorite status');
+      // Проверяем коды статусов
+      if (response.statusCode != 200 &&
+          response.statusCode != 204 &&
+          response.statusCode != 201) {
+        throw Exception(
+            'Failed to update favorite status: ${response.statusCode}');
       }
     } catch (e, stacktrace) {
       log('Error toggling favorite status', error: e, stackTrace: stacktrace);
@@ -326,7 +345,7 @@ class CocktailRepository {
       print("Request data: $data");
 
       final response = await dio.post(
-        'http://109.71.246.251:8000/api/recipe/',
+        '/recipe/',
         data: formData,
         options: Options(
           headers: {
