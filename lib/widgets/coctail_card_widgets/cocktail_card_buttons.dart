@@ -36,24 +36,34 @@ class _CocktailCardButtonsState extends State<CocktailCardButtons> {
                   : const Color(0xFFF6B402),
             ),
             child: widget.isCocked
-                ? Row(
-                    children: [
-                      Center(
-                        child: Container(
-                          width: 10,
-                          height: 10,
+                ? Center(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 20,
+                          height: 20,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.lightGreenAccent,
+                            color: Color(0xff68C248),
                           ),
-                          child: SvgPicture.asset(
-                            'assets/images/check_icon.svg',
-                            height: 10,
-                            width: 10,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: SvgPicture.asset(
+                              'assets/images/check_icon.svg',
+                              height: 5,
+                              width: 5,
+                            ),
                           ),
                         ),
-                      )
-                    ],
+                        const SizedBox(width: 10.0),
+                        Text("Приготовлен",
+                            textAlign: TextAlign.center,
+                            style: context.text.bodyText14White
+                                .copyWith(color: const Color(0xff68C248)))
+                      ],
+                    ),
                   )
                 : Text(
                     tr('bonus_screen.points', namedArgs: {'points': '15'}),

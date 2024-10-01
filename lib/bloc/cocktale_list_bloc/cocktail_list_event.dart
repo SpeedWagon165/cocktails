@@ -106,3 +106,12 @@ class ToggleFavoriteCocktail extends CocktailListEvent {
 class RefreshFavoriteCocktails extends CocktailListEvent {
   const RefreshFavoriteCocktails();
 }
+
+class ClaimCocktail extends CocktailListEvent {
+  final int cocktailId;
+
+  const ClaimCocktail(this.cocktailId);
+
+  @override
+  List<Object> get props => [cocktailId];
+}

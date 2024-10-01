@@ -364,4 +364,13 @@ class CocktailRepository {
       throw e;
     }
   }
+
+  Future<void> claimRecipe(int recipeId) async {
+    try {
+      await dio
+          .post('/recipe/claim/', data: {'recipe_id': recipeId.toString()});
+    } catch (e) {
+      throw Exception('Не удалось отметить рецепт как приготовленный: $e');
+    }
+  }
 }

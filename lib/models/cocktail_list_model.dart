@@ -37,6 +37,42 @@ class Cocktail {
     required this.user,
   });
 
+  Cocktail copyWith({
+    int? id,
+    int? ingredientCount,
+    List<Ingredient>? ingredients,
+    List<Tool>? tools,
+    bool? isFavorite,
+    String? imageUrl,
+    String? name,
+    String? description,
+    Map<String, String>? instruction,
+    bool? isEnabled,
+    String? photo,
+    bool? claimed,
+    String? moderationStatus,
+    String? videoUrl,
+    int? user,
+  }) {
+    return Cocktail(
+      id: id ?? this.id,
+      ingredientCount: ingredientCount ?? this.ingredientCount,
+      ingredients: ingredients ?? this.ingredients,
+      tools: tools ?? this.tools,
+      isFavorite: isFavorite ?? this.isFavorite,
+      imageUrl: imageUrl ?? this.imageUrl,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      instruction: instruction ?? this.instruction,
+      isEnabled: isEnabled ?? this.isEnabled,
+      photo: photo ?? this.photo,
+      claimed: claimed ?? this.claimed,
+      moderationStatus: moderationStatus ?? this.moderationStatus,
+      videoUrl: videoUrl ?? this.videoUrl,
+      user: user ?? this.user,
+    );
+  }
+
   factory Cocktail.fromJson(Map<String, dynamic> json) {
     return Cocktail(
       id: json["id"],
@@ -58,7 +94,7 @@ class Cocktail {
           : null,
       isEnabled: json["isEnabled"] ?? true,
       photo: json["photo"] as String?,
-      claimed: json["is_favorite"] ?? false,
+      claimed: json["claimed"] ?? false,
       moderationStatus: json["moderation_status"] ?? '',
       videoUrl: json["video_url"] as String?,
       user: json["user"] ?? 0,

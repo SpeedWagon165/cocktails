@@ -131,7 +131,9 @@
     "filter": "Фильтр",
     "sort_alphabet_asc": "По алфавиту (А-Я)",
     "sort_alphabet_desc": "По алфавиту (Я-А)",
-    "sort_by_video": "По наличию видео"
+    "sort_by_video": "По наличию видео",
+    "mark_as_prepared": "Отметить приготовленным",
+    "prepared": "Приготовлен"
   },
   "my_cocktails_page": {
     "title": "Мои рецепты ({count})",

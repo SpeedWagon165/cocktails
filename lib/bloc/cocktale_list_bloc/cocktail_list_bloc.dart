@@ -20,6 +20,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
     on<FetchFavoriteCocktails>(_onFetchFavoriteCocktails);
     on<SearchFavoriteCocktails>(_onSearchFavoriteCocktails);
     on<ToggleFavoriteCocktail>(_onToggleFavoriteCocktail);
+    on<ClaimCocktail>(_onClaimCocktail);
   }
 
   // Получение всех коктейлей (без аутентификации)
@@ -130,6 +131,31 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
       } catch (e) {
         emit(CocktailError(
             'Не удалось изменить статус избранного: ${e.toString()}'));
+      }
+    }
+  }
+
+  void _onClaimCocktail(
+      ClaimCocktail event, Emitter<CocktailListState> emit) async {
+    final currentState = state;
+
+    if (currentState is CocktailLoaded) {
+      emit(CocktailLoading()); // Показать состояние загрузки
+
+      try {
+        await repository.claimRecipe(event.cocktailId);
+
+        // Обновляем состояние, чтобы показать, что рецепт отмечен как приготовленный
+        final updatedCocktails = currentState.cocktails.map((cocktail) {
+          return cocktail.id == event.cocktailId
+              ? cocktail.copyWith(claimed: true) // Обновляем статус claimed
+              : cocktail;
+        }).toList();
+
+        emit(CocktailLoaded(updatedCocktails, currentState.currentSortOption));
+      } catch (e) {
+        emit(
+            CocktailError('Не удалось отметить рецепт как приготовленный: $e'));
       }
     }
   }

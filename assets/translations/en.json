@@ -131,7 +131,9 @@
     "filter": "Filter",
     "sort_alphabet_asc": "Alphabetically (A-Z)",
     "sort_alphabet_desc": "Alphabetically (Z-A)",
-    "sort_by_video": "By video availability"
+    "sort_by_video": "By video availability",
+    "mark_as_prepared": "Mark as prepared",
+    "prepared": "Prepared"
   },
   "my_cocktails_page": {
     "title": "My Recipes ({count})",
