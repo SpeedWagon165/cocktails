@@ -8,8 +8,22 @@ import '../../widgets/cocktail_list/cocktail_card.dart';
 import '../../widgets/custom_arrowback.dart';
 import '../../widgets/home/search_bar_widget.dart';
 
-class CatalogPage extends StatelessWidget {
+class CatalogPage extends StatefulWidget {
   const CatalogPage({super.key});
+
+  @override
+  State<CatalogPage> createState() => _CatalogPageState();
+}
+
+class _CatalogPageState extends State<CatalogPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Запускаем загрузку коктейлей при инициализации страницы
+    Future.microtask(() {
+      context.read<CocktailListBloc>().add(FetchCocktails());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +34,11 @@ class CatalogPage extends StatelessWidget {
           child: Column(
             children: [
               CustomAppBar(
-                text: tr('catalog_page.title'), // Локализация заголовка
+                text: tr('catalog_page.title'),
+                // Локализация заголовка
                 onPressed: null,
                 secondIcon: true,
+                arrow: false,
                 onSecondIconTap: () {
                   openFilterModal(context);
                 },

@@ -14,6 +14,7 @@ class Cocktail {
   Map<String, String>? instruction;
   bool isEnabled;
   String? photo;
+  bool claimed;
   String moderationStatus;
   String? videoUrl;
   int user;
@@ -30,6 +31,7 @@ class Cocktail {
     required this.instruction,
     required this.isEnabled,
     required this.photo,
+    required this.claimed,
     required this.moderationStatus,
     required this.videoUrl,
     required this.user,
@@ -56,6 +58,7 @@ class Cocktail {
           : null,
       isEnabled: json["isEnabled"] ?? true,
       photo: json["photo"] as String?,
+      claimed: json["is_favorite"] ?? false,
       moderationStatus: json["moderation_status"] ?? '',
       videoUrl: json["video_url"] as String?,
       user: json["user"] ?? 0,
@@ -74,6 +77,7 @@ class Cocktail {
         "instruction": instruction,
         "isEnabled": isEnabled,
         "photo": photo,
+        "claimed": claimed,
         "moderation_status": moderationStatus,
         "video_url": videoUrl,
         "user": user,

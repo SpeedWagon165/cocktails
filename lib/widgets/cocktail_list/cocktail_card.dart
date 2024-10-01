@@ -33,10 +33,6 @@ class CocktailCard extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => CocktailCardScreen(
                   cocktail: cocktail,
-                  isFavorite: cocktail.isFavorite,
-                  onToggleFavorite: (newFavoriteStatus) {
-                    // Логика синхронизации избранного
-                  },
                 ),
               ),
             );

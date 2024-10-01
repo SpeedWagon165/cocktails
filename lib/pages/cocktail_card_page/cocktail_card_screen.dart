@@ -4,7 +4,9 @@ import 'package:cocktails/widgets/coctail_card_widgets/cocktail_card_slider.dart
 import 'package:cocktails/widgets/coctail_card_widgets/ingredients_list_builder.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 import '../../models/cocktail_list_model.dart';
 import '../../widgets/coctail_card_widgets/cocktail_instruction_builder.dart';
 import '../../widgets/coctail_card_widgets/tool_list_builder.dart';
@@ -13,14 +15,10 @@ import '../../widgets/store/expandable_text.dart';
 
 class CocktailCardScreen extends StatefulWidget {
   final Cocktail cocktail;
-  final bool isFavorite;
-  final Function(bool) onToggleFavorite; // Обновленный тип колбэка
 
   const CocktailCardScreen({
     super.key,
     required this.cocktail,
-    required this.isFavorite,
-    required this.onToggleFavorite,
   });
 
   @override
@@ -28,23 +26,6 @@ class CocktailCardScreen extends StatefulWidget {
 }
 
 class _CocktailCardScreenState extends State<CocktailCardScreen> {
-  late bool isFavorite;
-
-  @override
-  void initState() {
-    super.initState();
-    isFavorite = widget.isFavorite; // Инициализация состояния избранного
-  }
-
-  // Обновленный метод для переключения избранного
-  void _toggleFavorite() {
-    setState(() {
-      isFavorite = !isFavorite; // Локальное изменение состояния
-    });
-    widget
-        .onToggleFavorite(isFavorite); // Вызов колбэка для изменения в карточке
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -60,9 +41,7 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                   CocktailCardSlider(
                     videoUrl: widget.cocktail.videoUrl,
                     imageUrls: widget.cocktail.imageUrl != null
-                        ? [
-                            widget.cocktail.imageUrl!
-                          ] // Передаем один URL как список
+                        ? [widget.cocktail.imageUrl!]
                         : [],
                   ),
                   const SizedBox(height: 12.0),
@@ -71,11 +50,31 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CocktailCardButtons(
-                          isCocked: false,
-                          // Измените в зависимости от вашей логики
-                          isFavorite: isFavorite,
-                          changeState: _toggleFavorite, // Обновленный метод
+                        BlocBuilder<CocktailListBloc, CocktailListState>(
+                          builder: (context, state) {
+                            bool isFavorite = false;
+
+                            if (state is CocktailLoaded) {
+                              // Найдите коктейль в загруженных коктейлях
+                              final cocktail = state.cocktails.firstWhere(
+                                  (c) => c.id == widget.cocktail.id);
+                              isFavorite = cocktail.isFavorite;
+                            }
+
+                            return CocktailCardButtons(
+                              isCocked: false,
+                              isFavorite: isFavorite,
+                              changeState: () {
+                                context.read<CocktailListBloc>().add(
+                                      ToggleFavoriteCocktail(
+                                        widget.cocktail.id,
+                                        isFavorite,
+                                        false,
+                                      ),
+                                    );
+                              },
+                            );
+                          },
                         ),
                         const SizedBox(height: 24.0),
                         Text(
@@ -91,13 +90,9 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                         const SizedBox(height: 24.0),
                         IngredientsListBuilder(cocktail: widget.cocktail),
                         const SizedBox(height: 24.0),
-                        CocktailInstructionBuilder(
-                          cocktail: widget.cocktail,
-                        ),
+                        CocktailInstructionBuilder(cocktail: widget.cocktail),
                         const SizedBox(height: 24.0),
-                        ToolsListBuilder(
-                          cocktail: widget.cocktail,
-                        ),
+                        ToolsListBuilder(cocktail: widget.cocktail),
                         const SizedBox(height: 24.0),
                       ],
                     ),
