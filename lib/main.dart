@@ -4,6 +4,7 @@ import 'package:cocktails/bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import 'package:cocktails/pages/welcome_page.dart';
 import 'package:cocktails/provider/cocktail_auth_repository.dart';
 import 'package:cocktails/provider/cocktail_list_get.dart';
+import 'package:cocktails/provider/notification_repository.dart';
 import 'package:cocktails/provider/profile_repository.dart';
 import 'package:cocktails/theme/themes.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
@@ -13,7 +14,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bloc/app_start_bloc/app_start_bloc.dart';
 import 'bloc/avatar_cubit/avatar_cubit.dart';
@@ -77,8 +77,9 @@ class MyApp extends StatelessWidget {
                 create: (context) => ProfileImageCubit()..loadProfileImage(),
               ),
               BlocProvider(
-                  create: (context) => NotificationBloc(CocktailRepository())
-                    ..add(LoadNotifications())),
+                  create: (context) =>
+                      NotificationBloc(NotificationRepository())
+                        ..add(LoadNotifications())),
               BlocProvider(
                 create: (context) =>
                     ProfileBloc(ProfileRepository())..add(FetchProfile()),
@@ -100,40 +101,23 @@ class MyApp extends StatelessWidget {
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
               locale: context.locale,
-              home: WillPopScope(
-                onWillPop: () async {
-                  // Проверяем, можно ли выполнить pop
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
-                    return Future.value(false); // Не выходим из приложения
+              home: BlocBuilder<AppBloc, AppState>(
+                builder: (context, state) {
+                  if (state is AppInitial) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is AppAuthenticated) {
+                    return const CustomBottomNavigationBar();
+                  } else if (state is AppUnauthenticated) {
+                    return const WelcomePage();
                   } else {
-                    return Future.value(true); // Выходим из приложения
+                    return const Center(
+                      child: Text('Unexpected state!'),
+                    );
                   }
                 },
-                child: BlocBuilder<AppBloc, AppState>(
-                  builder: (context, state) {
-                    if (state is AppInitial) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (state is AppAuthenticated) {
-                      return const CustomBottomNavigationBar();
-                    } else if (state is AppUnauthenticated) {
-                      return const WelcomePage();
-                    } else {
-                      return const Center(
-                        child: Text('Unexpected state!'),
-                      );
-                    }
-                  },
-                ),
               ),
             ));
       },
     );
-  }
-
-  Future<bool> _checkAuthStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    return token != null && token.isNotEmpty;
   }
 }

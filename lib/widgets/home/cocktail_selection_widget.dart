@@ -38,7 +38,7 @@ class CocktailSelectionViewState extends State<CocktailSelectionView> {
 
         if (state.errorMessage != null) {
           return Center(
-            child: Text('Ошибка: ${state.errorMessage}',
+            child: Text(tr("errors.error"),
                 style: const TextStyle(color: Colors.red)),
           );
         }

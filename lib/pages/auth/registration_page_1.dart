@@ -116,11 +116,11 @@ class RegistrationPage1State extends State<RegistrationPage1> {
               TextWithLines(text: tr('registration_page.alternative_sign_in')),
               // Локализованный текст "или с помощью"
               const SizedBox(height: 24),
-              RegistrationServicesButton(
-                text: tr('registration_page.apple_id_button'),
-                // Локализованная кнопка "Apple ID"
-                onPressed: () {},
-              ),
+              // RegistrationServicesButton(
+              //   text: tr('registration_page.apple_id_button'),
+              //   // Локализованная кнопка "Apple ID"
+              //   onPressed: () {},
+              // ),
               const SizedBox(height: 12),
               RegistrationServicesButton(
                 text: tr('registration_page.google_button'),
@@ -128,11 +128,11 @@ class RegistrationPage1State extends State<RegistrationPage1> {
                 onPressed: () {},
               ),
               const SizedBox(height: 12),
-              RegistrationServicesButton(
-                text: tr('registration_page.facebook_button'),
-                // Локализованная кнопка "Facebook"
-                onPressed: () {},
-              ),
+              // RegistrationServicesButton(
+              //   text: tr('registration_page.facebook_button'),
+              //   // Локализованная кнопка "Facebook"
+              //   onPressed: () {},
+              // ),
               const SizedBox(height: 24.0),
               RichText(
                 text: TextSpan(

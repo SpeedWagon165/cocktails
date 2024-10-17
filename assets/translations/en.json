@@ -148,7 +148,9 @@
     "marketplace_yandex": "Yandex Market",
     "buy_on": "Buy on {count}",
     "price_from": "from {count} ₽",
-    "order_now": "Order Now"
+    "order_now": "Order Now",
+    "how_to_use": "How to use",
+    "no_description": "No description"
   },
   "change_pass_pages": {
     "enter_your_email": "Enter your email",
@@ -212,7 +214,10 @@
     "redeem_points_button": "Redeem Points",
     "no_points": "0 points",
     "history_title": "Bonus History",
-    "history": "History"
+    "history": "History",
+    "copied": "Promo code copied",
+    "not_enough_points": "There are not enough points to purchase a promo code",
+    "purchased": "Purchased!"
   },
   "buttons": {
     "confirm": "Confirm",
@@ -229,7 +234,8 @@
     "empty_field": "Field cannot be empty",
     "invalid_code": "The code entered is incorrect",
     "email_incorrect": "Incorrect email",
-    "server_error": "Connection troubles"
+    "server_error": "Connection troubles",
+    "error": "Error"
   },
   "timer": {
     "time_left": "Resend code in ",

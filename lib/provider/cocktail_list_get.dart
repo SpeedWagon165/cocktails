@@ -5,10 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/cocktail_list_model.dart';
 import '../models/ingredient_category_model.dart';
-import '../models/notification_model.dart';
 
 class CocktailRepository {
-  final String baseUrl = 'http://109.71.246.251:8000/api';
   final Dio dio;
 
   CocktailRepository()
@@ -34,7 +32,7 @@ class CocktailRepository {
         // Обработка ответа
         return handler.next(response);
       },
-      onError: (DioError e, handler) {
+      onError: (e, handler) {
         // Обработка ошибок
         return handler.next(e);
       },
@@ -44,38 +42,6 @@ class CocktailRepository {
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
-  }
-
-  Future<List<NotificationItem>> fetchNotifications() async {
-    try {
-      final response = await dio.get('/notification/');
-      if (response.statusCode == 200) {
-        List data = response.data;
-        return data.map((item) => NotificationItem.fromJson(item)).toList();
-      } else {
-        throw Exception('Failed to load notifications');
-      }
-    } catch (e) {
-      throw Exception('Error fetching notifications: $e');
-    }
-  }
-
-  Future<void> markAllAsRead() async {
-    try {
-      final response = await dio.post('/notification/read/');
-
-      if (response.statusCode == 200) {
-        print('Notifications marked as read.');
-      } else if (response.statusCode == 404) {
-        // Обработка ошибки 404: нет непрочитанных уведомлений
-        print('No unread notifications found.');
-      } else {
-        throw Exception('Failed to mark notifications as read');
-      }
-    } catch (e) {
-      print('Error marking notifications as read: $e');
-      // Можно вывести лог или отправить сообщение пользователю в случае ошибки
-    }
   }
 
   // Метод для получения коктейлей

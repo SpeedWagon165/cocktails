@@ -1,6 +1,7 @@
 import 'package:cocktails/models/store_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../widgets/auth/custom_registration_button.dart';
@@ -8,10 +9,14 @@ import '../../../widgets/base_pop_up.dart';
 import '../../../widgets/store/expandable_text.dart';
 
 void productPagePopUp(BuildContext context, Product product) {
-  showModalBottomSheet(
+  showCupertinoModalBottomSheet(
     context: context,
-    isScrollControlled: true,
-    useRootNavigator: true,
+    isDismissible: true,
+    // Возможность закрытия свайпом вниз
+    enableDrag: true,
+    // Включение возможности тянуть вниз
+    expand: false,
+    // Не занимает весь экран сразу
     backgroundColor: Colors.transparent,
     builder: (context) {
       return BasePopup(

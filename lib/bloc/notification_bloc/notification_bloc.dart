@@ -1,14 +1,14 @@
 import 'package:bloc/bloc.dart';
-import 'package:cocktails/provider/cocktail_list_get.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/notification_model.dart';
+import '../../provider/notification_repository.dart';
 
 part 'notification_event.dart';
 part 'notification_state.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
-  final CocktailRepository notificationService;
+  final NotificationRepository notificationService;
 
   NotificationBloc(this.notificationService) : super(NotificationInitial()) {
     on<LoadNotifications>((event, emit) async {

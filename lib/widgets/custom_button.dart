@@ -1,10 +1,8 @@
 import 'dart:ui';
 
 import 'package:cocktails/theme/theme_extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../theme/text_styles.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -13,6 +11,8 @@ class CustomButton extends StatelessWidget {
   final bool single;
   final bool grey;
   final VoidCallback onPressed;
+  final double buttonHeight;
+  final bool haveIcon;
 
   const CustomButton({
     required this.text,
@@ -22,6 +22,8 @@ class CustomButton extends StatelessWidget {
     required this.single,
     required this.onPressed,
     super.key,
+    this.buttonHeight = 60,
+    this.haveIcon = false,
   });
 
   @override
@@ -32,7 +34,7 @@ class CustomButton extends StatelessWidget {
           children: [
             Expanded(
               child: SizedBox(
-                height: 60,
+                height: buttonHeight,
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
@@ -71,19 +73,44 @@ class CustomButton extends StatelessWidget {
           children: [
             Expanded(
               child: SizedBox(
-                height: 60,
+                height: buttonHeight,
                 child: ElevatedButton(
                   onPressed: onPressed,
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
                     backgroundColor: const Color(0xFFF6B402),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 32.0, vertical: 16.0),
+                        horizontal: 32.0, vertical: 0),
                   ),
-                  child: Text(
-                    text,
-                    style: context.text.buttonText18Brown,
-                  ),
+                  child: haveIcon
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            if (haveIcon)
+                              SvgPicture.asset("assets/images/copy_bold.svg"),
+                            if (haveIcon)
+                              const SizedBox(
+                                width: 10,
+                              ),
+                            Flexible(
+                              child: Text(
+                                text,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                style: context.text.buttonText18Brown
+                                    .copyWith(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(
+                          text,
+                          style: buttonHeight == 60
+                              ? context.text.buttonText18Brown
+                              : context.text.buttonText18Brown
+                                  .copyWith(fontSize: 16),
+                        ),
                 ),
               ),
             ),
@@ -97,7 +124,7 @@ class CustomButton extends StatelessWidget {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
             child: SizedBox(
-              height: 60,
+              height: buttonHeight,
               child: ElevatedButton(
                 onPressed: onPressed,
                 style: ElevatedButton.styleFrom(
@@ -121,7 +148,7 @@ class CustomButton extends StatelessWidget {
         );
       } else if (gradient) {
         return SizedBox(
-          height: 60,
+          height: buttonHeight,
           child: Container(
             decoration: BoxDecoration(
               gradient: const LinearGradient(
@@ -154,7 +181,7 @@ class CustomButton extends StatelessWidget {
         );
       } else if (grey) {
         return SizedBox(
-          height: 60,
+          height: buttonHeight,
           child: ElevatedButton(
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
@@ -172,7 +199,7 @@ class CustomButton extends StatelessWidget {
         );
       } else {
         return SizedBox(
-          height: 60,
+          height: buttonHeight,
           child: ElevatedButton(
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(

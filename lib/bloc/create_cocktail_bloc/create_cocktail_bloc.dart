@@ -190,8 +190,16 @@ class CocktailCreationBloc
 
   void _onRemoveStep(
       RemoveStepEvent event, Emitter<CocktailCreationState> emit) {
+    // Удаляем шаг
     final updatedSteps =
         state.steps.where((step) => step.number != event.stepNumber).toList();
+
+    // Обновляем номера шагов
+    for (int i = 0; i < updatedSteps.length; i++) {
+      updatedSteps[i] =
+          RecipeStep(number: i + 1, description: updatedSteps[i].description);
+    }
+
     emit(state.copyWith(steps: updatedSteps));
   }
 

@@ -68,7 +68,9 @@ class ChangeCocktailTile extends StatelessWidget {
                     color: Colors.white.withOpacity(0.5),
                   ),
                   iconSize: 30.0,
-                  onPressed: () {},
+                  onPressed: () {
+                    onTap!();
+                  },
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   splashRadius: 24.0,

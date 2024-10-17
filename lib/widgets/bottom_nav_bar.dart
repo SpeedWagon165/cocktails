@@ -30,7 +30,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             onWillPop: () async {
               // Check if the current tab's Navigator can go back
               if (navigatorKeys[currentIndex].currentState?.canPop() ?? false) {
-                navigatorKeys[currentIndex].currentState?.pop();
+                navigatorKeys[currentIndex].currentState?.pop(true);
                 return false; // Prevent exiting the app
               }
               return true; // Allow app to exit

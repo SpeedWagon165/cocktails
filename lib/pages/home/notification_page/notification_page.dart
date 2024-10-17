@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/notification_bloc/notification_bloc.dart';
-import '../../../provider/cocktail_list_get.dart';
+import '../../../provider/notification_repository.dart';
 import '../../../widgets/custom_arrowback.dart';
 
 class NotificationPage extends StatelessWidget {
@@ -13,7 +13,7 @@ class NotificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => NotificationBloc(CocktailRepository())
+      create: (context) => NotificationBloc(NotificationRepository())
         ..add(LoadNotifications())
         ..add(MarkNotificationsAsRead()),
       child: SafeArea(
@@ -41,7 +41,7 @@ class NotificationPage extends StatelessWidget {
                       } else if (state is NotificationError) {
                         return Center(
                           child: Text(
-                            'Error: ${state.error}',
+                            tr("errors.server_error"),
                             style: const TextStyle(color: Colors.red),
                           ),
                         );

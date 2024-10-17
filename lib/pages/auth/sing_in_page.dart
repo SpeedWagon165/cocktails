@@ -191,10 +191,10 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 24.0),
                 TextWithLines(text: tr('sign_in_page.alternative_sign_in')),
                 const SizedBox(height: 24),
-                RegistrationServicesButton(
-                  text: tr('sign_in_page.apple_id_button'),
-                  onPressed: () {},
-                ),
+                // RegistrationServicesButton(
+                //   text: tr('sign_in_page.apple_id_button'),
+                //   onPressed: () {},
+                // ),
                 const SizedBox(height: 12),
                 BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {
@@ -232,10 +232,10 @@ class _SignInPageState extends State<SignInPage> {
                   },
                 ),
                 const SizedBox(height: 12),
-                RegistrationServicesButton(
-                  text: tr('sign_in_page.facebook_button'),
-                  onPressed: () {},
-                ),
+                // RegistrationServicesButton(
+                //   text: tr('sign_in_page.facebook_button'),
+                //   onPressed: () {},
+                // ),
                 const SizedBox(height: 24.0),
                 TextButton(
                   onPressed: () {

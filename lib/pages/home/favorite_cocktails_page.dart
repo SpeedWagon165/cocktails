@@ -53,7 +53,6 @@ class FavoriteCocktailsPage extends StatelessWidget {
                                 'favorite_cocktails.no_recipes')), // Локализация текста, если рецептов нет
                           );
                         }
-
                         return ListView.builder(
                           itemCount: state.cocktails.length,
                           itemBuilder: (context, index) {

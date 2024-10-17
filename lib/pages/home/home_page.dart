@@ -1,5 +1,4 @@
 import 'package:cocktails/pages/home/popups/cocktail_selection_pop_up.dart';
-import 'package:cocktails/pages/home/popups/need_registration_pop_up.dart';
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/home/info_tile_home.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -179,7 +178,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                             .push(MaterialPageRoute(
                                           builder: (context) =>
                                               const BonusScreen(),
-                                        ));
+                                        ))
+                                            .then((result) {
+                                          if (result == true) {
+                                            _refreshData(); // Обновляем данные только если вернулись с изменениями
+                                          }
+                                        });
                                       },
                                     ),
                                     const Divider(
@@ -191,10 +195,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         'count': recipesCount.toString()
                                       }),
                                       onTap: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const MyCocktailsListPage()));
+                                                    const MyCocktailsListPage()))
+                                            .then((result) {
+                                          if (result == true) {
+                                            _refreshData(); // Обновляем данные только если вернулись с изменениями
+                                          }
+                                        });
                                       },
                                     ),
                                     const Divider(
@@ -311,11 +320,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     text: tr('home.select_cocktail_button'),
                     onPressed: () {
                       final authState = context.read<AuthBloc>().state;
-                      if (authState is AuthAuthenticated) {
-                        cocktailSelectionPopUp(context);
-                      } else {
-                        needRegistrationPopUp(context);
-                      }
+                      // if (authState is AuthAuthenticated) {
+                      cocktailSelectionPopUp(context);
+                      // } else {
+                      //   needRegistrationPopUp(context);
+                      // }
                     },
                     single: true,
                   ),

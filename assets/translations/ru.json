@@ -148,7 +148,9 @@
     "marketplace_yandex": "Яндекс Маркет",
     "buy_on": "Купить на {count}",
     "price_from": "от {count} ₽",
-    "order_now": "Заказать"
+    "order_now": "Заказать",
+    "how_to_use": "Как использовать",
+    "no_description": "Нет описания"
   },
   "change_pass_pages": {
     "enter_your_email": "Введите электронную почту",
@@ -212,7 +214,10 @@
     "redeem_points_button": "Обменять баллы",
     "no_points": "0 баллов",
     "history_title": "История бонусов",
-    "history": "История"
+    "history": "История",
+    "copied": "Промокод скопирован",
+    "not_enough_points": "Недостаточно баллов для покупки промокода",
+    "purchased": "Куплено!"
   },
   "buttons": {
     "confirm": "Подтвердить",
@@ -229,7 +234,8 @@
     "empty_field": "Поле не может быть пустым",
     "invalid_code": "Код введён неверно",
     "email_incorrect": "Некорректный email",
-    "server_error": "Ошибка сервера или интернета"
+    "server_error": "Ошибка сервера или интернета",
+    "error": "Ошибка"
   },
   "timer": {
     "time_left": "Повторная отправка ",

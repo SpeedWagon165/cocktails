@@ -19,7 +19,7 @@ class NewStepsView extends StatelessWidget {
             final steps = state.steps;
 
             return SizedBox(
-              height: MediaQuery.of(context).size.height * 0.60,
+              height: MediaQuery.of(context).size.height * 0.55,
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: steps.length,
