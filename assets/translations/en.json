@@ -12,7 +12,8 @@
   "notifications_page": {
     "title": "Notifications",
     "sms_notifications": "Allow SMS Notifications",
-    "push_notifications": "Push Notifications"
+    "push_notifications": "Push Notifications",
+    "no_notification": "No notification"
   },
   "account_page": {
     "title": "Account",

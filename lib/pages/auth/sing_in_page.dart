@@ -198,7 +198,7 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 12),
                 BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {
-                    if (state is AuthLoading) {
+                    if (state is AuthGoogleLoading) {
                       showDialog(
                         context: context,
                         barrierDismissible: false,
@@ -206,19 +206,21 @@ class _SignInPageState extends State<SignInPage> {
                             const Center(child: CircularProgressIndicator()),
                       );
                     } else if (state is AuthAuthenticated) {
-                      Navigator.of(context).pop(); // Закрываем окно загрузки
+                      // Закрываем окно загрузки
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
                                 const CustomBottomNavigationBar()),
                       );
-                    } else if (state is AuthError) {
+                    } else if (state is AuthGoogleError) {
+                      print('google error');
                       Navigator.of(context).pop(); // Закрываем окно загрузки
                       setState(() {
-                        generalError = 'Ошибка авторизации через Google';
+                        generalError =
+                            state.message; // Сообщение об ошибке для Google
                       });
-                    }
+                    } else if (state is AuthUnauthenticated) {}
                   },
                   builder: (context, state) {
                     return RegistrationServicesButton(

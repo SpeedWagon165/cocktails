@@ -48,7 +48,11 @@ class NotificationPage extends StatelessWidget {
                       } else if (state is NotificationLoaded) {
                         final notifications = state.notifications;
                         if (notifications.isEmpty) {
-                          return const Center(child: Text('Нет уведомлений'));
+                          return Center(
+                              child: Text(
+                            tr("notifications_page.no_notification"),
+                            style: context.text.bodyText16White,
+                          ));
                         }
 
                         return ListView.builder(

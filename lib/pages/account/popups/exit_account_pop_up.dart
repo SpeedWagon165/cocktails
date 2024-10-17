@@ -2,6 +2,7 @@ import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import '../../../widgets/base_pop_up.dart';
@@ -42,7 +43,9 @@ void exitAccount(BuildContext context) {
                       text: tr('buttons.sign_out'),
                       // Локализованный текст "Выйти"
                       grey: true,
-                      onPressed: () {
+                      onPressed: () async {
+                        final googleSignIn = GoogleSignIn();
+                        await googleSignIn.signOut();
                         BlocProvider.of<AuthBloc>(context)
                             .add(SignOutRequested());
                         Navigator.pushAndRemoveUntil(

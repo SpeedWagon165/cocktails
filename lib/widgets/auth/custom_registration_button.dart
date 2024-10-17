@@ -73,7 +73,7 @@ class RegistrationServicesButton extends StatelessWidget {
                         height: SizeConfig.heightAdaptive(10),
                       ),
                       iconSize: 30.0,
-                      onPressed: () {},
+                      onPressed: onPressed,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                       splashRadius: 24.0,

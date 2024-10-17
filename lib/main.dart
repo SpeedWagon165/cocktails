@@ -85,8 +85,7 @@ class MyApp extends StatelessWidget {
                     ProfileBloc(ProfileRepository())..add(FetchProfile()),
               ),
               BlocProvider(
-                create: (context) =>
-                    AuthBloc(AuthRepository())..add(CheckAuthStatus()),
+                create: (context) => AuthBloc(AuthRepository()),
               ),
               // BlocProvider(
               //   create: (context) => SupportBloc(SupportRepository()),

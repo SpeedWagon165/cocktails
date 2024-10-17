@@ -1,4 +1,5 @@
 import 'package:cocktails/pages/catalog/pop_up/filter_pop_up.dart';
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,8 +63,9 @@ class _CatalogPageState extends State<CatalogPage> {
                       );
                     } else if (state is CocktailError) {
                       return Center(
-                          child: Text(
-                              tr('errors.server_error'))); // Локализация ошибок
+                          child: Text(tr('errors.server_error'),
+                              style: context
+                                  .text.bodyText16White)); // Локализация ошибок
                     }
                     return Center(
                       child: Text(tr(

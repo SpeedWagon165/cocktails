@@ -12,7 +12,8 @@
   "notifications_page": {
     "title": "Уведомления",
     "sms_notifications": "Разрешить текстовые сообщения на телефоне",
-    "push_notifications": "Пуш уведомления"
+    "push_notifications": "Пуш уведомления",
+    "no_notification": "Нет уведомлений"
   },
   "account_page": {
     "title": "Аккаунт",

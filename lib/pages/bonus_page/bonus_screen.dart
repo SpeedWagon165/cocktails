@@ -167,7 +167,9 @@ class _BonusScreenState extends State<BonusScreen> {
                         ),
                       );
                     } else if (state is PromoError) {
-                      return Center(child: Text(tr("errors.server_error")));
+                      return Center(
+                          child: Text(tr("errors.server_error"),
+                              style: context.text.bodyText16White));
                     } else {
                       return Container();
                     }

@@ -10,7 +10,7 @@ class AuthRepository {
     try {
       final response = await _dio.post(
         'http://109.71.246.251:8000/api/auth/web/sign-in/',
-        data: ({'username': username, 'password': password}),
+        data: {'username': username, 'password': password},
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -28,6 +28,10 @@ class AuthRepository {
         await prefs.setString('token', authResponse.token);
         print('Sign-in successful, token: ${authResponse.token}');
         return authResponse;
+      } else if (response.statusCode == 400) {
+        // Возвращаем сообщение об ошибке при коде 400
+        print('Invalid credentials: ${response.data}');
+        throw Exception('Неправильный логин или пароль');
       } else {
         print('Failed to sign in: ${response.statusCode}');
         throw Exception('Failed to sign in: ${response.statusCode}');

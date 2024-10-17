@@ -41,3 +41,14 @@ class AuthError extends AuthState {
   @override
   List<Object> get props => [message];
 }
+
+class AuthGoogleLoading extends AuthState {}
+
+class AuthGoogleError extends AuthState {
+  final String message;
+
+  AuthGoogleError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

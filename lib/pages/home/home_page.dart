@@ -244,7 +244,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                                   .length;
 
                                           return InfoTileHome(
-                                            icon: 'assets/images/mail_icon.svg',
+                                            icon: unreadNotificationsCount == 0
+                                                ? 'assets/images/mail_icon.svg'
+                                                : 'assets/images/mail_active_icon.svg',
                                             title: tr('home.notifications'),
                                             subtitle: unreadNotificationsCount !=
                                                     0
@@ -301,7 +303,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                   ],
                                 );
                               } else if (profileState is ProfileError) {
-                                return Text(tr('errors.server_error'));
+                                return Text(
+                                  tr('errors.server_error'),
+                                  style: context.text.bodyText16White,
+                                );
                               } else {
                                 return const CircularProgressIndicator();
                               }

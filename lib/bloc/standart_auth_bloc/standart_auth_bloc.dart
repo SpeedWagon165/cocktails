@@ -42,6 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onCheckAuthStatus(
       CheckAuthStatus event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
+    print('чек аунт активирован');
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
@@ -158,7 +159,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onSignInWithGoogleRequested(
       SignInWithGoogleRequested event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
+    emit(AuthGoogleLoading());
 
     try {
       final googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
@@ -173,22 +174,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final accessToken = googleAuth.accessToken;
 
       if (idToken != null && accessToken != null) {
-        // Вызов метода для отправки токенов на сервер
         final authResponse =
             await AuthRepository().sendTokensToServer(idToken, accessToken);
 
         if (authResponse != null) {
+          print("гугляяяялляя");
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('token', authResponse.token);
           emit(AuthAuthenticated(AuthResponse(token: authResponse.token)));
         } else {
-          emit(AuthError('Ошибка авторизации через Google.'));
+          emit(AuthGoogleError('Ошибка авторизации через Google.'));
         }
       } else {
-        emit(AuthError('Отсутствуют токены Google.'));
+        emit(AuthGoogleError('Отсутствуют токены Google.'));
       }
     } catch (e) {
-      emit(AuthError(e.toString()));
+      emit(AuthGoogleError(e.toString()));
     }
   }
 }

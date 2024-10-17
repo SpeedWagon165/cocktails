@@ -52,7 +52,9 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
+        print("Current state: $state");
         if (state is AuthLoading) {
+          print('AuthLoading 2 state');
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -86,7 +88,7 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
             children: [
               CenterText(
                 text: tr('registration_page.code_sent_description',
-                    args: [widget.email]),
+                    namedArgs: {'email': widget.email}),
                 // Локализованное сообщение о том, что код отправлен на email
                 padding: 60,
               ),
