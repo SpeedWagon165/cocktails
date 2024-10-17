@@ -229,7 +229,7 @@
     "empty_field": "Поле не может быть пустым",
     "invalid_code": "Код введён неверно",
     "email_incorrect": "Некорректный email",
-    "server_error": "Ошибка сервера"
+    "server_error": "Ошибка сервера или интернета"
   },
   "timer": {
     "time_left": "Повторная отправка ",
@@ -296,5 +296,12 @@
     "catalog": "Каталог",
     "store": "Магазин",
     "account": "Аккаунт"
+  },
+  "moderation_status": {
+    "draft": "Черновик",
+    "rejected": "Отклонено",
+    "pending": "На рассмотрении",
+    "approved": "Опубликован",
+    "unknown": "Неизвестный статус"
   }
 }

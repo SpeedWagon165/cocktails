@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/notification_bloc/notification_bloc.dart';
 import '../../bloc/profile_bloc/profile_bloc.dart';
 import '../../bloc/standart_auth_bloc/standart_auth_bloc.dart';
 import '../../widgets/account/profile_avatar.dart';
@@ -15,6 +16,7 @@ import '../auth/popups/auth_pop_up.dart';
 import '../bonus_page/bonus_screen.dart';
 import 'favorite_cocktails_page.dart';
 import 'my_cocktail_list_page.dart';
+import 'notification_page/notification_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,12 +25,31 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _refreshData();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _refreshData();
+    }
+  }
+
+  void _refreshData() {
     context.read<AuthBloc>().add(CheckAuthStatus());
     context.read<ProfileBloc>().add(FetchProfile());
+    context.read<NotificationBloc>().add(LoadNotifications());
   }
 
   @override
@@ -94,6 +115,7 @@ class _HomePageState extends State<HomePage> {
                                     // Если пользователь не авторизован
                                     return Text(tr('home.greeting_default'),
                                         maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                         style: context.text.headline24White);
                                   }
                                 },
@@ -184,32 +206,93 @@ class _HomePageState extends State<HomePage> {
                                           namedArgs: {
                                             'count': favoritesCount.toString()
                                           }), // Использование namedArgs
-                                      onTap: () {
-                                        Navigator.of(context).push(
+                                      onTap: () async {
+                                        Navigator.of(context)
+                                            .push(
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const FavoriteCocktailsPage()),
-                                        );
+                                            builder: (context) =>
+                                                const FavoriteCocktailsPage(),
+                                          ),
+                                        )
+                                            .then((result) {
+                                          if (result == true) {
+                                            _refreshData(); // Обновляем данные только если вернулись с изменениями
+                                          }
+                                        });
                                       },
                                     ),
                                     const Divider(
                                         color: Color(0xff343434), height: 1),
-                                    InfoTileHome(
-                                      icon: 'assets/images/mail_icon.svg',
-                                      title: tr('home.notifications'),
-                                      subtitle: tr('home.new_notifications',
-                                          namedArgs: {'count': 3.toString()}),
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const BonusScreen()));
+                                    BlocBuilder<NotificationBloc,
+                                        NotificationState>(
+                                      builder: (context, notificationState) {
+                                        if (notificationState
+                                            is NotificationLoaded) {
+                                          final unreadNotificationsCount =
+                                              notificationState.notifications
+                                                  .where((notification) =>
+                                                      !notification.isRead)
+                                                  .length;
+
+                                          return InfoTileHome(
+                                            icon: 'assets/images/mail_icon.svg',
+                                            title: tr('home.notifications'),
+                                            subtitle: unreadNotificationsCount !=
+                                                    0
+                                                ? tr('home.new_notifications',
+                                                    namedArgs: {
+                                                        'count':
+                                                            unreadNotificationsCount
+                                                                .toString()
+                                                      })
+                                                : '',
+                                            onTap: () async {
+                                              // Открываем экран уведомлений
+                                              final result =
+                                                  await Navigator.of(context)
+                                                      .push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const NotificationPage()),
+                                              );
+
+                                              // Если вернулись с обновленными данными, перезагружаем уведомления
+                                              if (result == true) {
+                                                context
+                                                    .read<NotificationBloc>()
+                                                    .add(LoadNotifications());
+                                              }
+                                            },
+                                          );
+                                        } else {
+                                          return InfoTileHome(
+                                            icon: 'assets/images/mail_icon.svg',
+                                            title: tr('home.notifications'),
+                                            subtitle: "",
+                                            onTap: () async {
+                                              final result =
+                                                  await Navigator.of(context)
+                                                      .push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const NotificationPage()),
+                                              );
+
+                                              // Если вернулись с обновленными данными, перезагружаем уведомления
+                                              if (result == true) {
+                                                context
+                                                    .read<NotificationBloc>()
+                                                    .add(LoadNotifications());
+                                              }
+                                            },
+                                          );
+                                        }
                                       },
                                     ),
                                   ],
                                 );
                               } else if (profileState is ProfileError) {
-                                return Text(profileState.message);
+                                return Text(tr('errors.server_error'));
                               } else {
                                 return const CircularProgressIndicator();
                               }
@@ -218,7 +301,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       } else {
                         return Container(
-                          height: 300,
+                          height: 125,
                         );
                       }
                     },

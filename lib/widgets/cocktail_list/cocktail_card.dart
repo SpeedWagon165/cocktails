@@ -10,6 +10,7 @@ import '../../models/cocktail_list_model.dart';
 
 class CocktailCard extends StatelessWidget {
   final bool favoritePage;
+  final bool myCocktailPage;
 
   final Cocktail cocktail;
 
@@ -17,6 +18,7 @@ class CocktailCard extends StatelessWidget {
     super.key,
     required this.cocktail,
     this.favoritePage = false,
+    this.myCocktailPage = false,
   });
 
   @override
@@ -99,7 +101,7 @@ class CocktailCard extends StatelessWidget {
                       child: GestureDetector(
                         onTap: isLoading
                             ? null
-                            : () {
+                            : () async {
                                 // Отправляем событие для переключения статуса избранного
                                 context.read<CocktailListBloc>().add(
                                       ToggleFavoriteCocktail(cocktail.id,
@@ -165,12 +167,77 @@ class CocktailCard extends StatelessWidget {
                               ),
                       ),
                     ),
+                  if (myCocktailPage) // Проверяем, что мы на странице "Мои коктейли"
+                    Positioned(
+                      top: 20,
+                      left: 20,
+                      child: _buildModerationStatus(context, cocktail),
+                    ),
                 ],
               ),
             );
           },
         );
       },
+    );
+  }
+
+  Widget _buildModerationStatus(BuildContext context, Cocktail cocktail) {
+    // Определяем текст, иконку и цвет обводки в зависимости от статуса модерации
+    IconData statusIcon;
+    String statusText;
+    Color borderColor;
+
+    switch (cocktail.moderationStatus) {
+      case "Draft":
+        statusIcon = Icons.edit;
+        statusText = tr("moderation_status.draft");
+        borderColor = Colors.grey;
+        break;
+      case "Rejected":
+        statusIcon = Icons.cancel;
+        statusText = tr("moderation_status.rejected");
+        borderColor = Colors.red;
+        break;
+      case "Pending":
+        statusIcon = Icons.hourglass_empty;
+        statusText = tr("moderation_status.pending");
+        borderColor = Colors.orange;
+        break;
+      case "Approved":
+        statusIcon = Icons.check;
+        statusText = tr("moderation_status.approved");
+        borderColor = Colors.green;
+        break;
+      default:
+        statusIcon = Icons.help_outline;
+        statusText = tr("moderation_status.unknown");
+        borderColor = Colors.grey;
+    }
+
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white.withOpacity(0.2), // Полупрозрачный фон
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: borderColor, // Цвет иконки
+            ),
+            child: Icon(statusIcon, size: 15, color: Colors.white),
+          ),
+          const SizedBox(width: 10.0),
+          Text(statusText, style: context.text.bodyText14White),
+        ],
+      ),
     );
   }
 }

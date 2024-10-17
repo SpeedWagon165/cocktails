@@ -173,6 +173,7 @@ class CustomTextFieldState extends State<CustomTextField> {
             child: Text(
               widget.errorMessage!,
               style: context.text.bodyText12Grey.copyWith(color: Colors.red),
+              overflow: TextOverflow.ellipsis,
             ),
           )
         else if (widget.showRedBorder == true)

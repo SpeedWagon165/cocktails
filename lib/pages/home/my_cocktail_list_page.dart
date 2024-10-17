@@ -84,7 +84,10 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
                     child: ListView.builder(
                       itemCount: state.cocktails.length,
                       itemBuilder: (context, index) {
-                        return CocktailCard(cocktail: state.cocktails[index]);
+                        return CocktailCard(
+                          cocktail: state.cocktails[index],
+                          myCocktailPage: true,
+                        );
                       },
                     ),
                   );

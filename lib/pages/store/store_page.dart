@@ -51,7 +51,7 @@ class StorePage extends StatelessWidget {
                           },
                         );
                       } else if (state is GoodsError) {
-                        return Center(child: Text(state.message));
+                        return Center(child: Text(tr('errors.server_error')));
                       }
                       return Center(child: Text(tr('store.empty_message')));
                     },

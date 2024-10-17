@@ -68,6 +68,29 @@ dependencies:
   firebase_auth: ^5.3.1
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.1
+
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+
+  color: "#f6b402" # Цвет заливки
+  image: "assets/images/splash_for_ios.png" # Путь к вашей иконке
+
+  android_12:
+    color: "#f6b402" # Цвет заливки
+    image: "assets/images/splash_icon.png"
+
+
+flutter_launcher_icons:
+  android: 'ic_launcher'
+  ios: true
+  image_path: "assets/images/app_icon.png" # Путь к вашей иконке
+  adaptive_icon_background: "#f6b402"
+  adaptive_icon_foreground_inset: 30
+  remove_alpha_ios: true
   flutter_test:
     sdk: flutter
 

@@ -56,7 +56,6 @@ class RegistrationServicesButton extends StatelessWidget {
                   ),
                   Container(
                     width: SizeConfig.heightAdaptive(27),
-                    // Адаптивный размер кнопки
                     height: SizeConfig.heightAdaptive(27),
                     decoration: BoxDecoration(
                       color: Colors.transparent, // Цвет фона кнопки
@@ -138,8 +137,12 @@ class CustomRegistrationButton extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ),
-              Text(text,
-                  style: context.text.bodyText16White.copyWith(fontSize: 15)),
+              Flexible(
+                child: Text(text,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.text.bodyText16White.copyWith(fontSize: 15)),
+              ),
             ],
           ),
         ),

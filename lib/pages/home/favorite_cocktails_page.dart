@@ -25,12 +25,13 @@ class FavoriteCocktailsPage extends StatelessWidget {
             child: Column(
               children: [
                 CustomAppBar(
-                  text: tr('favorite_cocktails.title'), // Локализация заголовка
-                  onPressed: null,
-                  secondIcon: false,
-                  onSecondIconTap: () {
-                    Navigator.of(context).pop();
+                  auth: true,
+                  text: tr('favorite_cocktails.title'),
+                  // Локализация заголовка
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
                   },
+                  secondIcon: false,
                 ),
                 const SizedBox(
                   height: 10,

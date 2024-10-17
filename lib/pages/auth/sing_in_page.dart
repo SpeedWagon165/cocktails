@@ -131,22 +131,22 @@ class _SignInPageState extends State<SignInPage> {
                                 generalError!,
                                 style: context.text.bodyText14White
                                     .copyWith(color: Colors.red),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             )
                           : const SizedBox(),
-                      TextButton(
-                        onPressed: () {
-                          widget.pageController.animateToPage(2,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut);
-                        },
-                        child: Text(
-                          tr('sign_in_page.forgot_password_link'),
-                          style: context.text.bodyText12Grey
-                              .copyWith(fontSize: 14),
-                        ),
-                      ),
                     ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    widget.pageController.animateToPage(2,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut);
+                  },
+                  child: Text(
+                    tr('sign_in_page.forgot_password_link'),
+                    style: context.text.bodyText12Grey.copyWith(fontSize: 14),
                   ),
                 ),
                 const SizedBox(height: 20),

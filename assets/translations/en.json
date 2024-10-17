@@ -229,7 +229,7 @@
     "empty_field": "Field cannot be empty",
     "invalid_code": "The code entered is incorrect",
     "email_incorrect": "Incorrect email",
-    "server_error": "Server error"
+    "server_error": "Connection troubles"
   },
   "timer": {
     "time_left": "Resend code in ",
@@ -296,5 +296,12 @@
     "catalog": "Catalog",
     "store": "Store",
     "account": "Account"
+  },
+  "moderation_status": {
+    "draft": "Draft",
+    "rejected": "Rejected",
+    "pending": "Pending",
+    "approved": "Approved",
+    "unknown": "Unknown"
   }
 }

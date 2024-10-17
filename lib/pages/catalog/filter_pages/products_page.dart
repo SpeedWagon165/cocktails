@@ -36,6 +36,9 @@ class _ProductsPageState extends State<ProductsPage> {
           const CocktailFilterView(
             step: 3,
           ),
+          const SizedBox(
+            height: 24,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

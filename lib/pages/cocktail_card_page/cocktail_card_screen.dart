@@ -79,9 +79,12 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                               bool isFavorite = false;
 
                               if (state is CocktailLoaded) {
-                                // Найдите коктейль в загруженных коктейлях
+                                // Найдите коктейль в загруженных коктейлях или верните текущий коктейль
                                 final cocktail = state.cocktails.firstWhere(
-                                    (c) => c.id == widget.cocktail.id);
+                                  (c) => c.id == widget.cocktail.id,
+                                  orElse: () => widget
+                                      .cocktail, // Возвращаем оригинальный коктейль, если не найден
+                                );
                                 isFavorite = cocktail.isFavorite;
                               }
 

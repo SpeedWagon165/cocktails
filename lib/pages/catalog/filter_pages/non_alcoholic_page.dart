@@ -36,6 +36,9 @@ class _NonAlcoholicPageState extends State<NonAlcoholicPage> {
           const CocktailFilterView(
             step: 2,
           ),
+          const SizedBox(
+            height: 24,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

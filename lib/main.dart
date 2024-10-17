@@ -21,6 +21,7 @@ import 'bloc/bottom_navigation_bloc/bottom_navigation_bloc.dart';
 import 'bloc/catalog_filter_bloc/catalog_filter_bloc.dart';
 import 'bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 import 'bloc/create_cocktail_bloc/create_cocktail_bloc.dart';
+import 'bloc/notification_bloc/notification_bloc.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 import 'firebase_options.dart';
 
@@ -76,6 +77,9 @@ class MyApp extends StatelessWidget {
                 create: (context) => ProfileImageCubit()..loadProfileImage(),
               ),
               BlocProvider(
+                  create: (context) => NotificationBloc(CocktailRepository())
+                    ..add(LoadNotifications())),
+              BlocProvider(
                 create: (context) =>
                     ProfileBloc(ProfileRepository())..add(FetchProfile()),
               ),
@@ -96,20 +100,31 @@ class MyApp extends StatelessWidget {
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
               locale: context.locale,
-              home: BlocBuilder<AppBloc, AppState>(
-                builder: (context, state) {
-                  if (state is AppInitial) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is AppAuthenticated) {
-                    return const CustomBottomNavigationBar();
-                  } else if (state is AppUnauthenticated) {
-                    return const WelcomePage();
+              home: WillPopScope(
+                onWillPop: () async {
+                  // Проверяем, можно ли выполнить pop
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                    return Future.value(false); // Не выходим из приложения
                   } else {
-                    return const Center(
-                      child: Text('Unexpected state!'),
-                    );
+                    return Future.value(true); // Выходим из приложения
                   }
                 },
+                child: BlocBuilder<AppBloc, AppState>(
+                  builder: (context, state) {
+                    if (state is AppInitial) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is AppAuthenticated) {
+                      return const CustomBottomNavigationBar();
+                    } else if (state is AppUnauthenticated) {
+                      return const WelcomePage();
+                    } else {
+                      return const Center(
+                        child: Text('Unexpected state!'),
+                      );
+                    }
+                  },
+                ),
               ),
             ));
       },
