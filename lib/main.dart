@@ -8,6 +8,7 @@ import 'package:cocktails/provider/notification_repository.dart';
 import 'package:cocktails/provider/profile_repository.dart';
 import 'package:cocktails/theme/themes.dart';
 import 'package:cocktails/utilities/adaptive_size.dart';
+import 'package:cocktails/utilities/language_swich.dart';
 import 'package:cocktails/widgets/bottom_nav_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,6 +32,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await EasyLocalization.ensureInitialized();
+  final savedLanguage = await LanguageService.getLanguage();
+  final startLocale = savedLanguage == 'rus' ? Locale('ru') : Locale('en');
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // Разрешить только портретную ориентацию
   ]).then((_) {
@@ -38,7 +41,7 @@ void main() async {
         supportedLocales: const [Locale('en', ''), Locale('ru', '')],
         path: 'assets/translations',
         fallbackLocale: const Locale('en', ''),
-        startLocale: const Locale('ru', ''),
+        startLocale: startLocale,
         child: const MyApp()));
   });
 }

@@ -72,6 +72,19 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: 340,
+                errorBuilder: (context, error, stackTrace) {
+                  // Заглушка на случай ошибки загрузки изображения
+                  return Container(
+                    width: double.infinity,
+                    height: 340,
+                    color: Colors.grey,
+                    child: const Icon(
+                      Icons.image_not_supported,
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                  );
+                },
               ),
               Positioned(
                 right: 16.0,

@@ -1,3 +1,4 @@
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,8 +67,9 @@ class FavoriteCocktailsPage extends StatelessWidget {
                         return Center(child: Text(state.message));
                       }
                       return Center(
-                        child: Text(tr(
-                            'favorite_cocktails.no_recipes')), // Локализация текста, если рецептов нет
+                        child: Text(tr('favorite_cocktails.no_recipes'),
+                            style: context.text
+                                .bodyText16White), // Локализация текста, если рецептов нет
                       );
                     },
                   ),

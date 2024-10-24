@@ -2,6 +2,8 @@ import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../utilities/language_swich.dart';
+
 class LanguageSelectionPage extends StatelessWidget {
   const LanguageSelectionPage({super.key});
 
@@ -11,8 +13,8 @@ class LanguageSelectionPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Language', style: context.text.bodyText16White)
-            .tr(), // Используем локализацию
+        title:
+            Text('Select Language', style: context.text.bodyText16White).tr(),
       ),
       body: ListView.builder(
         itemCount: supportedLocales.length,
@@ -23,11 +25,17 @@ class LanguageSelectionPage extends StatelessWidget {
               locale.languageCode.toUpperCase(),
               style: context.text.bodyText16White,
             ),
-            // Отображаем код языка
-            onTap: () {
-              // Меняем локализацию при нажатии
+            onTap: () async {
+              // Меняем локализацию
               context.setLocale(locale);
-              Navigator.pop(context); // Закрываем страницу после выбора
+
+              // Сохраняем выбранный язык в SharedPreferences
+              String selectedLanguage =
+                  locale.languageCode == 'ru' ? 'rus' : 'eng';
+              await LanguageService.saveLanguage(selectedLanguage);
+
+              // Возвращаемся назад после выбора языка
+              Navigator.pop(context);
             },
           );
         },

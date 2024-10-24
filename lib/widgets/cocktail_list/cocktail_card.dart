@@ -72,6 +72,19 @@ class CocktailCard extends StatelessWidget {
                                   width: double.infinity,
                                   height: 190,
                                   fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    // Заглушка на случай ошибки загрузки изображения
+                                    return Container(
+                                      width: double.infinity,
+                                      height: 190,
+                                      color: Colors.grey,
+                                      child: const Icon(
+                                        Icons.image_not_supported,
+                                        color: Colors.white,
+                                        size: 50,
+                                      ),
+                                    );
+                                  },
                                 )
                               : Container(
                                   width: double.infinity,

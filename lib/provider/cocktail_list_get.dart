@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/cocktail_list_model.dart';
 import '../models/ingredient_category_model.dart';
+import '../utilities/language_swich.dart';
 
 class CocktailRepository {
   final Dio dio;
@@ -15,7 +16,6 @@ class CocktailRepository {
             baseUrl: 'http://109.71.246.251:8000/api',
             headers: {
               'Content-Type': 'application/json',
-              'User-Language': 'rus'
             },
           ),
         ) {
@@ -23,10 +23,15 @@ class CocktailRepository {
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         final token = await _getToken();
+        final userLanguage =
+            await LanguageService.getLanguage(); // Получаем сохранённый язык
+
+        options.headers['User-Language'] =
+            userLanguage; // Устанавливаем язык в заголовке
         if (token != null) {
           options.headers['Authorization'] = 'Token $token';
         }
-        return handler.next(options); // Продолжаем с обновленными опциями
+        return handler.next(options);
       },
       onResponse: (response, handler) {
         // Обработка ответа
@@ -45,7 +50,8 @@ class CocktailRepository {
   }
 
   // Метод для получения коктейлей
-  Future<List<Cocktail>> fetchCocktails() async {
+  Future<List<Cocktail>> fetchCocktails(
+      {int page = 1, int pageSize = 20}) async {
     try {
       // Получаем токен из SharedPreferences
       final token = await _getToken();
@@ -64,9 +70,15 @@ class CocktailRepository {
         options = Options();
       }
 
-      // Выполняем запрос
+      // Выполняем запрос с параметрами пагинации
       final response = await dio.get(
         '/recipe/',
+        queryParameters: {
+          'page': page,
+          // Параметр для страницы
+          'page_size': pageSize,
+          // Параметр для количества элементов на странице
+        },
         options: options,
       );
 
