@@ -15,14 +15,34 @@ class CocktailLoading extends CocktailListState {}
 class CocktailLoaded extends CocktailListState {
   final List<Cocktail> cocktails;
   final String currentSortOption;
-  final Map<int, bool>
-      loadingStates; // Хранение состояния загрузки для каждого коктейля
+  final Map<int, bool> loadingStates;
+  final bool hasReachedMax; // Добавляем флаг для пагинации
 
-  const CocktailLoaded(this.cocktails, this.currentSortOption,
-      {this.loadingStates = const {}});
+  const CocktailLoaded(
+    this.cocktails,
+    this.currentSortOption, {
+    this.loadingStates = const {},
+    this.hasReachedMax = false, // Значение по умолчанию
+  });
+
+  // Метод copyWith для обновления состояния
+  CocktailLoaded copyWith({
+    List<Cocktail>? cocktails,
+    String? currentSortOption,
+    Map<int, bool>? loadingStates,
+    bool? hasReachedMax,
+  }) {
+    return CocktailLoaded(
+      cocktails ?? this.cocktails,
+      currentSortOption ?? this.currentSortOption,
+      loadingStates: loadingStates ?? this.loadingStates,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+    );
+  }
 
   @override
-  List<Object> get props => [cocktails, currentSortOption, loadingStates];
+  List<Object> get props =>
+      [cocktails, currentSortOption, loadingStates, hasReachedMax];
 }
 
 class CocktailError extends CocktailListState {

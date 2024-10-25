@@ -50,62 +50,40 @@ class CocktailRepository {
   }
 
   // Метод для получения коктейлей
-  Future<List<Cocktail>> fetchCocktails(
-      {int page = 1, int pageSize = 20}) async {
+  Future<List<Cocktail>> fetchCocktails({
+    int page = 1,
+    int pageSize = 20,
+  }) async {
     try {
-      // Получаем токен из SharedPreferences
-      final token = await _getToken();
-
-      // Настраиваем опции запроса
-      Options options;
-      if (token != null) {
-        // Если токен есть, добавляем его в заголовки
-        options = Options(
-          headers: {
-            'Authorization': 'Token $token',
-          },
-        );
-      } else {
-        // Если токена нет, заголовки не нужны
-        options = Options();
-      }
-
-      // Выполняем запрос с параметрами пагинации
       final response = await dio.get(
         '/recipe/',
         queryParameters: {
           'page': page,
-          // Параметр для страницы
           'page_size': pageSize,
-          // Параметр для количества элементов на странице
         },
-        options: options,
       );
 
-      // Обрабатываем ответ
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}'); // Логируем полный ответ
-
         final Map<String, dynamic> jsonResponse = response.data;
         if (jsonResponse.containsKey('results')) {
-          List<Cocktail> cocktails = List<Cocktail>.from(
+          return List<Cocktail>.from(
             jsonResponse["results"].map((x) => Cocktail.fromJson(x)),
           );
-          return cocktails;
         } else {
           throw Exception('Invalid response structure');
         }
       } else {
         throw Exception('Failed to load cocktails: ${response.statusCode}');
       }
-    } catch (e, stacktrace) {
-      log('Error fetching cocktails', error: e, stackTrace: stacktrace);
+    } catch (e) {
+      log('Error fetching cocktails', error: e);
       throw Exception('Failed to fetch cocktails: $e');
     }
   }
 
   // Метод для получения коктейлей пользователя с токеном
-  Future<List<Cocktail>> fetchUserCocktails(String token) async {
+  Future<List<Cocktail>> fetchUserCocktails(String token,
+      {int page = 1, int pageSize = 20}) async {
     try {
       final response = await dio.get(
         '/profile/recipe/',
@@ -114,10 +92,11 @@ class CocktailRepository {
             'Authorization': 'Token $token',
           },
         ),
+        queryParameters: {
+          'page': page,
+          'page_size': pageSize,
+        },
       );
-
-      log('Response body: ${response.data}');
-      log('Response status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final jsonResponse = response.data;
@@ -170,8 +149,8 @@ class CocktailRepository {
       } else {
         throw Exception('Failed to search cocktails: ${response.statusCode}');
       }
-    } catch (e, stacktrace) {
-      log('Error searching cocktails', error: e, stackTrace: stacktrace);
+    } catch (e) {
+      log('Error searching cocktails', error: e);
       throw Exception('Failed to search cocktails: $e');
     }
   }
@@ -322,6 +301,8 @@ class CocktailRepository {
   Future<List<Section>> fetchSections() async {
     try {
       final response = await dio.get('/recipe/section/');
+      print(response.statusCode);
+      print(response.data);
       if (response.statusCode == 200) {
         List<dynamic> data = response.data;
         return data.map((json) => Section.fromJson(json)).toList();

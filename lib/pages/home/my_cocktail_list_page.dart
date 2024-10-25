@@ -37,13 +37,13 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
       token = prefs.getString('token');
     });
 
+    // Отправка события на загрузку коктейлей
     if (token != null) {
-      // Загружаем коктейли пользователя
       _bloc.add(FetchUserCocktails(token!));
     } else {
-      // Логика, если токен отсутствует, например, перенаправление на страницу входа
-      print('Token not found. Redirect to login or handle error.');
-      _bloc.add(FetchCocktails()); // Опционально можно показать общие коктейли
+      // Если токен отсутствует, можем показать общие коктейли или сообщение
+      print('Token not found. Loading default cocktails.');
+      _bloc.add(FetchCocktails());
     }
   }
 
@@ -61,19 +61,15 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
         body: SafeArea(
           child: BlocBuilder<CocktailListBloc, CocktailListState>(
             builder: (context, state) {
-              int cocktailCount = 0;
               Widget content;
 
               // Обрабатываем различные состояния блока
               if (state is CocktailLoading) {
                 content = const Center(child: CircularProgressIndicator());
               } else if (state is CocktailLoaded) {
-                cocktailCount = state.cocktails.length;
-
                 if (state.cocktails.isEmpty) {
                   content = Center(
-                    child: Text(tr(
-                        'my_cocktails_page.no_cocktails')), // Локализация сообщения
+                    child: Text(tr('my_cocktails_page.no_cocktails')),
                   );
                 } else {
                   content = RefreshIndicator(
@@ -95,13 +91,12 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
                 }
               } else if (state is CocktailError) {
                 content = Center(
-                    child: Text(tr('errors.server_error'),
-                        style: context
-                            .text.bodyText16White)); // Локализация ошибки
+                  child: Text(tr('errors.server_error'),
+                      style: context.text.bodyText16White),
+                );
               } else {
                 content = Center(
-                  child: Text(tr(
-                      'my_cocktails_page.start_search')), // Локализация сообщения
+                  child: Text(tr('my_cocktails_page.start_search')),
                 );
               }
 
@@ -110,14 +105,14 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
                 child: Column(
                   children: [
                     CustomAppBar(
-                      text: tr('my_cocktails_page.title',
-                          namedArgs: {'count': cocktailCount.toString()}),
-                      // Локализация заголовка
+                      text: tr('my_cocktails_page.title', namedArgs: {
+                        'count': state is CocktailLoaded
+                            ? state.cocktails.length.toString()
+                            : '0'
+                      }),
                       onPressed: null,
                     ),
-                    SizedBox(
-                      height: 16,
-                    ),
+                    SizedBox(height: 16),
                     Row(
                       children: [
                         const Expanded(child: CustomSearchBar()),
@@ -127,7 +122,7 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => const NewRecipePage()));
                           },
-                        )
+                        ),
                       ],
                     ),
                     const SizedBox(height: 16),

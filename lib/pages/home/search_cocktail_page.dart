@@ -24,32 +24,23 @@ class SearchCocktailPageState extends State<SearchCocktailPage> {
   @override
   void initState() {
     super.initState();
-
-    // Получаем блок для управления коктейлями
     cocktailListBloc = CocktailListBloc(CocktailRepository());
 
-    // Подписываемся на изменения в CocktailSelectionBloc
     final cocktailSelectionBloc =
-    BlocProvider.of<CocktailSelectionBloc>(context);
-
-    // Обновляем список коктейлей каждый раз, когда изменяются выбранные ингредиенты
+        BlocProvider.of<CocktailSelectionBloc>(context);
     cocktailSelectionBloc.stream.listen((selectionState) {
-      // Получаем выбранные ингредиенты
       final selectedIngredientIds =
-      cocktailSelectionBloc.getSelectedIngredientIds();
+          cocktailSelectionBloc.getSelectedIngredientIds();
 
-      // Отправляем новое событие поиска с обновленными ингредиентами
       cocktailListBloc.add(SearchCocktails(
         ingredients: selectedIngredientIds.isNotEmpty
-            ? selectedIngredientIds.join(',') // Преобразуем в строку
-            : null, // Если ингредиенты не выбраны
+            ? selectedIngredientIds.join(',')
+            : null,
       ));
     });
 
-    // Инициализируем первый поиск при открытии страницы
     final selectedIngredientIds =
-    cocktailSelectionBloc.getSelectedIngredientIds();
-
+        cocktailSelectionBloc.getSelectedIngredientIds();
     cocktailListBloc.add(SearchCocktails(
       ingredients: selectedIngredientIds.isNotEmpty
           ? selectedIngredientIds.join(',')
@@ -59,7 +50,6 @@ class SearchCocktailPageState extends State<SearchCocktailPage> {
 
   @override
   void dispose() {
-    // Закрываем блок при удалении виджета
     cocktailListBloc.close();
     super.dispose();
   }
@@ -76,16 +66,11 @@ class SearchCocktailPageState extends State<SearchCocktailPage> {
               children: [
                 BlocBuilder<CocktailListBloc, CocktailListState>(
                   builder: (context, state) {
-                    String titleText =
-                        "0 ${tr(
-                        'cocktail_selection.recipes')}"; // Заголовок по умолчанию
+                    String titleText = "0 ${tr('cocktail_selection.recipes')}";
 
-                    // Если загружены коктейли, показываем их количество
                     if (state is CocktailLoaded) {
                       final count = state.cocktails.length;
-                      titleText =
-                      "$count ${tr(
-                          'cocktail_selection.recipes')}"; // Например: "18 рецептов"
+                      titleText = "$count ${tr('cocktail_selection.recipes')}";
                     }
                     return CustomAppBar(
                       text: titleText,

@@ -16,8 +16,8 @@ class Ingredients {
   factory Ingredients.fromJson(Map<String, dynamic> json, int sectionId) {
     return Ingredients(
       id: json['id'],
-      name: json['name'],
-      description: json['description'],
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
       isAlcoholic: json['is_alcoholic'],
       sectionId: sectionId, // Передаем sectionId при создании
     );
@@ -38,7 +38,7 @@ class Section {
   factory Section.fromJson(Map<String, dynamic> json) {
     return Section(
       id: json['id'],
-      name: json['name'],
+      name: json['name'] ?? '',
       categories: (json['categories'] as List)
           .map((categoryJson) => Category.fromJson(categoryJson,
               json['id'])) // Передаем id секции при создании категории
@@ -65,7 +65,7 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json, int sectionId) {
     return Category(
       id: json['id'],
-      name: json['name'],
+      name: json['name'] ?? '',
       isMain: json['is_main'],
       isAlcoholic: json['is_alcoholic'],
       ingredients: (json['ingredients'] as List)

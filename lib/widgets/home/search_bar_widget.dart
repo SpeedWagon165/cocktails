@@ -40,6 +40,8 @@ class CustomSearchBar extends StatelessWidget {
                     context.read<CocktailListBloc>().add(
                           SearchFavoriteCocktails(
                             query: query,
+                            page: 1,
+                            pageSize: 20,
                             // Передача дополнительных параметров
                           ),
                         );
@@ -47,6 +49,8 @@ class CustomSearchBar extends StatelessWidget {
                     context.read<CocktailListBloc>().add(
                           SearchCocktails(
                             query: query,
+                            page: 1,
+                            pageSize: 20,
                           ),
                         );
                   }

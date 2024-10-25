@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 
 import '../../models/cocktail_list_model.dart';
 import '../../provider/cocktail_list_get.dart';
@@ -26,13 +25,55 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
   // Получение всех коктейлей (без аутентификации)
   void _onFetchCocktails(
       FetchCocktails event, Emitter<CocktailListState> emit) async {
-    emit(CocktailLoading());
-    try {
-      final cocktails = await repository.fetchCocktails();
-      emit(CocktailLoaded(cocktails, 'title'));
-    } catch (e, stacktrace) {
-      log('Error fetching cocktail', error: e, stackTrace: stacktrace);
-      emit(CocktailError('Failed to fetch cocktails: ${e.toString()}'));
+    final currentState = state;
+
+    // Проверяем, если уже загружены коктейли (для подгрузки страниц)
+    if (currentState is CocktailLoaded) {
+      try {
+        // Загружаем следующую страницу
+        final newCocktails = await repository.fetchCocktails(
+          page: event.page,
+          pageSize: event.pageSize,
+        );
+
+        if (newCocktails.isEmpty) {
+          // Если новых данных нет, не обновляем состояние
+          emit(currentState.copyWith(hasReachedMax: true));
+        } else if (newCocktails.length < event.pageSize) {
+          // Если количество полученных коктейлей меньше, чем запрашивалось
+          emit(currentState.copyWith(
+            cocktails: currentState.cocktails + newCocktails,
+            hasReachedMax: true, // Устанавливаем, что больше нет данных
+          ));
+        } else {
+          // Обновляем список коктейлей, добавляя новые элементы
+          emit(currentState.copyWith(
+            cocktails: currentState.cocktails + newCocktails,
+            hasReachedMax: false,
+          ));
+        }
+      } catch (e, stacktrace) {
+        log('Error fetching more cocktails', error: e, stackTrace: stacktrace);
+        emit(CocktailError('Failed to load more cocktails: ${e.toString()}'));
+      }
+    } else {
+      // Если это первая загрузка
+      emit(CocktailLoading());
+      try {
+        final cocktails = await repository.fetchCocktails(
+          page: event.page,
+          pageSize: event.pageSize,
+        );
+
+        if (cocktails.length < event.pageSize) {
+          emit(CocktailLoaded(cocktails, 'title', hasReachedMax: true));
+        } else {
+          emit(CocktailLoaded(cocktails, 'title', hasReachedMax: false));
+        }
+      } catch (e, stacktrace) {
+        log('Error fetching cocktails', error: e, stackTrace: stacktrace);
+        emit(CocktailError('Failed to fetch cocktails: ${e.toString()}'));
+      }
     }
   }
 
@@ -41,11 +82,11 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
       FetchUserCocktails event, Emitter<CocktailListState> emit) async {
     emit(CocktailLoading());
     try {
-      final cocktails = await repository.fetchUserCocktails(event.token);
+      final cocktails = await repository.fetchUserCocktails(event.token,
+          page: event.page, pageSize: event.pageSize);
       emit(CocktailLoaded(cocktails, 'title'));
     } catch (e, stacktrace) {
       log('Error fetching user cocktails', error: e, stackTrace: stacktrace);
-      log(e.toString());
       emit(CocktailError('Failed to fetch user cocktails: ${e.toString()}'));
     }
   }
@@ -62,11 +103,13 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         page: event.page,
         pageSize: event.pageSize,
       );
-      debugPrint('Current sort option: ${event.ordering ?? 'title'}');
-      emit(CocktailLoaded(cocktails, event.ordering ?? 'title'));
+
+      emit(CocktailLoaded(cocktails, event.ordering ?? 'title',
+          hasReachedMax: cocktails.length <
+              event.pageSize)); // Устанавливаем состояние hasReachedMax
     } catch (e, stacktrace) {
       log('Error searching cocktails: $e', error: e, stackTrace: stacktrace);
-      throw Exception('Failed to search cocktails: $e');
+      emit(CocktailError('Failed to search cocktails: $e'));
     }
   }
 
@@ -84,8 +127,8 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
 
   void _onSearchFavoriteCocktails(
       SearchFavoriteCocktails event, Emitter<CocktailListState> emit) async {
+    emit(CocktailLoading());
     try {
-      emit(CocktailLoading());
       final cocktails = await repository.searchFavoriteCocktails(
         query: event.query,
         ingredients: event.ingredients,
@@ -94,7 +137,10 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         page: event.page,
         pageSize: event.pageSize,
       );
-      emit(CocktailLoaded(cocktails, 'title'));
+
+      emit(CocktailLoaded(cocktails, 'title',
+          hasReachedMax: cocktails.length <
+              event.pageSize)); // Устанавливаем состояние hasReachedMax
     } catch (e) {
       emit(CocktailError(e.toString()));
     }
