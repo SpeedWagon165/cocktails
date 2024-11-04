@@ -16,12 +16,16 @@ import '../../widgets/store/expandable_text.dart';
 
 class CocktailCardScreen extends StatefulWidget {
   final Cocktail cocktail;
+  final bool favoritePage;
   final int? userId;
+  final bool myCocktails;
 
   const CocktailCardScreen({
     super.key,
     required this.cocktail,
     required this.userId,
+    this.myCocktails = false,
+    this.favoritePage = false,
   });
 
   @override
@@ -42,14 +46,34 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
   Widget build(BuildContext context) {
     return BlocListener<CocktailListBloc, CocktailListState>(
       listener: (context, state) {
-        if (state is CocktailLoaded) {
-          final updatedCocktail = state.cocktails.firstWhere(
-            (c) => c.id == widget.cocktail.id,
-            orElse: () => widget.cocktail,
-          );
-          setState(() {
-            currentCocktail = updatedCocktail;
-          });
+        print(widget.myCocktails.toString());
+        print(state.toString());
+        if (widget.myCocktails == true) {
+          if (state is UserCocktailLoaded) {
+            print("MyCocktailLoaded state received");
+            final updatedCocktail = state.userCocktails.firstWhere(
+              (c) => c.id == widget.cocktail.id,
+              orElse: () => widget.cocktail,
+            );
+
+            setState(() {
+              currentCocktail = updatedCocktail;
+            });
+            print(currentCocktail.moderationStatus);
+          }
+        } else {
+          if (state is CocktailLoaded) {
+            print("CocktailLoaded state received");
+            final updatedCocktail = state.cocktails.firstWhere(
+              (c) => c.id == widget.cocktail.id,
+              orElse: () => widget.cocktail,
+            );
+
+            setState(() {
+              currentCocktail = updatedCocktail;
+            });
+            print(currentCocktail.moderationStatus);
+          }
         }
       },
       child: SafeArea(
@@ -119,13 +143,28 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                             text: currentCocktail.description,
                             titleText: tr("catalog_page.description"),
                           ),
-                          const SizedBox(height: 24.0),
+                          const SizedBox(height: 10.0),
                           IngredientsListBuilder(cocktail: currentCocktail),
                           const SizedBox(height: 24.0),
                           CocktailInstructionBuilder(cocktail: currentCocktail),
                           const SizedBox(height: 24.0),
                           ToolsListBuilder(cocktail: currentCocktail),
                           const SizedBox(height: 24.0),
+                          if (currentCocktail.moderationStatus == 'Draft')
+                            CustomButton(
+                              text: tr("my_cocktails_page.publish"),
+                              single: true,
+                              gradient: true,
+                              onPressed: () {
+                                print(currentCocktail.moderationStatus
+                                    .toString());
+                                context.read<CocktailListBloc>().add(
+                                      PublishCocktail(currentCocktail.id),
+                                    );
+                                print(currentCocktail.moderationStatus
+                                    .toString());
+                              },
+                            ),
                           if (!currentCocktail.claimed &&
                               widget.userId != null &&
                               widget.userId.toString() !=

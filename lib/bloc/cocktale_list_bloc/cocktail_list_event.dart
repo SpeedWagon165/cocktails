@@ -19,14 +19,14 @@ class FetchCocktails extends CocktailListEvent {
 
 // Событие для загрузки коктейлей пользователя
 class FetchUserCocktails extends CocktailListEvent {
-  final String token;
-  final int page; // Добавить для пагинации
+  final String? query;
+  final int page;
   final int pageSize;
 
-  FetchUserCocktails(this.token, {this.page = 1, this.pageSize = 20});
+  const FetchUserCocktails({this.query, this.page = 1, this.pageSize = 50});
 
   @override
-  List<Object> get props => [token];
+  List<Object> get props => [page, pageSize];
 }
 
 class FetchFavoriteCocktails extends CocktailListEvent {
@@ -65,6 +65,35 @@ class SearchCocktails extends CocktailListEvent {
       ];
 }
 
+class SearchCocktailsLoadMore extends CocktailListEvent {
+  final String? query;
+  final String? ingredients; // IDs of ingredients (optional)
+  final String? tools; // IDs of tools (optional)
+  final String? ordering; // Sorting (optional)
+  final int page; // Page number (optional)
+  final int pageSize; // Page size (optional)
+
+  const SearchCocktailsLoadMore({
+    this.query,
+    this.ingredients,
+    this.tools,
+    this.ordering,
+    this.page = 1,
+    this.pageSize = 20,
+  });
+
+  @override
+  List<Object> get props => [
+        query ?? '',
+        ingredients ?? '',
+        // Заменяем null на пустую строку
+        tools ?? '',
+        // Заменяем null на пустую строку
+        ordering ?? '',
+        // Заменяем null на пустую строку
+      ];
+}
+
 class SearchFavoriteCocktails extends CocktailListEvent {
   final String? query;
   final String? ingredients;
@@ -79,7 +108,7 @@ class SearchFavoriteCocktails extends CocktailListEvent {
     this.tools,
     this.ordering,
     this.page = 1,
-    this.pageSize = 20,
+    this.pageSize = 50,
   });
 
   @override
@@ -114,6 +143,15 @@ class ClaimCocktail extends CocktailListEvent {
   final int cocktailId;
 
   const ClaimCocktail(this.cocktailId);
+
+  @override
+  List<Object> get props => [cocktailId];
+}
+
+class PublishCocktail extends CocktailListEvent {
+  final int cocktailId;
+
+  PublishCocktail(this.cocktailId);
 
   @override
   List<Object> get props => [cocktailId];

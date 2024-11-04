@@ -16,10 +16,12 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
     on<FetchCocktails>(_onFetchCocktails);
     on<FetchUserCocktails>(_onFetchUserCocktails); // Обрабатываем новый ивент
     on<SearchCocktails>(_onSearchCocktails);
+    on<SearchCocktailsLoadMore>(_onSearchCocktailsLoadMore);
     on<FetchFavoriteCocktails>(_onFetchFavoriteCocktails);
     on<SearchFavoriteCocktails>(_onSearchFavoriteCocktails);
     on<ToggleFavoriteCocktail>(_onToggleFavoriteCocktail);
     on<ClaimCocktail>(_onClaimCocktail);
+    on<PublishCocktail>(_onPublishCocktail);
   }
 
   // Получение всех коктейлей (без аутентификации)
@@ -29,6 +31,8 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
 
     // Проверяем, если уже загружены коктейли (для подгрузки страниц)
     if (currentState is CocktailLoaded) {
+      print(
+          "Current state is CocktailLoaded with ${currentState.cocktails.length} fetch cocktails.");
       try {
         // Загружаем следующую страницу
         final newCocktails = await repository.fetchCocktails(
@@ -82,9 +86,12 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
       FetchUserCocktails event, Emitter<CocktailListState> emit) async {
     emit(CocktailLoading());
     try {
-      final cocktails = await repository.fetchUserCocktails(event.token,
-          page: event.page, pageSize: event.pageSize);
-      emit(CocktailLoaded(cocktails, 'title'));
+      final userCocktails = await repository.fetchUserCocktails(
+        query: event.query,
+        page: event.page,
+        pageSize: event.pageSize,
+      );
+      emit(UserCocktailLoaded(userCocktails));
     } catch (e, stacktrace) {
       log('Error fetching user cocktails', error: e, stackTrace: stacktrace);
       emit(CocktailError('Failed to fetch user cocktails: ${e.toString()}'));
@@ -95,7 +102,8 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
       SearchCocktails event, Emitter<CocktailListState> emit) async {
     emit(CocktailLoading());
     try {
-      final cocktails = await repository.searchCocktails(
+      print(event.ingredients);
+      final cocktailsResponse = await repository.searchCocktails(
         query: event.query,
         ingredients: event.ingredients,
         tools: event.tools,
@@ -104,12 +112,54 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         pageSize: event.pageSize,
       );
 
-      emit(CocktailLoaded(cocktails, event.ordering ?? 'title',
-          hasReachedMax: cocktails.length <
-              event.pageSize)); // Устанавливаем состояние hasReachedMax
+      emit(CocktailSearchLoaded(
+          cocktailsResponse.cocktails, event.ordering ?? 'title',
+          hasReachedMax: cocktailsResponse.cocktails.length < event.pageSize,
+          count: cocktailsResponse
+              .count)); // Устанавливаем состояние hasReachedMax
     } catch (e, stacktrace) {
       log('Error searching cocktails: $e', error: e, stackTrace: stacktrace);
       emit(CocktailError('Failed to search cocktails: $e'));
+    }
+  }
+
+  void _onSearchCocktailsLoadMore(
+      SearchCocktailsLoadMore event, Emitter<CocktailListState> emit) async {
+    final currentState = state;
+    if (currentState is CocktailSearchLoaded) {
+      try {
+        print(event.query);
+        print(event.page);
+        print(event.ingredients);
+        print(event.pageSize);
+        // Загружаем следующую страницу
+        final newCocktails = await repository.searchCocktails(
+          query: event.query,
+          ingredients: event.ingredients,
+          page: event.page,
+          pageSize: event.pageSize,
+        );
+
+        if (newCocktails.cocktails.isEmpty) {
+          // Если новых данных нет, не обновляем состояние
+          emit(currentState.copyWith(hasReachedMax: true));
+        } else if (newCocktails.cocktails.length < event.pageSize) {
+          // Если количество полученных коктейлей меньше, чем запрашивалось
+          emit(currentState.copyWith(
+            cocktails: currentState.cocktails + newCocktails.cocktails,
+            hasReachedMax: true, // Устанавливаем, что больше нет данных
+          ));
+        } else {
+          // Обновляем список коктейлей, добавляя новые элементы
+          emit(currentState.copyWith(
+            cocktails: currentState.cocktails + newCocktails.cocktails,
+            hasReachedMax: false,
+          ));
+        }
+      } catch (e, stacktrace) {
+        log('Error fetching more cocktails', error: e, stackTrace: stacktrace);
+        emit(CocktailError('Failed to load more cocktails: ${e.toString()}'));
+      }
     }
   }
 
@@ -202,6 +252,31 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
       } catch (e) {
         emit(
             CocktailError('Не удалось отметить рецепт как приготовленный: $e'));
+      }
+    }
+  }
+
+  void _onPublishCocktail(
+      PublishCocktail event, Emitter<CocktailListState> emit) async {
+    final currentState = state;
+    print("PublishCocktail event received: ${event.cocktailId}");
+    print(currentState.toString());
+    if (currentState is UserCocktailLoaded) {
+      emit(CocktailLoading()); // Показать состояние загрузки
+      print(currentState.toString());
+      try {
+        await repository.publishCocktail(event.cocktailId);
+        final updatedCocktails = currentState.userCocktails.map((cocktail) {
+          return cocktail.id == event.cocktailId
+              ? cocktail.copyWith(
+                  moderationStatus: 'Pending') // Обновляем статус
+              : cocktail;
+        }).toList();
+        final updatedUserCocktails = await repository.fetchUserCocktails();
+
+        emit(UserCocktailLoaded(updatedCocktails));
+      } catch (e) {
+        emit(CocktailError('Не удалось опубликовать коктейль: $e'));
       }
     }
   }

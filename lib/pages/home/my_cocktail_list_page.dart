@@ -3,7 +3,6 @@ import 'package:cocktails/widgets/home/create_cocktail_widgets/gradient_add_butt
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 import '../../provider/cocktail_list_get.dart';
@@ -20,43 +19,26 @@ class MyCocktailsListPage extends StatefulWidget {
 }
 
 class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
-  late final CocktailListBloc _bloc;
-  String? token;
+  int _currentPage = 1;
 
   @override
   void initState() {
     super.initState();
-    _bloc = CocktailListBloc(CocktailRepository());
-    _loadToken();
-  }
-
-  // Получение токена из SharedPreferences
-  Future<void> _loadToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      token = prefs.getString('token');
-    });
-
-    // Отправка события на загрузку коктейлей
-    if (token != null) {
-      _bloc.add(FetchUserCocktails(token!));
-    } else {
-      // Если токен отсутствует, можем показать общие коктейли или сообщение
-      print('Token not found. Loading default cocktails.');
-      _bloc.add(FetchCocktails());
-    }
+    context.read<CocktailListBloc>().add(FetchUserCocktails());
   }
 
   @override
   void dispose() {
-    _bloc.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => _bloc,
+      create: (context) {
+        return CocktailListBloc(CocktailRepository())
+          ..add(FetchUserCocktails());
+      },
       child: Scaffold(
         body: SafeArea(
           child: BlocBuilder<CocktailListBloc, CocktailListState>(
@@ -66,23 +48,23 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
               // Обрабатываем различные состояния блока
               if (state is CocktailLoading) {
                 content = const Center(child: CircularProgressIndicator());
-              } else if (state is CocktailLoaded) {
-                if (state.cocktails.isEmpty) {
+              } else if (state is UserCocktailLoaded) {
+                if (state.userCocktails.isEmpty) {
                   content = Center(
                     child: Text(tr('my_cocktails_page.no_cocktails')),
                   );
                 } else {
                   content = RefreshIndicator(
                     onRefresh: () async {
-                      if (token != null) {
-                        _bloc.add(FetchUserCocktails(token!));
-                      }
+                      context
+                          .read<CocktailListBloc>()
+                          .add(FetchUserCocktails());
                     },
                     child: ListView.builder(
-                      itemCount: state.cocktails.length,
+                      itemCount: state.userCocktails.length,
                       itemBuilder: (context, index) {
                         return CocktailCard(
-                          cocktail: state.cocktails[index],
+                          cocktail: state.userCocktails[index],
                           myCocktailPage: true,
                         );
                       },
@@ -106,8 +88,8 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
                   children: [
                     CustomAppBar(
                       text: tr('my_cocktails_page.title', namedArgs: {
-                        'count': state is CocktailLoaded
-                            ? state.cocktails.length.toString()
+                        'count': state is UserCocktailLoaded
+                            ? state.userCocktails.length.toString()
                             : '0'
                       }),
                       onPressed: null,
@@ -115,7 +97,10 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
                     SizedBox(height: 16),
                     Row(
                       children: [
-                        const Expanded(child: CustomSearchBar()),
+                        const Expanded(
+                            child: CustomSearchBar(
+                          userRecipes: true,
+                        )),
                         const SizedBox(width: 8),
                         GradientAddButton(
                           onTap: () {

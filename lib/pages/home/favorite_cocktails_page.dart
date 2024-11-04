@@ -44,30 +44,40 @@ class FavoriteCocktailsPage extends StatelessWidget {
                 Expanded(
                   child: BlocBuilder<CocktailListBloc, CocktailListState>(
                     builder: (context, state) {
+                      Widget content;
                       if (state is CocktailLoading) {
-                        return const Center(child: CircularProgressIndicator());
+                        return content =
+                            Center(child: CircularProgressIndicator());
                       } else if (state is CocktailLoaded) {
                         // Проверяем, есть ли избранные рецепты
                         if (state.cocktails.isEmpty) {
-                          return Center(
+                          return content = Center(
                             child: Text(tr(
                                 'favorite_cocktails.no_recipes')), // Локализация текста, если рецептов нет
                           );
                         }
-                        return ListView.builder(
-                          itemCount: state.cocktails.length,
-                          itemBuilder: (context, index) {
-                            return CocktailCard(
-                              cocktail: state.cocktails[index],
-                              favoritePage: true,
-                            );
+                        return content = RefreshIndicator(
+                          onRefresh: () async {
+                            context
+                                .read<CocktailListBloc>()
+                                .add(FetchFavoriteCocktails());
                           },
+                          child: ListView.builder(
+                            itemCount: state.cocktails.length,
+                            itemBuilder: (context, index) {
+                              return CocktailCard(
+                                cocktail: state.cocktails[index],
+                                favoritePage: true,
+                              );
+                            },
+                          ),
                         );
                       } else if (state is CocktailError) {
-                        return Center(child: Text(state.message));
+                        return content = Center(child: Text(state.message));
                       }
                       return Center(
-                        child: Text(tr('favorite_cocktails.no_recipes'),
+                        child: content = Text(
+                            tr('favorite_cocktails.no_recipes'),
                             style: context.text
                                 .bodyText16White), // Локализация текста, если рецептов нет
                       );

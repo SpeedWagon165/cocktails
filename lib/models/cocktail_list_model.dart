@@ -1,6 +1,12 @@
 // Cocktail cocktailFromJson(String str) => Cocktail.fromJson(json.decode(str));
 //
 // String cocktailToJson(Cocktail data) => json.encode(data.toJson());
+class CocktailResponseModel {
+  final int count;
+  final List<Cocktail> cocktails;
+
+  CocktailResponseModel({required this.count, required this.cocktails});
+}
 
 class Cocktail {
   int id;

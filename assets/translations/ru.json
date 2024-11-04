@@ -139,7 +139,8 @@
   "my_cocktails_page": {
     "title": "Мои рецепты ({count})",
     "no_cocktails": "У вас пока нет коктейлей.",
-    "start_search": "Начните поиск рецептов"
+    "start_search": "Начните поиск рецептов",
+    "publish": "Опубликовать"
   },
   "store": {
     "title": "Магазин",

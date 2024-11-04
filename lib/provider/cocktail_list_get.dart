@@ -82,19 +82,16 @@ class CocktailRepository {
   }
 
   // Метод для получения коктейлей пользователя с токеном
-  Future<List<Cocktail>> fetchUserCocktails(String token,
-      {int page = 1, int pageSize = 20}) async {
+  Future<List<Cocktail>> fetchUserCocktails(
+      {String? query, int page = 1, int pageSize = 50}) async {
     try {
       final response = await dio.get(
         '/profile/recipe/',
-        options: Options(
-          headers: {
-            'Authorization': 'Token $token',
-          },
-        ),
+        options: Options(),
         queryParameters: {
           'page': page,
           'page_size': pageSize,
+          if (query != null && query.isNotEmpty) 'q': query,
         },
       );
 
@@ -116,7 +113,7 @@ class CocktailRepository {
     }
   }
 
-  Future<List<Cocktail>> searchCocktails({
+  Future<CocktailResponseModel> searchCocktails({
     String? query,
     String? ingredients,
     String? tools,
@@ -125,24 +122,26 @@ class CocktailRepository {
     int? pageSize,
   }) async {
     try {
-      final response = await dio.get(
-        '/recipe/',
-        queryParameters: {
-          if (query != null) 'q': query,
-          if (ingredients != null) 'ingredients': ingredients,
-          if (tools != null) 'tools': tools,
-          if (ordering != null) 'ordering': ordering,
-          if (page != null) 'page': page,
-          if (pageSize != null) 'page_size': pageSize,
-        },
-      );
-
+      final Map<String, dynamic> queryParameters = {
+        if (query != null) 'q': query,
+        if (ingredients != null) 'ingredients': ingredients,
+        if (tools != null) 'tools': tools,
+        if (ordering != null) 'ordering': ordering,
+        if (page != null) 'page': page,
+        if (pageSize != null) 'page_size': pageSize,
+      };
+      final response =
+          await dio.get('/recipe/', queryParameters: queryParameters);
+      print("$queryParameters, это в репе");
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = response.data;
+        print(jsonResponse["count"]);
         if (jsonResponse.containsKey('results')) {
-          return List<Cocktail>.from(
-            jsonResponse["results"].map((x) => Cocktail.fromJson(x)),
-          );
+          return CocktailResponseModel(
+              cocktails: List<Cocktail>.from(
+                jsonResponse["results"].map((x) => Cocktail.fromJson(x)),
+              ),
+              count: jsonResponse["count"]);
         } else {
           throw Exception('Invalid response structure');
         }
@@ -354,6 +353,20 @@ class CocktailRepository {
     } catch (e) {
       print('Error creating recipe: $e');
       throw e;
+    }
+  }
+
+  Future<void> publishCocktail(int cocktailId) async {
+    try {
+      final response = await dio.get('/profile/recipe/$cocktailId/pending/');
+      print(response.statusCode.toString());
+      if (response.statusCode != 200) {
+        print("коктейль опубликован");
+        throw Exception('Failed to publish cocktail');
+      }
+    } catch (e) {
+      log('Error publishing cocktail: $e');
+      throw Exception('Failed to publish cocktail: $e');
     }
   }
 

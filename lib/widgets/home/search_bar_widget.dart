@@ -6,10 +6,14 @@ import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final bool isFavorites; // Добавляем флаг для поиска по избранным
+  final TextEditingController? controller;
+  final bool userRecipes;
 
   const CustomSearchBar({
     super.key,
-    this.isFavorites = false, // По умолчанию флаг отключён
+    this.isFavorites = false,
+    this.controller,
+    this.userRecipes = false, // По умолчанию флаг отключён
   });
 
   @override
@@ -27,6 +31,7 @@ class CustomSearchBar extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
+              controller: controller != null ? controller : null,
               decoration: InputDecoration(
                 hintText: tr("search.search"),
                 hintStyle: const TextStyle(color: Colors.white54),
@@ -41,8 +46,16 @@ class CustomSearchBar extends StatelessWidget {
                           SearchFavoriteCocktails(
                             query: query,
                             page: 1,
-                            pageSize: 20,
+                            pageSize: 50,
                             // Передача дополнительных параметров
+                          ),
+                        );
+                  } else if (userRecipes) {
+                    context.read<CocktailListBloc>().add(
+                          FetchUserCocktails(
+                            query: query,
+                            page: 1,
+                            pageSize: 50,
                           ),
                         );
                   } else {
@@ -59,6 +72,10 @@ class CustomSearchBar extends StatelessWidget {
                     context
                         .read<CocktailListBloc>()
                         .add(const FetchFavoriteCocktails());
+                  } else if (userRecipes) {
+                    context.read<CocktailListBloc>().add(
+                          FetchUserCocktails(),
+                        );
                   } else {
                     context.read<CocktailListBloc>().add(FetchCocktails());
                   }

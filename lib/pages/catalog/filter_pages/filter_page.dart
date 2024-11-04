@@ -34,15 +34,19 @@ class FilterMainPage extends StatelessWidget {
 
           // Собираем все выбранные ингредиенты в виде строки, готовой для передачи в API
           final selectedIngredients = _getSelectedIngredients(state);
-
+          final currentSortOption = context.read<CocktailListBloc>().state
+                  is CocktailSearchLoaded
+              ? (context.read<CocktailListBloc>().state as CocktailSearchLoaded)
+                  .currentSortOption
+              : 'title';
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BlocBuilder<CocktailListBloc, CocktailListState>(
                 builder: (context, state) {
-                  if (state is CocktailLoaded) {
+                  if (state is CocktailSearchLoaded) {
                     return SortExpansionTile(
-                      currentSortOption: state.currentSortOption,
+                      currentSortOption: currentSortOption,
                     );
                   }
                   return const SortExpansionTile(
@@ -124,9 +128,9 @@ class FilterMainPage extends StatelessWidget {
                         onPressed: () {
                           final currentSortOption = context
                                   .read<CocktailListBloc>()
-                                  .state is CocktailLoaded
+                                  .state is CocktailSearchLoaded
                               ? (context.read<CocktailListBloc>().state
-                                      as CocktailLoaded)
+                                      as CocktailSearchLoaded)
                                   .currentSortOption
                               : 'title';
 

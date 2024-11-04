@@ -58,7 +58,7 @@ class _CocktailCardButtonsState extends State<CocktailCardButtons> {
                           ),
                         ),
                         const SizedBox(width: 10.0),
-                        Text("Приготовлен",
+                        Text(tr('catalog_page.prepared'),
                             textAlign: TextAlign.center,
                             style: context.text.bodyText14White
                                 .copyWith(color: const Color(0xff68C248)))

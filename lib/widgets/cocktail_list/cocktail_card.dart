@@ -33,21 +33,42 @@ class CocktailCard extends StatelessWidget {
         return BlocBuilder<CocktailListBloc, CocktailListState>(
           builder: (context, state) {
             bool isLoading = false;
-
-            if (state is CocktailLoaded) {
-              isLoading = state.loadingStates[cocktail.id] ?? false;
+            if (myCocktailPage == true) {
+              if (state is UserCocktailLoaded) {
+                isLoading = state.loadingStates[cocktail.id] ?? false;
+              }
+            } else {
+              if (state is CocktailLoaded) {
+                isLoading = state.loadingStates[cocktail.id] ?? false;
+              }
             }
 
             return GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
+                Navigator.of(context)
+                    .push(
                   MaterialPageRoute(
                     builder: (context) => CocktailCardScreen(
                       cocktail: cocktail,
                       userId: userId,
+                      myCocktails: myCocktailPage,
+                      favoritePage: favoritePage,
                     ),
                   ),
-                );
+                )
+                    .then((result) {
+                  if (result == true) {
+                    if (myCocktailPage == true)
+                      context
+                          .read<CocktailListBloc>()
+                          .add(FetchUserCocktails());
+                    if (favoritePage == true)
+                      context
+                          .read<CocktailListBloc>()
+                          .add(FetchFavoriteCocktails());
+                  }
+                });
+                print(state.toString());
               },
               child: Stack(
                 children: [

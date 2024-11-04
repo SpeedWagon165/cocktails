@@ -12,17 +12,56 @@ class CocktailInitial extends CocktailListState {}
 
 class CocktailLoading extends CocktailListState {}
 
+class CocktailSearchLoaded extends CocktailListState {
+  final List<Cocktail> cocktails;
+  final String currentSortOption;
+  final Map<int, bool> loadingStates;
+  final bool hasReachedMax; // Добавляем флаг для пагинации
+  final int count;
+
+  const CocktailSearchLoaded(
+    this.cocktails,
+    this.currentSortOption, {
+    required this.count,
+    this.loadingStates = const {},
+    this.hasReachedMax = false,
+  });
+
+  // Метод copyWith для обновления состояния
+  CocktailSearchLoaded copyWith({
+    List<Cocktail>? cocktails,
+    String? currentSortOption,
+    Map<int, bool>? loadingStates,
+    bool? hasReachedMax,
+    int? count,
+  }) {
+    return CocktailSearchLoaded(
+      cocktails ?? this.cocktails,
+      currentSortOption ?? this.currentSortOption,
+      loadingStates: loadingStates ?? this.loadingStates,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      count: count ?? this.count,
+    );
+  }
+
+  @override
+  List<Object> get props =>
+      [cocktails, currentSortOption, loadingStates, hasReachedMax, count];
+}
+
 class CocktailLoaded extends CocktailListState {
   final List<Cocktail> cocktails;
   final String currentSortOption;
   final Map<int, bool> loadingStates;
   final bool hasReachedMax; // Добавляем флаг для пагинации
+  final int count;
 
   const CocktailLoaded(
     this.cocktails,
     this.currentSortOption, {
+    this.count = 0,
     this.loadingStates = const {},
-    this.hasReachedMax = false, // Значение по умолчанию
+    this.hasReachedMax = false,
   });
 
   // Метод copyWith для обновления состояния
@@ -43,6 +82,38 @@ class CocktailLoaded extends CocktailListState {
   @override
   List<Object> get props =>
       [cocktails, currentSortOption, loadingStates, hasReachedMax];
+}
+
+class UserCocktailLoaded extends CocktailListState {
+  final List<Cocktail> userCocktails;
+  final Map<int, bool> loadingStates;
+  final bool hasReachedMax;
+  final int count;
+
+  const UserCocktailLoaded(
+    this.userCocktails, {
+    this.count = 0,
+    this.loadingStates = const {},
+    this.hasReachedMax = false,
+  });
+
+  UserCocktailLoaded copyWith({
+    List<Cocktail>? userCocktails,
+    Map<int, bool>? loadingStates,
+    bool? hasReachedMax,
+    int? count,
+  }) {
+    return UserCocktailLoaded(
+      userCocktails ?? this.userCocktails,
+      loadingStates: loadingStates ?? this.loadingStates,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      count: count ?? this.count,
+    );
+  }
+
+  @override
+  List<Object> get props =>
+      [userCocktails, loadingStates, hasReachedMax, count];
 }
 
 class CocktailError extends CocktailListState {

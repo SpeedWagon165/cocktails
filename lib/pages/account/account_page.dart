@@ -174,7 +174,6 @@ class _AccountPageState extends State<AccountPage> {
                             // Локализованная строка "Связаться с поддержкой"
                             onTap: () {
                               final authState = context.read<AuthBloc>().state;
-
                               if (authState is AuthAuthenticated) {
                                 final profileBlocState =
                                     context.read<ProfileBloc>().state;

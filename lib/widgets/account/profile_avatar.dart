@@ -19,7 +19,7 @@ class ProfileAvatar extends StatelessWidget {
           width: radius * 2,
           height: radius * 2,
           decoration: const BoxDecoration(
-            color: Colors.grey,
+            color: Color(0xff343434),
             shape: BoxShape.circle,
           ),
           child: ClipOval(

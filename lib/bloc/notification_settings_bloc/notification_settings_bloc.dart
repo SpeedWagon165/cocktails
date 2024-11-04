@@ -40,7 +40,7 @@ class NotificationSettingsBloc
   Future<void> _onLoadNotificationSettings(LoadNotificationSettingsEvent event,
       Emitter<NotificationSettingsState> emit) async {
     final prefs = await SharedPreferences.getInstance();
-    final smsNotificationsEnabled = prefs.getBool(_smsNotificationKey) ?? true;
+    final smsNotificationsEnabled = prefs.getBool(_smsNotificationKey) ?? false;
     final pushNotificationsEnabled =
         prefs.getBool(_pushNotificationKey) ?? false;
     emit(state.copyWith(

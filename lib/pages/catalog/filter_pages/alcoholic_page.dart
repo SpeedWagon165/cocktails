@@ -1,8 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/catalog_filter_bloc/catalog_filter_bloc.dart';
 import '../../../widgets/base_pop_up.dart';
 import '../../../widgets/catalog_widgets/cocktail_filter_widget.dart';
 import '../../../widgets/custom_button.dart';
@@ -18,9 +16,6 @@ class AlcoholicPageState extends State<AlcoholicPage> {
   @override
   void initState() {
     super.initState();
-
-    // Запрашиваем категории (алкогольные напитки)
-    context.read<IngredientSelectionBloc>().add(LoadCategoriesEvent());
   }
 
   @override

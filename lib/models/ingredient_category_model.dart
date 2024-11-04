@@ -36,12 +36,17 @@ class Section {
   });
 
   factory Section.fromJson(Map<String, dynamic> json) {
+    int modifiedId = json['id'];
+
+    // Заменяем ID 4, 5, 6 на 1, 2, 3
+    if (json['id'] == 4) modifiedId = 3;
+    if (json['id'] == 5) modifiedId = 2;
+    if (json['id'] == 6) modifiedId = 1;
     return Section(
-      id: json['id'],
+      id: modifiedId,
       name: json['name'] ?? '',
       categories: (json['categories'] as List)
-          .map((categoryJson) => Category.fromJson(categoryJson,
-              json['id'])) // Передаем id секции при создании категории
+          .map((categoryJson) => Category.fromJson(categoryJson, modifiedId))
           .toList(),
     );
   }

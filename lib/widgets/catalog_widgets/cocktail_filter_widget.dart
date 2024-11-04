@@ -22,8 +22,10 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
   @override
   void initState() {
     super.initState();
-    // Загружаем категории
-    context.read<IngredientSelectionBloc>().add(LoadCategoriesEvent());
+    final ingredientBloc = context.read<IngredientSelectionBloc>();
+    if (ingredientBloc.state.sections.isEmpty) {
+      ingredientBloc.add(LoadCategoriesEvent());
+    }
   }
 
   @override
@@ -35,7 +37,6 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
         if (state.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
-
         if (state.errorMessage != null) {
           return Center(
             child: Text(
@@ -44,7 +45,6 @@ class CocktailFilterViewState extends State<CocktailFilterView> {
             ),
           );
         }
-
         // Фильтруем секции по переданному шагу
         List<Section> sections = state.sections
             .where((section) => section.id == widget.step)

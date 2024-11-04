@@ -139,7 +139,8 @@
   "my_cocktails_page": {
     "title": "My Recipes ({count})",
     "no_cocktails": "You don't have any cocktails yet.",
-    "start_search": "Start searching for recipes"
+    "start_search": "Start searching for recipes",
+    "publish": "Publish"
   },
   "store": {
     "title": "Store",

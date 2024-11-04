@@ -25,7 +25,7 @@ class PureCustomArrowBack extends StatelessWidget {
         ),
         iconSize: 30.0,
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
         },
         padding: EdgeInsets.zero,
         constraints: const BoxConstraints(),
