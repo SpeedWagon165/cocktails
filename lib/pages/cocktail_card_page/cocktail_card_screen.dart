@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 import '../../models/cocktail_list_model.dart';
+import '../../widgets/catalog_widgets/bonus_pop_up.dart';
 import '../../widgets/coctail_card_widgets/cocktail_instruction_builder.dart';
 import '../../widgets/coctail_card_widgets/tool_list_builder.dart';
 import '../../widgets/pure_custom_arrow_back.dart';
@@ -91,6 +92,7 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                       imageUrls: currentCocktail.imageUrl != null
                           ? [currentCocktail.imageUrl!]
                           : [],
+                      isImageAvailable: currentCocktail.isImageAvailable,
                     ),
                     const SizedBox(height: 12.0),
                     Padding(
@@ -178,6 +180,7 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                                   context
                                       .read<CocktailListBloc>()
                                       .add(ClaimCocktail(currentCocktail.id));
+                                  bonusTakePopUp(context, currentCocktail.name);
                                 }),
                           const SizedBox(height: 24.0),
                         ],

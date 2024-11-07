@@ -33,16 +33,17 @@ class CocktailCard extends StatelessWidget {
         return BlocBuilder<CocktailListBloc, CocktailListState>(
           builder: (context, state) {
             bool isLoading = false;
-            if (myCocktailPage == true) {
-              if (state is UserCocktailLoaded) {
-                isLoading = state.loadingStates[cocktail.id] ?? false;
-              }
-            } else {
-              if (state is CocktailLoaded) {
-                isLoading = state.loadingStates[cocktail.id] ?? false;
-              }
+            if (myCocktailPage && state is UserCocktailLoaded) {
+              isLoading = state.loadingStates[cocktail.id] ?? false;
+            } else if (state is CocktailLoaded) {
+              print(
+                  "${state.loadingStates[cocktail.id].toString()} CocktailLoaded");
+              isLoading = state.loadingStates[cocktail.id] ?? false;
+            } else if (state is CocktailSearchLoaded) {
+              print(
+                  "${state.loadingStates[cocktail.id].toString()} CocktailSearchLoaded");
+              isLoading = state.loadingStates[cocktail.id] ?? false;
             }
-
             return GestureDetector(
               onTap: () {
                 Navigator.of(context)
@@ -95,6 +96,8 @@ class CocktailCard extends StatelessWidget {
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
                                     // Заглушка на случай ошибки загрузки изображения
+                                    cocktail.isImageAvailable = false;
+
                                     return Container(
                                       width: double.infinity,
                                       height: 190,
@@ -124,6 +127,13 @@ class CocktailCard extends StatelessWidget {
                               style: context.text.headline24White
                                   .copyWith(fontSize: 18)),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            "Не хватает из ${cocktail.ingredients.length} ингредиентов",
+                            style: context.text.bodyText16White,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -136,6 +146,7 @@ class CocktailCard extends StatelessWidget {
                         onTap: isLoading
                             ? null
                             : () async {
+                                print('ГЕРМАН ХУЕСОС');
                                 // Отправляем событие для переключения статуса избранного
                                 context.read<CocktailListBloc>().add(
                                       ToggleFavoriteCocktail(cocktail.id,

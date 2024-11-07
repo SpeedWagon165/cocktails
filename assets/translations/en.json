@@ -134,7 +134,10 @@
     "sort_alphabet_desc": "Alphabetically (Z-A)",
     "sort_by_video": "By video availability",
     "mark_as_prepared": "Mark as prepared",
-    "prepared": "Prepared"
+    "prepared": "Prepared",
+    "bonus_take_title": "You got 15 points!",
+    "bonus_take_subtitle": "Congratulations! Now you know how to make a “{name}”",
+    "good": "Ok"
   },
   "my_cocktails_page": {
     "title": "My Recipes ({count})",
@@ -158,7 +161,7 @@
     "enter_your_email": "Enter your email",
     "enter_correct_email": "Enter a valid email",
     "change_pass": "Change Password",
-    "enter_email_for_code": "Enter your phone number or email to receive the confirmation code",
+    "enter_email_for_code": "Enter your email to receive the confirmation code",
     "enter_code": "Enter the confirmation code",
     "wrong_code": "Incorrect confirmation code",
     "email": "Email",
@@ -292,7 +295,8 @@
     "cocktail_base": "Base of the cocktail"
   },
   "search": {
-    "search": "Search"
+    "search": "Search",
+    "recording": "Recording in progress..."
   },
   "step_indicator": {
     "alcohol": "Alcohol",

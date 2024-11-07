@@ -48,6 +48,12 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
         );
   }
 
+  void _resendCode() {
+    // Метод для повторной отправки кода
+    context.read<AuthBloc>().add(RequestPasswordReset(email: widget.email));
+    print('Повторно отправлен код на ${widget.email}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
@@ -66,6 +72,9 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
           widget.pageController.animateToPage(2,
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut);
+        } else if (state is PasswordResetRequested) {
+          Navigator.pop(
+              context); // Закрываем диалог, если состояние изначальное
         } else if (state is AuthError) {
           Navigator.pop(context); // Закрываем диалог загрузки
           setState(() {
@@ -101,9 +110,7 @@ class _RegistrationPage2State extends State<RegistrationPage2> {
               ),
               const SizedBox(height: 24.0),
               TimerWidget(
-                onTimerEnd: () {
-                  print('Timer ended');
-                },
+                onTimerEnd: _resendCode,
               ),
               const SizedBox(height: 24),
               CustomButton(

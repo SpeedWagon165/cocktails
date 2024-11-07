@@ -229,6 +229,42 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
             'Не удалось изменить статус избранного: ${e.toString()}'));
       }
     }
+    if (currentState is CocktailSearchLoaded) {
+      final updatedLoadingStates =
+          Map<int, bool>.from(currentState.loadingStates);
+      updatedLoadingStates[event.cocktailId] = true;
+
+      // Сначала эмитим состояние с флагом загрузки
+      emit(currentState.copyWith(loadingStates: updatedLoadingStates));
+
+      try {
+        await repository.toggleFavorite(event.cocktailId, event.isFavorite);
+
+        updatedLoadingStates[event.cocktailId] = false;
+
+        // Обновляем данные коктейлей в избранном
+        if (event.favoritePage) {
+          add(const FetchFavoriteCocktails());
+        } else {
+          // Обновляем локально коктейли, изменяя только `isFavorite`
+          final updatedCocktails = currentState.cocktails.map((cocktail) {
+            if (cocktail.id == event.cocktailId) {
+              return cocktail.copyWith(
+                  isFavorite: !cocktail.isFavorite); // Инверсия значения
+            }
+            return cocktail;
+          }).toList();
+
+          emit(currentState.copyWith(
+            cocktails: updatedCocktails,
+            loadingStates: updatedLoadingStates,
+          ));
+        }
+      } catch (e) {
+        emit(CocktailError(
+            'Не удалось изменить статус избранного: ${e.toString()}'));
+      }
+    }
   }
 
   void _onClaimCocktail(

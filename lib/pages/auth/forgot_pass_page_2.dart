@@ -26,6 +26,19 @@ class ForgotPassPage2 extends StatefulWidget {
 }
 
 class _ForgotPassPage2State extends State<ForgotPassPage2> {
+  late String email;
+
+  @override
+  void initState() {
+    super.initState();
+    email = widget.email; // Присвоение начального значения
+  }
+
+  void _resendCode() {
+    context.read<AuthBloc>().add(RequestPasswordReset(email: email));
+    print('Код повторно отправлен на ${email}');
+  }
+
   final codeController = TextEditingController();
   String? errorMessage;
 
@@ -63,7 +76,7 @@ class _ForgotPassPage2State extends State<ForgotPassPage2> {
                 children: [
                   CenterText(
                     text: tr('forgot_password_page.code_sent_description',
-                        namedArgs: {'email': widget.email}),
+                        namedArgs: {'email': email}),
                     // Локализованная строка "Мы отправили код на почту {email}"
                     padding: 60,
                   ),
@@ -76,9 +89,7 @@ class _ForgotPassPage2State extends State<ForgotPassPage2> {
                   ),
                   const SizedBox(height: 24.0),
                   TimerWidget(
-                    onTimerEnd: () {
-                      print('Timer ended');
-                    },
+                    onTimerEnd: _resendCode,
                   ),
                   const SizedBox(height: 24),
                   CustomButton(
@@ -98,7 +109,7 @@ class _ForgotPassPage2State extends State<ForgotPassPage2> {
                         });
 
                         context.read<AuthBloc>().add(
-                              ConfirmResetCode(email: widget.email, code: code),
+                              ConfirmResetCode(email: email, code: code),
                             );
                       }
                     },

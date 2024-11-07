@@ -24,6 +24,7 @@ class Cocktail {
   String moderationStatus;
   String? videoUrl;
   int user;
+  bool isImageAvailable;
 
   Cocktail({
     required this.id,
@@ -41,6 +42,7 @@ class Cocktail {
     required this.moderationStatus,
     required this.videoUrl,
     required this.user,
+    this.isImageAvailable = true,
   });
 
   Cocktail copyWith({

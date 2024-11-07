@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class TimerWidget extends StatefulWidget {
-  final Function onTimerEnd;
+  final VoidCallback
+      onTimerEnd; // Функция, вызываемая при нажатии кнопки после окончания таймера
 
   const TimerWidget({super.key, required this.onTimerEnd});
 
@@ -14,8 +15,9 @@ class TimerWidget extends StatefulWidget {
 }
 
 class _TimerWidgetState extends State<TimerWidget> {
-  int _start = 59;
+  int _start = 3;
   Timer? _timer;
+  bool _showButton = false; // Флаг для отображения кнопки вместо таймера
 
   @override
   void initState() {
@@ -24,12 +26,19 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 
   void _startTimer() {
+    // Сбрасываем таймер и начальное значение
+    setState(() {
+      _start = 3; // Устанавливаем начальное значение
+      _showButton = false; // Скрываем кнопку и показываем таймер
+    });
+
+    _timer?.cancel(); // Отменяем предыдущий таймер, если он есть
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_start == 0) {
         setState(() {
-          timer.cancel();
+          _showButton = true; // Показываем кнопку после завершения таймера
         });
-        widget.onTimerEnd();
+        timer.cancel(); // Останавливаем таймер
       } else {
         setState(() {
           _start--;
@@ -49,26 +58,40 @@ class _TimerWidgetState extends State<TimerWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Center(
-        child: RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: tr('timer.time_left'), // Статичный текст
-                style: context.text.bodyText16White,
-              ),
-              TextSpan(
-                text: tr(
-                  'timer.time_left_seconds',
-                  namedArgs: {
-                    'seconds': _start.toString().padLeft(2, '0')
-                  }, // Передаем список
+        child: _showButton
+            ? InkWell(
+                onTap: () {
+                  widget.onTimerEnd(); // Вызываем переданную функцию
+                  _startTimer(); // Перезапускаем таймер
+                },
+                child: Text(
+                  "Отправить повторно",
+                  style: context.text.bodyText16White.copyWith(
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.white,
+                  ),
                 ),
-                style: context.text.bodyText12Grey.copyWith(fontSize: 16),
+              )
+            : RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: tr('timer.time_left'), // Статичный текст
+                      style: context.text.bodyText16White,
+                    ),
+                    TextSpan(
+                      text: tr(
+                        'timer.time_left_seconds',
+                        namedArgs: {
+                          'seconds': _start.toString().padLeft(2, '0')
+                        }, // Передаем значение таймера
+                      ),
+                      style: context.text.bodyText12Grey.copyWith(fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }

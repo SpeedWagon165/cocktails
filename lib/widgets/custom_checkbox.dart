@@ -57,10 +57,10 @@ class CustomCheckboxListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: GestureDetector(
-        onTap: () => onChanged(!value),
-        child: Container(
+    return GestureDetector(
+      onTap: () => onChanged(!value), // Обработка нажатия на всю область
+      child: ListTile(
+        leading: Container(
           width: 22,
           height: 22,
           decoration: BoxDecoration(
@@ -78,8 +78,8 @@ class CustomCheckboxListTile extends StatelessWidget {
                 )
               : null,
         ),
+        title: Text(title, style: context.text.bodyText14White),
       ),
-      title: Text(title, style: context.text.bodyText14White),
     );
   }
 }

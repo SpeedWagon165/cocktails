@@ -6,11 +6,13 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class CocktailCardSlider extends StatefulWidget {
   final List<String> imageUrls;
   final String? videoUrl;
+  final bool isImageAvailable;
 
   const CocktailCardSlider({
     super.key,
     required this.imageUrls,
     this.videoUrl,
+    this.isImageAvailable = true,
   });
 
   @override
@@ -19,10 +21,20 @@ class CocktailCardSlider extends StatefulWidget {
 
 class _CocktailCardSliderState extends State<CocktailCardSlider> {
   YoutubePlayerController? _controller;
+  double imageHeight = 340;
 
   @override
   void initState() {
     super.initState();
+    if (widget.imageUrls.isNotEmpty) {
+      if (widget.isImageAvailable == true) {
+        imageHeight = 340;
+      } else {
+        imageHeight = 200;
+      }
+    } else {
+      imageHeight = 200;
+    }
 
     // Инициализируем контроллер только если есть videoUrl
     if (widget.videoUrl != null &&
@@ -117,7 +129,7 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
           child: const Icon(
             Icons.image,
             color: Colors.white,
-            size: 100,
+            size: 50,
           ),
         ),
       );
@@ -161,7 +173,7 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
       options: CarouselOptions(
         autoPlay: false,
         enlargeCenterPage: true,
-        height: 340.0,
+        height: imageHeight,
         aspectRatio: 1,
         viewportFraction: 1,
         initialPage: 0,

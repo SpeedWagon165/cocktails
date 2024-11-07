@@ -52,6 +52,12 @@ class ChangePasswordStep2State extends State<ChangePasswordStep2> {
     }
   }
 
+  void _resendCode() {
+    // Отправляем событие запроса на отправку кода повторно
+    context.read<AuthBloc>().add(RequestPasswordReset(email: widget.email));
+    print('Код отправлен повторно на ${widget.email}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
@@ -103,9 +109,7 @@ class ChangePasswordStep2State extends State<ChangePasswordStep2> {
                   ),
                   const SizedBox(height: 32),
                   TimerWidget(
-                    onTimerEnd: () {
-                      print('Timer ended');
-                    },
+                    onTimerEnd: _resendCode,
                   ),
                   const SizedBox(height: 29),
                   CustomButton(
