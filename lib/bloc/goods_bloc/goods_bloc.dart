@@ -21,5 +21,14 @@ class GoodsBloc extends Bloc<GoodsEvent, GoodsState> {
         emit(GoodsError('Failed to load goods: $e'));
       }
     });
+    on<SearchGoods>((event, emit) async {
+      emit(GoodsLoading());
+      try {
+        final goods = await repository.searchGoods(event.query);
+        emit(GoodsLoaded(goods));
+      } catch (e) {
+        emit(GoodsError('Failed to search goods: $e'));
+      }
+    });
   }
 }

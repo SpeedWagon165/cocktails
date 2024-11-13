@@ -45,8 +45,10 @@ class _ForgotPassPage3State extends State<ForgotPassPage3> {
     final password = passwordController.text;
     final confirmPassword = confirmPasswordController.text;
     bool isValid = true;
+    final passwordRegex =
+        RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$');
 
-    if (password.isEmpty || password.length < 8) {
+    if (password.isEmpty || !passwordRegex.hasMatch(password)) {
       setState(() {
         passwordError = tr(
             'forgot_password_page.password_error'); // Локализованная ошибка для короткого пароля

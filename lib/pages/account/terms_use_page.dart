@@ -23,10 +23,15 @@ class TermsUsePage extends StatelessWidget {
             const SizedBox(
               height: 24,
             ),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Tempus sagittis dapibus ut amet. In facilisis eget ornare vulputate turpis consequat donec consequat. Sed imperdiet rhoncus sed eget pharetra ullamcorper tempus. In scelerisque arcu ultrices tortor eget dolor netus in risus.Lorem ipsum dolor sit amet consectetur. Tempus sagittis dapibus ut amet. In facilisis eget ornare vulputate turpis consequat donec consequat. Sed imperdiet rhoncus sed eget pharetra ullamcorper tempus. In scelerisque arcu ultrices tortor eget dolor netus in risus.',
-              style: context.text.bodyText16White
-                  .copyWith(color: Colors.white.withOpacity(0.85)),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Text(
+                  tr('policy.user_agreement'),
+                  textAlign: TextAlign.center,
+                  style: context.text.bodyText16White
+                      .copyWith(color: Colors.white.withOpacity(0.85)),
+                ),
+              ),
             )
           ]),
         ),

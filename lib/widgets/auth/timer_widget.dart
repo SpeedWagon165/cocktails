@@ -15,7 +15,7 @@ class TimerWidget extends StatefulWidget {
 }
 
 class _TimerWidgetState extends State<TimerWidget> {
-  int _start = 3;
+  int _start = 59;
   Timer? _timer;
   bool _showButton = false; // Флаг для отображения кнопки вместо таймера
 
@@ -28,7 +28,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   void _startTimer() {
     // Сбрасываем таймер и начальное значение
     setState(() {
-      _start = 3; // Устанавливаем начальное значение
+      _start = 59; // Устанавливаем начальное значение
       _showButton = false; // Скрываем кнопку и показываем таймер
     });
 

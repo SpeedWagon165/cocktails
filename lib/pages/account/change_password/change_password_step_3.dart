@@ -43,7 +43,10 @@ class ChangePasswordStep3State extends State<ChangePasswordStep3> {
     final confirmPassword = confirmPasswordController.text;
     bool isValid = true;
 
-    if (password.isEmpty || password.length < 8) {
+    final passwordRegex =
+        RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$');
+
+    if (password.isEmpty || !passwordRegex.hasMatch(password)) {
       setState(() {
         passwordError =
             tr('change_pass_pages.password_too_short'); // Локализация

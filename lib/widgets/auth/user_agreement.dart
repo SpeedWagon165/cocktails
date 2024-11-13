@@ -1,4 +1,3 @@
-import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -7,14 +6,16 @@ import '../custom_checkbox.dart';
 class UserAgreement extends StatefulWidget {
   final String text;
   final String clickText;
-  final Function(bool)
-      onCheckChanged; // Колбэк для обработки изменений состояния
+  final VoidCallback
+      onClickText; // Новый параметр для обработки клика по тексту
+  final Function(bool) onCheckChanged;
 
   const UserAgreement({
     super.key,
     required this.text,
     required this.clickText,
-    required this.onCheckChanged, // Передаем функцию для управления состоянием чекбокса
+    required this.onCheckChanged,
+    required this.onClickText, // Передаем функцию для обработки клика
   });
 
   @override
@@ -33,12 +34,11 @@ class UserAgreementState extends State<UserAgreement> {
           onTap: () {
             setState(() {
               isChecked = !isChecked;
-              widget.onCheckChanged(
-                  isChecked); // Сообщаем родительскому компоненту об изменении состояния
+              widget.onCheckChanged(isChecked);
             });
           },
           child: CustomCircularCheckbox(
-            isChecked: isChecked, // Передаем текущее состояние
+            isChecked: isChecked,
             onChanged: (checked) {
               setState(() {
                 isChecked = checked;
@@ -47,15 +47,14 @@ class UserAgreementState extends State<UserAgreement> {
             },
           ),
         ),
-        const SizedBox(
-          width: 12,
-        ),
+        const SizedBox(width: 12),
         Expanded(
           child: RichText(
             text: TextSpan(
               text: widget.text,
-              style: context.text.bodyText12Grey.copyWith(
+              style: TextStyle(
                 fontSize: 13,
+                color: Colors.grey,
                 height: 1.5,
               ),
               children: [
@@ -66,10 +65,7 @@ class UserAgreementState extends State<UserAgreement> {
                     decoration: TextDecoration.underline,
                   ),
                   recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      // Действие при нажатии на пользовательское соглашение
-                      print('Пользовательское соглашение нажато');
-                    },
+                    ..onTap = widget.onClickText, // Обрабатываем клик по тексту
                 ),
               ],
             ),

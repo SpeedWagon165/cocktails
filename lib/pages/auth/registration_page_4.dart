@@ -35,6 +35,8 @@ class RegistrationPage4 extends StatelessWidget {
 
     String? passwordError;
     String? confirmPasswordError;
+    final passwordRegex =
+        RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$');
 
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {},
@@ -90,7 +92,8 @@ class RegistrationPage4 extends StatelessWidget {
                           passwordError =
                               tr('registration_page.password_error');
                         });
-                      } else if (password.length < 8) {
+                      } else if (password.length < 8 ||
+                          !passwordRegex.hasMatch(password)) {
                         setState(() {
                           passwordError =
                               tr('registration_page.password_too_short_error');

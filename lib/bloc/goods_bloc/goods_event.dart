@@ -6,3 +6,9 @@ abstract class GoodsEvent extends Equatable {
 }
 
 class FetchGoods extends GoodsEvent {}
+
+class SearchGoods extends GoodsEvent {
+  final String query;
+
+  SearchGoods({required this.query});
+}

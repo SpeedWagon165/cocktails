@@ -15,12 +15,22 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   Future<void> _onAppStarted(AppStarted event, Emitter<AppState> emit) async {
-    final isAuthenticated = await _checkAuthStatus();
-    if (isAuthenticated) {
+    final isFirstLaunch = await _checkFirstLaunch();
+    if (!isFirstLaunch) {
       emit(AppAuthenticated());
     } else {
-      emit(AppUnauthenticated());
+      final isAuthenticated = await _checkAuthStatus();
+      emit(isAuthenticated ? AppAuthenticated() : AppUnauthenticated());
     }
+  }
+
+  Future<bool> _checkFirstLaunch() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+    if (isFirstLaunch) {
+      await prefs.setBool('isFirstLaunch', false);
+    }
+    return isFirstLaunch;
   }
 
   Future<bool> _checkAuthStatus() async {

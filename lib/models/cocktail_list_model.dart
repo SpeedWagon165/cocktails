@@ -134,12 +134,43 @@ class Ingredient {
   String quantity;
   String type;
 
+  // Карта переводов единиц измерения
+  static const Map<String, String> unitsTranslation = {
+    'ounce': 'унция',
+    'ml': 'мл',
+    'gram': 'грамм',
+    'piece': 'шт',
+    'spoon': 'ложка',
+    'cup': 'кружка',
+    'tablespoon': 'столовая ложка',
+    'teaspoon': 'чайная ложка',
+    'slice': 'ломтик',
+    'twist': 'твист',
+    'cube': 'кубик',
+    'sprig': 'веточка',
+    'pinch': 'щепотка',
+    'spiral': 'спираль',
+    'wedge': 'долька',
+    'dash': 'дэш',
+    'block': 'блок',
+    'circle': 'кружок',
+    'bottle': 'бутылка',
+  };
+
   Ingredient({
     required this.ingredientId,
     required this.name,
     required this.quantity,
     required this.type,
   });
+
+  // Метод для получения переведённой единицы измерения
+  String getTranslatedType(String currentLanguage) {
+    if (currentLanguage == 'rus') {
+      return unitsTranslation[type] ?? type;
+    }
+    return type;
+  }
 
   factory Ingredient.fromJson(Map<String, dynamic> json) {
     return Ingredient(
@@ -150,16 +181,19 @@ class Ingredient {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        "ingredient": ingredientId,
-        "name": name,
-        "quantity": quantity,
-        "type": type,
-      };
+  // Метод toJson для преобразования объекта в JSON
+  Map<String, dynamic> toJson() {
+    return {
+      "ingredient": ingredientId,
+      "name": name,
+      "quantity": quantity,
+      "type": type,
+    };
+  }
 
   @override
   String toString() {
-    return '$name: $quantity $type';
+    return '$name: $quantity ${unitsTranslation[type] ?? type}';
   }
 }
 

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/custom_button.dart';
@@ -16,6 +17,15 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<void> _skipWelcome() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isFirstLaunch', false);
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+          builder: (context) => const CustomBottomNavigationBar()),
+    );
   }
 
   @override
@@ -37,11 +47,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       child: CustomButton(
                         text: tr("buttons.skip"),
                         transper: true,
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const CustomBottomNavigationBar()));
-                        },
+                        onPressed: _skipWelcome,
                         single: false,
                       ),
                     ),

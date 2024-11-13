@@ -127,13 +127,13 @@ class CocktailCard extends StatelessWidget {
                               style: context.text.headline24White
                                   .copyWith(fontSize: 18)),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            "Не хватает из ${cocktail.ingredients.length} ингредиентов",
-                            style: context.text.bodyText16White,
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(12.0),
+                        //   child: Text(
+                        //     "Не хватает из ${cocktail.ingredients.length} ингредиентов",
+                        //     style: context.text.bodyText16White,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -146,8 +146,6 @@ class CocktailCard extends StatelessWidget {
                         onTap: isLoading
                             ? null
                             : () async {
-                                print('ГЕРМАН ХУЕСОС');
-                                // Отправляем событие для переключения статуса избранного
                                 context.read<CocktailListBloc>().add(
                                       ToggleFavoriteCocktail(cocktail.id,
                                           cocktail.isFavorite, favoritePage),
@@ -182,7 +180,7 @@ class CocktailCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: cocktail.claimed
-                              ? Colors.white.withOpacity(0.2)
+                              ? Colors.grey.withOpacity(0.2)
                               : const Color(0xFFF6B402),
                         ),
                         child: cocktail.claimed

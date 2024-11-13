@@ -1,10 +1,6 @@
 part of 'app_start_bloc.dart';
 
 @immutable
-abstract class AppState {}
+abstract class AppEvent {}
 
-class AppInitial extends AppState {}
-
-class AppAuthenticated extends AppState {}
-
-class AppUnauthenticated extends AppState {}
+class AppStarted extends AppEvent {}

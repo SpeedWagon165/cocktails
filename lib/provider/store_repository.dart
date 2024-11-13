@@ -25,4 +25,19 @@ class GoodsRepository {
       throw Exception('Error fetching goods: $e');
     }
   }
+
+  Future<List<Product>> searchGoods(String query) async {
+    try {
+      final response = await dio
+          .get('/goods/', queryParameters: {'q': query, 'page_size': 50});
+      if (response.statusCode == 200) {
+        final List<dynamic> results = response.data['results'];
+        return results.map((json) => Product.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to search goods');
+      }
+    } catch (e) {
+      throw Exception('Error searching goods: $e');
+    }
+  }
 }

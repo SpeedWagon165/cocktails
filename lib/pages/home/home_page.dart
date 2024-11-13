@@ -327,6 +327,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       final authState = context.read<AuthBloc>().state;
                       // if (authState is AuthAuthenticated) {
                       cocktailSelectionPopUp(context);
+
                       // } else {
                       //   needRegistrationPopUp(context);
                       // }

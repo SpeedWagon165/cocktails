@@ -1,3 +1,5 @@
+import 'package:cocktails/pages/auth/privacy_policy_popup.dart';
+import 'package:cocktails/pages/auth/user_agreement_popup.dart';
 import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:cocktails/widgets/auth/user_agreement.dart';
 import 'package:cocktails/widgets/base_pop_up.dart';
@@ -219,6 +221,8 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
                     isAgreementChecked = checked;
                   });
                 },
+                onClickText: () =>
+                    userAgreementPopUp(context), // Открываем userAgreementPopUp
               ),
               const SizedBox(height: 12),
               UserAgreement(
@@ -229,6 +233,8 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
                     isPrivacyChecked = checked;
                   });
                 },
+                onClickText: () =>
+                    privacyPolicyPopUp(context), // Открываем privacyPolicyPopUp
               ),
               if (generalError != null)
                 Padding(

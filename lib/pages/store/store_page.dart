@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/goods_bloc/goods_bloc.dart';
 import '../../provider/store_repository.dart';
 import '../../widgets/custom_arrowback.dart';
-import '../../widgets/home/search_bar_widget.dart';
+import '../../widgets/store/goods_search_bar.dart';
 
 class StorePage extends StatelessWidget {
   const StorePage({super.key});
@@ -29,7 +29,7 @@ class StorePage extends StatelessWidget {
                   onPressed: null,
                 ),
                 const SizedBox(height: 16),
-                const CustomSearchBar(),
+                const GoodsSearchBar(),
                 const SizedBox(height: 16),
                 Expanded(
                   child: BlocBuilder<GoodsBloc, GoodsState>(
@@ -88,33 +88,3 @@ class StorePage extends StatelessWidget {
     return prices.isNotEmpty ? prices.first : 0.0;
   }
 }
-// final List<String> categories = [
-//   'Бочонки',
-//   'Дымные наборы',
-//   'Набор 17 предмет',
-//   'Вино',
-//   'Вино шотланское'
-// ];
-//     SingleChildScrollView(
-//       scrollDirection: Axis.horizontal,
-//       child: Row(
-//         children: categories.map((category) {
-//           return Padding(
-//             padding: const EdgeInsets.symmetric(horizontal: 4.0),
-//             child: Chip(
-//               backgroundColor: Color(0xff212121),
-//               label: Text(
-//                 category,
-//                 style: const TextStyle(
-//                   color: Colors.white,
-//                   fontSize: 14,
-//                 ),
-//               ),
-//               shape: const StadiumBorder(
-//                 side: BorderSide(color: Color(0xff343434)),
-//               ),
-//             ),
-//           );
-//         }).toList(),
-//       ),
-//     ),
