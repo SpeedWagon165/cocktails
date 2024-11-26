@@ -180,7 +180,7 @@ class CocktailCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: cocktail.claimed
-                              ? Colors.grey.withOpacity(0.2)
+                              ? Colors.grey.withOpacity(0.3)
                               : const Color(0xFFF6B402),
                         ),
                         child: cocktail.claimed

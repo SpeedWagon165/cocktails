@@ -7,6 +7,12 @@ abstract class CocktailListEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class FetchCocktailById extends CocktailListEvent {
+  final int cocktailId;
+
+  FetchCocktailById(this.cocktailId);
+}
+
 class FetchCocktails extends CocktailListEvent {
   final int page;
   final int pageSize;

@@ -6,6 +6,7 @@ import 'package:cocktails/widgets/custom_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 import '../../models/cocktail_list_model.dart';
@@ -16,15 +17,17 @@ import '../../widgets/pure_custom_arrow_back.dart';
 import '../../widgets/store/expandable_text.dart';
 
 class CocktailCardScreen extends StatefulWidget {
-  final Cocktail cocktail;
+  final Cocktail? cocktail;
   final bool favoritePage;
   final int? userId;
   final bool myCocktails;
+  final int? cocktailId;
 
   const CocktailCardScreen({
     super.key,
-    required this.cocktail,
+    this.cocktail,
     required this.userId,
+    this.cocktailId,
     this.myCocktails = false,
     this.favoritePage = false,
   });
@@ -39,8 +42,22 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
   @override
   void initState() {
     super.initState();
-    currentCocktail =
-        widget.cocktail; // Изначально берём коктейль из параметров
+    if (widget.cocktail != null) {
+      currentCocktail = widget.cocktail!;
+    } else if (widget.cocktailId != null) {
+      _loadCocktailById(widget.cocktailId!);
+    }
+  }
+
+  void _shareRecipe() {
+    final String cocktailUrl =
+        'https://mrbarmister.pro/recipe/${currentCocktail.id}'; // Example URL
+    Share.share(
+        'Check out this cocktail: ${currentCocktail.name}\n\n$cocktailUrl');
+  }
+
+  void _loadCocktailById(int id) {
+    context.read<CocktailListBloc>().add(FetchCocktailById(id));
   }
 
   @override
@@ -53,8 +70,8 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
           if (state is UserCocktailLoaded) {
             print("MyCocktailLoaded state received");
             final updatedCocktail = state.userCocktails.firstWhere(
-              (c) => c.id == widget.cocktail.id,
-              orElse: () => widget.cocktail,
+              (c) => c.id == widget.cocktail?.id,
+              orElse: () => widget.cocktail!,
             );
 
             setState(() {
@@ -66,8 +83,8 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
           if (state is CocktailLoaded) {
             print("CocktailLoaded state received");
             final updatedCocktail = state.cocktails.firstWhere(
-              (c) => c.id == widget.cocktail.id,
-              orElse: () => widget.cocktail,
+              (c) => c.id == widget.cocktail?.id,
+              orElse: () => widget.cocktail!,
             );
 
             setState(() {
@@ -107,16 +124,16 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                               if (state is CocktailLoaded) {
                                 // Найдите коктейль в загруженных коктейлях или верните текущий коктейль
                                 final cocktail = state.cocktails.firstWhere(
-                                  (c) => c.id == widget.cocktail.id,
+                                  (c) => c.id == widget.cocktail?.id,
                                   orElse: () => widget
-                                      .cocktail, // Возвращаем оригинальный коктейль, если не найден
+                                      .cocktail!, // Возвращаем оригинальный коктейль, если не найден
                                 );
                                 isFavorite = cocktail.isFavorite;
                               }
 
                               return (widget.userId != null &&
                                       widget.userId.toString() !=
-                                          widget.cocktail.user.toString())
+                                          widget.cocktail?.user.toString())
                                   ? CocktailCardButtons(
                                       isCocked: currentCocktail.claimed,
                                       // Используем обновленное состояние
@@ -170,7 +187,7 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                           if (!currentCocktail.claimed &&
                               widget.userId != null &&
                               widget.userId.toString() !=
-                                  widget.cocktail.user
+                                  widget.cocktail?.user
                                       .toString()) // Условие для показа кнопки
                             CustomButton(
                                 text: tr("catalog_page.mark_as_prepared"),
@@ -183,6 +200,11 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                                   bonusTakePopUp(context, currentCocktail.name);
                                 }),
                           const SizedBox(height: 24.0),
+                          CustomButton(
+                            text: 'Share Recipe',
+                            onPressed: _shareRecipe,
+                            single: true, // Trigger share
+                          ),
                         ],
                       ),
                     )

@@ -23,7 +23,31 @@
 		<key>CFBundleVersion</key>
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>LSRequiresIPhoneOS</key>
+		<key>CFBundleURLTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleURLName</key>
+                <string>mrbarmister</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>https</string>
+                </array>
+            </dict>
+        </array>
 
+        <key>NSAppTransportSecurity</key>
+        <dict>
+            <key>NSExceptionDomains</key>
+            <dict>
+                <key>mrbarmister.pro</key>
+                <dict>
+                    <key>NSIncludesSubdomains</key>
+                    <true/>
+                    <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                    <true/>
+                </dict>
+            </dict>
+        </dict>
 		<true/>
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>

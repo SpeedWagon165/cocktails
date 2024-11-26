@@ -13,6 +13,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
   final CocktailRepository repository;
 
   CocktailListBloc(this.repository) : super(CocktailInitial()) {
+    on<FetchCocktailById>(_onFetchCocktailById);
     on<FetchCocktails>(_onFetchCocktails);
     on<FetchUserCocktails>(_onFetchUserCocktails); // Обрабатываем новый ивент
     on<SearchCocktails>(_onSearchCocktails);
@@ -22,6 +23,19 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
     on<ToggleFavoriteCocktail>(_onToggleFavoriteCocktail);
     on<ClaimCocktail>(_onClaimCocktail);
     on<PublishCocktail>(_onPublishCocktail);
+  }
+
+  void _onFetchCocktailById(
+      FetchCocktailById event, Emitter<CocktailListState> emit) async {
+    emit(CocktailLoading()); // Показать состояние загрузки
+
+    try {
+      final cocktail = await repository.fetchCocktailById(event.cocktailId);
+      emit(CocktailByIdLoaded(cocktail)); // Эмитим состояние с коктейлем по ID
+    } catch (e, stacktrace) {
+      log('Error fetching cocktail by ID', error: e, stackTrace: stacktrace);
+      emit(CocktailError('Failed to fetch cocktail: ${e.toString()}'));
+    }
   }
 
   // Получение всех коктейлей (без аутентификации)

@@ -49,6 +49,20 @@ class CocktailRepository {
     return prefs.getString('token');
   }
 
+  Future<Cocktail> fetchCocktailById(int cocktailId) async {
+    try {
+      final response = await dio.get('/recipe/$cocktailId');
+      if (response.statusCode == 200) {
+        return Cocktail.fromJson(response.data);
+      } else {
+        throw Exception('Failed to load cocktail: ${response.statusCode}');
+      }
+    } catch (e) {
+      log('Error fetching cocktail by ID', error: e);
+      throw Exception('Failed to fetch cocktail: $e');
+    }
+  }
+
   // Метод для получения коктейлей
   Future<List<Cocktail>> fetchCocktails({
     int page = 1,

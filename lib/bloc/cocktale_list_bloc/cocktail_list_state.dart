@@ -10,6 +10,12 @@ abstract class CocktailListState extends Equatable {
 
 class CocktailInitial extends CocktailListState {}
 
+class CocktailByIdLoaded extends CocktailListState {
+  final Cocktail cocktail;
+
+  CocktailByIdLoaded(this.cocktail);
+}
+
 class CocktailLoading extends CocktailListState {}
 
 class CocktailSearchLoaded extends CocktailListState {
