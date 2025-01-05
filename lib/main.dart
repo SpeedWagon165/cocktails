@@ -1,6 +1,8 @@
+import 'package:app_links/app_links.dart';
 import 'package:cocktails/bloc/cocktail_setup_bloc/cocktail_setup_bloc.dart';
 import 'package:cocktails/bloc/notification_settings_bloc/notification_settings_bloc.dart';
 import 'package:cocktails/bloc/standart_auth_bloc/standart_auth_bloc.dart';
+import 'package:cocktails/pages/cocktail_card_page/cocktail_card_screen.dart';
 import 'package:cocktails/pages/welcome_page.dart';
 import 'package:cocktails/provider/cocktail_auth_repository.dart';
 import 'package:cocktails/provider/cocktail_list_get.dart';
@@ -20,7 +22,7 @@ import 'bloc/app_start_bloc/app_start_bloc.dart';
 import 'bloc/avatar_cubit/avatar_cubit.dart';
 import 'bloc/bottom_navigation_bloc/bottom_navigation_bloc.dart';
 import 'bloc/catalog_filter_bloc/catalog_filter_bloc.dart';
-import 'bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
+import 'bloc/cocktail_list_bloc/cocktail_list_bloc.dart';
 import 'bloc/create_cocktail_bloc/create_cocktail_bloc.dart';
 import 'bloc/deep_link_bloc/deep_link_bloc.dart';
 import 'bloc/notification_bloc/notification_bloc.dart';
@@ -103,6 +105,45 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late final AppLinks _appLinks;
+  String? _deepLink;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeDeepLinkListener();
+  }
+
+  void _initializeDeepLinkListener() async {
+    _appLinks = AppLinks();
+
+    // Слушатель для обработанных ссылок
+    _appLinks.uriLinkStream.listen((Uri? uri) {
+      if (uri != null) {
+        _handleDeepLink(uri);
+      }
+    });
+
+    // Проверка активной ссылки при старте
+    final initialUri = await _appLinks.getInitialLink();
+    if (initialUri != null) {
+      _handleDeepLink(initialUri);
+    }
+  }
+
+  void _handleDeepLink(Uri uri) {
+    if (uri.pathSegments.contains('recipe')) {
+      final id = uri.pathSegments.last;
+      debugPrint(id);
+      if (id.isNotEmpty) {
+        context.read<CocktailListBloc>().add(FetchCocktailById(int.parse(id)));
+        setState(() {
+          _deepLink = uri.toString();
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -121,7 +162,12 @@ class _MyAppState extends State<MyApp> {
           locale: context.locale,
           home: BlocBuilder<AppBloc, AppState>(
             builder: (context, state) {
-              if (state is AppInitial) {
+              if (_deepLink != null) {
+                return CocktailCardScreen(
+                  cocktailId: int.tryParse(_deepLink!.split('/').last),
+                  userId: null,
+                );
+              } else if (state is AppInitial) {
                 return const Center(child: CircularProgressIndicator());
               } else if (state is AppAuthenticated) {
                 return const CustomBottomNavigationBar();
@@ -137,5 +183,10 @@ class _MyAppState extends State<MyApp> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

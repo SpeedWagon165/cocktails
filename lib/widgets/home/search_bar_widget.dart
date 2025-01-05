@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
+import '../../bloc/cocktail_list_bloc/cocktail_list_bloc.dart';
 
 class CustomSearchBar extends StatefulWidget {
   final bool isFavorites;
@@ -25,6 +27,23 @@ class CustomSearchBar extends StatefulWidget {
 class _CustomSearchBarState extends State<CustomSearchBar> {
   late stt.SpeechToText _speech;
   bool _isListening = false;
+  Timer? _inactivityTimer;
+
+  void _resetInactivityTimer() {
+    _inactivityTimer?.cancel(); // Сбрасываем текущий таймер
+    _inactivityTimer = Timer(const Duration(seconds: 2), () {
+      // Закрываем окно после 2 секунд бездействия
+      if (_isListening) {
+        _stopListening();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _inactivityTimer?.cancel(); // Очищаем таймер при удалении виджета
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -33,24 +52,38 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   }
 
   Future<void> _startListening() async {
+    final locale = EasyLocalization.of(context)?.locale.languageCode ??
+        'en'; // Язык локализации
     bool available = await _speech.initialize();
     if (available) {
       setState(() => _isListening = true);
-      _showRecordingDialog(); // Показать диалог записи
+      _showRecordingDialog();
 
-      _speech.listen(onResult: (result) {
-        setState(() {
-          widget.controller?.text = result.recognizedWords;
-        });
-        _onSearchChanged(result.recognizedWords);
-      }).then((_) => _closeRecordingDialog()); // Закрыть диалог по завершении
+      _speech
+          .listen(
+            localeId: locale,
+            // Используем локализацию приложения
+            onResult: (result) {
+              setState(() {
+                widget.controller?.text = result.recognizedWords;
+              });
+              _onSearchChanged(result.recognizedWords);
+            },
+            listenFor: const Duration(seconds: 10),
+            // Максимальное время прослушивания
+            onSoundLevelChange: (level) {
+              _resetInactivityTimer(); // Сбрасываем таймер при активности
+            },
+          )
+          .then((_) => _closeRecordingDialog());
     }
   }
 
   void _stopListening() {
     _speech.stop();
+    _inactivityTimer?.cancel(); // Останавливаем таймер
     setState(() => _isListening = false);
-    _closeRecordingDialog(); // Закрыть диалог, если остановлено вручную
+    _closeRecordingDialog();
   }
 
   void _onSearchChanged(String query) {

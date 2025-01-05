@@ -57,7 +57,7 @@ class CocktailFilterStep1State extends State<CocktailFilterStep1> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: CustomButton(
-                    text: tr("buttons.confirm"),
+                    text: tr("buttons.choose"),
                     onPressed: () {
                       widget.pageController.animateToPage(
                         2,

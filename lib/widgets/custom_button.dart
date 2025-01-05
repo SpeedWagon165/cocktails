@@ -28,193 +28,92 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (single) {
-      if (gradient) {
-        return Row(
-          children: [
-            Expanded(
-              child: SizedBox(
-                height: buttonHeight,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFFF8C82C),
-                        Color(0xFFEF7F31),
-                        Color(0xFFDD66A9),
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  child: ElevatedButton(
-                    onPressed: onPressed,
-                    style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32.0, vertical: 16.0),
-                    ),
-                    child: Text(
-                      text,
-                      style: context.text.buttonText18Brown
-                          .copyWith(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      } else {
-        return Row(
-          children: [
-            Expanded(
-              child: SizedBox(
-                height: buttonHeight,
-                child: ElevatedButton(
-                  onPressed: onPressed,
-                  style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
-                    backgroundColor: const Color(0xFFF6B402),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 32.0, vertical: 0),
-                  ),
-                  child: haveIcon
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            if (haveIcon)
-                              SvgPicture.asset("assets/images/copy_bold.svg"),
-                            if (haveIcon)
-                              const SizedBox(
-                                width: 10,
-                              ),
-                            Flexible(
-                              child: Text(
-                                text,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                                style: context.text.buttonText18Brown
-                                    .copyWith(fontSize: 16),
-                              ),
-                            ),
-                          ],
-                        )
-                      : Text(
-                          text,
-                          style: buttonHeight == 60
-                              ? context.text.buttonText18Brown
-                              : context.text.buttonText18Brown
-                                  .copyWith(fontSize: 16),
-                        ),
-                ),
-              ),
-            ),
-          ],
-        );
-      }
-    } else {
-      if (transper) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(30.0),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-            child: SizedBox(
-              height: buttonHeight,
-              child: ElevatedButton(
-                onPressed: onPressed,
-                style: ElevatedButton.styleFrom(
-                  shape: const StadiumBorder(),
-                  backgroundColor: Colors.white.withOpacity(0.15),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 32.0, vertical: 16.0),
-                  side: const BorderSide(
-                    color: Colors.white,
-                    width: 1.3,
-                  ),
-                ),
+    final buttonStyle = ElevatedButton.styleFrom(
+      shape: const StadiumBorder(),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      backgroundColor: _getBackgroundColor(),
+      shadowColor: Colors.transparent,
+    );
+
+    final buttonContent = haveIcon
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset("assets/images/copy_bold.svg"),
+              const SizedBox(width: 10),
+              Flexible(
                 child: Text(
                   text,
-                  style: context.text.buttonText18Brown
-                      .copyWith(color: Colors.white),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.text.buttonText18Brown.copyWith(fontSize: 16),
                 ),
               ),
+            ],
+          )
+        : Text(
+            text,
+            style: context.text.buttonText18Brown.copyWith(
+              color: _getTextColor(),
+              fontSize: buttonHeight == 60 ? 18 : 16,
             ),
+          );
+
+    final button = ElevatedButton(
+      onPressed: onPressed,
+      style: buttonStyle,
+      child: buttonContent,
+    );
+
+    return single
+        ? Row(
+            children: [
+              Expanded(
+                  child: SizedBox(
+                      height: buttonHeight,
+                      child: _wrapWithDecoration(button))),
+            ],
+          )
+        : SizedBox(height: buttonHeight, child: _wrapWithDecoration(button));
+  }
+
+  /// Возвращает цвет фона кнопки в зависимости от параметров.
+  Color? _getBackgroundColor() {
+    if (gradient || transper) return Colors.transparent;
+    if (grey) return const Color(0x0FFFFFFF);
+    return const Color(0xFFF6B402);
+  }
+
+  /// Возвращает цвет текста кнопки в зависимости от параметров.
+  Color _getTextColor() {
+    if (grey) return const Color(0x66FFFFFF);
+    if (transper) return Colors.white;
+    return Colors.brown;
+  }
+
+  /// Добавляет декорацию кнопке, если она требуется.
+  Widget _wrapWithDecoration(Widget child) {
+    if (gradient) {
+      return Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFFF8C82C), Color(0xFFEF7F31), Color(0xFFDD66A9)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
           ),
-        );
-      } else if (gradient) {
-        return SizedBox(
-          height: buttonHeight,
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFFF8C82C),
-                  Color(0xFFEF7F31),
-                  Color(0xFFDD66A9),
-                ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            child: ElevatedButton(
-              onPressed: onPressed,
-              style: ElevatedButton.styleFrom(
-                shape: const StadiumBorder(),
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 32.0, vertical: 16.0),
-              ),
-              child: Text(
-                text,
-                style: context.text.buttonText18Brown
-                    .copyWith(color: Colors.white),
-              ),
-            ),
-          ),
-        );
-      } else if (grey) {
-        return SizedBox(
-          height: buttonHeight,
-          child: ElevatedButton(
-            onPressed: onPressed,
-            style: ElevatedButton.styleFrom(
-              shape: const StadiumBorder(),
-              backgroundColor: const Color(0x0FFFFFFF),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-            ),
-            child: Text(
-              text,
-              style: context.text.buttonText18Brown
-                  .copyWith(color: const Color(0x66FFFFFF)),
-            ),
-          ),
-        );
-      } else {
-        return SizedBox(
-          height: buttonHeight,
-          child: ElevatedButton(
-            onPressed: onPressed,
-            style: ElevatedButton.styleFrom(
-              shape: const StadiumBorder(),
-              backgroundColor: const Color(0xFFF6B402),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-            ),
-            child: Text(
-              text,
-              style: context.text.buttonText18Brown,
-            ),
-          ),
-        );
-      }
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        child: child,
+      );
+    } else if (transper) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(30.0),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+          child: child,
+        ),
+      );
     }
+    return child;
   }
 }

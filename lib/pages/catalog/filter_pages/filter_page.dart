@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/catalog_filter_bloc/catalog_filter_bloc.dart';
-import '../../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
+import '../../../bloc/cocktail_list_bloc/cocktail_list_bloc.dart';
 import '../../../widgets/base_pop_up.dart';
 import '../../../widgets/catalog_widgets/catalog_selected_wrap.dart';
 import '../../../widgets/catalog_widgets/sort_expansion_tile.dart';

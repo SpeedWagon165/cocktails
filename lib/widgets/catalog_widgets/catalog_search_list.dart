@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/catalog_filter_bloc/catalog_filter_bloc.dart';
+import '../../bloc/cocktail_list_bloc/cocktail_list_bloc.dart';
 import '../../bloc/cocktail_setup_bloc/cocktail_setup_bloc.dart';
-import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
 import '../../models/cocktail_list_model.dart';
 import '../cocktail_list/cocktail_card.dart';
 

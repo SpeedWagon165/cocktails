@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../bloc/cocktale_list_bloc/cocktail_list_bloc.dart';
+import '../../bloc/cocktail_list_bloc/cocktail_list_bloc.dart';
 import '../../models/cocktail_list_model.dart';
 import '../../widgets/catalog_widgets/bonus_pop_up.dart';
 import '../../widgets/coctail_card_widgets/cocktail_instruction_builder.dart';
