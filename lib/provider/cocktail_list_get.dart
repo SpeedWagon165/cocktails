@@ -49,7 +49,7 @@ class CocktailRepository {
     return prefs.getString('token');
   }
 
-  Future<Cocktail> fetchCocktailById(int cocktailId) async {
+  Future<Cocktail> fetchCocktailById(String cocktailId) async {
     try {
       final response = await dio.get('/recipe/$cocktailId');
       if (response.statusCode == 200) {

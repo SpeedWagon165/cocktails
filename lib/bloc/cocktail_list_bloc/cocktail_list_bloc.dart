@@ -31,6 +31,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
 
     try {
       final cocktail = await repository.fetchCocktailById(event.cocktailId);
+      print(cocktail.photo);
       emit(CocktailByIdLoaded(cocktail)); // Эмитим состояние с коктейлем по ID
     } catch (e, stacktrace) {
       log('Error fetching cocktail by ID', error: e, stackTrace: stacktrace);
@@ -322,7 +323,6 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
                   moderationStatus: 'Pending') // Обновляем статус
               : cocktail;
         }).toList();
-        final updatedUserCocktails = await repository.fetchUserCocktails();
 
         emit(UserCocktailLoaded(updatedCocktails));
       } catch (e) {

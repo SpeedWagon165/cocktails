@@ -8,7 +8,7 @@ abstract class CocktailListEvent extends Equatable {
 }
 
 class FetchCocktailById extends CocktailListEvent {
-  final int cocktailId;
+  final String cocktailId;
 
   FetchCocktailById(this.cocktailId);
 }
