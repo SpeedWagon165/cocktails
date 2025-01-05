@@ -105,6 +105,7 @@ class Cocktail {
       claimed: json["claimed"] ?? false,
       moderationStatus: json["moderation_status"] ?? '',
       videoUrl: json["video_url"] as String?,
+      //@TODO ЗДЕСЬ НАХАРДКОЖЕНО
       user: 38,
     );
   }
