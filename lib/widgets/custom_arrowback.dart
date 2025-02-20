@@ -54,6 +54,7 @@ class CustomAppBar extends StatelessWidget {
                             onPressed();
                           } else {
                             Navigator.of(context).pop();
+                            print('pop');
                           }
                         },
                         padding: EdgeInsets.zero,

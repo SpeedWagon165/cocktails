@@ -51,7 +51,10 @@ class _MyCocktailsListPageState extends State<MyCocktailsListPage> {
               } else if (state is UserCocktailLoaded) {
                 if (state.userCocktails.isEmpty) {
                   content = Center(
-                    child: Text(tr('my_cocktails_page.no_cocktails')),
+                    child: Text(
+                      tr('my_cocktails_page.no_cocktails'),
+                      style: context.text.headline20White,
+                    ),
                   );
                 } else {
                   content = RefreshIndicator(

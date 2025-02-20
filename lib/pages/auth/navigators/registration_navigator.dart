@@ -25,6 +25,7 @@ class RegistrationNavigatorState extends State<RegistrationNavigator> {
   String _phone = '';
   String _gender = '';
   String _dateOfBirth = '';
+  String _promoCode = '';
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +55,7 @@ class RegistrationNavigatorState extends State<RegistrationNavigator> {
           phone: _phone,
           gender: _gender,
           dateOfBirth: _dateOfBirth,
+          referralCode: _promoCode,
         ),
         RegistrationPage5(
           pageController: _pageController,
@@ -74,6 +76,7 @@ class RegistrationNavigatorState extends State<RegistrationNavigator> {
     String phone,
     String gender,
     String dateOfBirth,
+    String promoCode,
   ) {
     setState(() {
       _firstName = firstName;
@@ -81,6 +84,7 @@ class RegistrationNavigatorState extends State<RegistrationNavigator> {
       _phone = phone;
       _gender = gender;
       _dateOfBirth = dateOfBirth;
+      _promoCode = promoCode;
     });
   }
 }

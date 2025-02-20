@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -258,7 +259,7 @@ class CocktailCreationBloc
         "description": state.description, // Используем данные из состояния
         "ingredients": ingredients, // Ингредиенты в виде строки
         "tools": tools, // Инструменты в виде строки
-        "instructions": instructions,
+        "instruction": jsonEncode(instructions),
         "video_url": state.videoUrl, // Используем данные из состояния
         "user": userId,
       };

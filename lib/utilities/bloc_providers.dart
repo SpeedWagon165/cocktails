@@ -16,6 +16,8 @@ import 'package:cocktails/provider/profile_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/avatar_cubit/avatar_cubit.dart';
+import '../bloc/goods_bloc/goods_bloc.dart';
+import '../provider/store_repository.dart';
 
 abstract class BlocProviders {
   static get getProviders => [
@@ -51,5 +53,8 @@ abstract class BlocProviders {
         BlocProvider(
           create: (context) => AuthBloc(AuthRepository()),
         ),
+        BlocProvider<GoodsBloc>(
+            create: (context) =>
+                GoodsBloc(GoodsRepository())..add(FetchGoods())),
       ];
 }

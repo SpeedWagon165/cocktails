@@ -87,7 +87,7 @@ class ChangePasswordStep2State extends State<ChangePasswordStep2> {
               child: Column(
                 children: [
                   CustomAppBar(
-                    text: tr("change_pass_pages.change_pass"),
+                    text: tr("change_pass_pages.confirmation_code"),
                     // Локализация текста "Смена пароля"
                     arrow: true,
                     auth: false,

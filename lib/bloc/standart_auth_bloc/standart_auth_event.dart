@@ -46,6 +46,7 @@ class RegisterRequested extends AuthEvent {
   final String dateOfBirth;
   final String password;
   final String email;
+  final String refCode; // Новый параметр
 
   RegisterRequested({
     required this.firstName,
@@ -55,6 +56,7 @@ class RegisterRequested extends AuthEvent {
     required this.dateOfBirth,
     required this.password,
     required this.email,
+    required this.refCode, // Обязательный параметр
   });
 
   @override
@@ -66,6 +68,7 @@ class RegisterRequested extends AuthEvent {
         dateOfBirth,
         password,
         email,
+        refCode,
       ];
 }
 

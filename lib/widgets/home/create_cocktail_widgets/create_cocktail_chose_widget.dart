@@ -108,7 +108,7 @@ class NewCocktailViewState extends State<NewCocktailView> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          constraints: BoxConstraints(maxWidth: screenWidth * 0.8),
+          constraints: BoxConstraints(maxWidth: screenWidth * 0.75),
           decoration: BoxDecoration(
             border: Border.all(color: const Color(0xFF343434), width: 1),
             borderRadius: BorderRadius.circular(10),

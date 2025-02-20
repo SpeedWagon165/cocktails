@@ -5,86 +5,102 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/goods_bloc/goods_bloc.dart';
-import '../../provider/store_repository.dart';
 import '../../widgets/custom_arrowback.dart';
 import '../../widgets/store/goods_search_bar.dart';
 
-class StorePage extends StatelessWidget {
+class StorePage extends StatefulWidget {
   const StorePage({super.key});
+
+  @override
+  _StorePageState createState() => _StorePageState();
+}
+
+class _StorePageState extends State<StorePage> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    const threshold = 100.0;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll - currentScroll <= threshold) {
+      context.read<GoodsBloc>().add(FetchMoreGoods());
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: BlocProvider(
-          create: (context) => GoodsBloc(GoodsRepository())..add(FetchGoods()),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
-            child: Column(
-              children: [
-                CustomAppBar(
-                  text: tr('store.title'), // локализованная строка
-                  arrow: false,
-                  auth: false,
-                  onPressed: null,
-                ),
-                const SizedBox(height: 16),
-                const GoodsSearchBar(),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: BlocBuilder<GoodsBloc, GoodsState>(
-                    builder: (context, state) {
-                      if (state is GoodsLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (state is GoodsLoaded) {
-                        return ListView.builder(
-                          itemCount: state.goods.length,
-                          itemBuilder: (context, index) {
+        child: Padding(
+          padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
+          child: Column(
+            children: [
+              CustomAppBar(
+                text: tr('store.title'),
+                arrow: false,
+                auth: false,
+                onPressed: null,
+              ),
+              const SizedBox(height: 16),
+              const GoodsSearchBar(),
+              const SizedBox(height: 16),
+              Expanded(
+                child: BlocBuilder<GoodsBloc, GoodsState>(
+                  builder: (context, state) {
+                    if (state is GoodsLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is GoodsLoaded) {
+                      return ListView.builder(
+                        controller: _scrollController,
+                        itemCount:
+                            state.goods.length + (state.next != null ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index < state.goods.length) {
                             final product = state.goods[index];
-                            final minPrice = _getMinPrice(product.links);
                             return ProductCard(
                               name: product.name ??
                                   tr("store.default_product_name"),
                               imageUrl: product.photo ?? '',
-                              price: minPrice,
+                              price: product.price,
                               product: product,
                             );
-                          },
-                        );
-                      } else if (state is GoodsError) {
-                        return Center(
-                            child: Text(tr('errors.server_error'),
-                                style: context.text.bodyText16White));
-                      }
-                      return Center(child: Text(tr('store.empty_message')));
-                    },
-                  ),
+                          } else {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+                        },
+                      );
+                    } else if (state is GoodsError) {
+                      return Center(
+                        child: Text(
+                          tr('errors.server_error'),
+                          style: context.text.bodyText16White,
+                        ),
+                      );
+                    }
+                    return Center(child: Text(tr('store.empty_message')));
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-
-  double _getMinPrice(Map<String, dynamic>? links) {
-    if (links == null || links.isEmpty) {
-      return 0.0; // Если ссылки пусты или null, возвращаем 0
-    }
-
-    final prices = links.values
-        .where((link) =>
-            link is Map<String, dynamic> && // Проверяем, что link - это Map
-            link.containsKey('price') && // Проверяем наличие ключа 'price'
-            link['price'] != null && // Проверяем, что значение не null
-            double.tryParse(link['price'].toString()) !=
-                null) // Проверяем корректность данных
-        .map((link) =>
-            double.parse(link['price'].toString())) // Преобразуем в double
-        .toList();
-
-    prices.sort();
-    return prices.isNotEmpty ? prices.first : 0.0;
   }
 }

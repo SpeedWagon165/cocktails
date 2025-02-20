@@ -348,6 +348,7 @@ class CocktailRepository {
     try {
       final formData = FormData.fromMap(data);
       print("Request data: $data");
+      print(formData);
 
       final response = await dio.post(
         '/recipe/',

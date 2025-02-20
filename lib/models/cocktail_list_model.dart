@@ -82,6 +82,7 @@ class Cocktail {
   }
 
   factory Cocktail.fromJson(Map<String, dynamic> json) {
+    print(json["user"]);
     return Cocktail(
       id: json["id"],
       ingredientCount: json["ingredient_count"] ?? 0,
@@ -106,7 +107,7 @@ class Cocktail {
       moderationStatus: json["moderation_status"] ?? '',
       videoUrl: json["video_url"] as String?,
       //@TODO ЗДЕСЬ НАХАРДКОЖЕНО
-      user: 38,
+      user: json["user"],
     );
   }
 

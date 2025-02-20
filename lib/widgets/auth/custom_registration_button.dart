@@ -131,7 +131,11 @@ class CustomRegistrationButton extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
+              SizedBox(
+                width: 15,
+              ),
               if (haveIcon) SvgPicture.asset(icon!),
               if (haveIcon)
                 const SizedBox(
@@ -143,6 +147,9 @@ class CustomRegistrationButton extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: context.text.bodyText16White.copyWith(fontSize: 15)),
               ),
+              SizedBox(
+                width: 15,
+              )
             ],
           ),
         ),

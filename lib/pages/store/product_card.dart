@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class ProductCard extends StatelessWidget {
   final String name;
   final String imageUrl;
-  final double price;
+  final String? price;
   final Product product; // Передаем весь продукт для переходов
 
   const ProductCard({
@@ -24,7 +24,7 @@ class ProductCard extends StatelessWidget {
       margin: const EdgeInsets.only(
         bottom: 16,
       ),
-      height: 100,
+      height: 120,
       child: Row(
         children: [
           Padding(
@@ -34,13 +34,13 @@ class ProductCard extends StatelessWidget {
               child: imageUrl.isNotEmpty
                   ? Image.network(
                       imageUrl,
-                      width: 100,
-                      height: 100,
+                      width: 120,
+                      height: 120,
                       fit: BoxFit.cover,
                     )
                   : Container(
-                      width: 100,
-                      height: 100,
+                      width: 120,
+                      height: 120,
                       color: Colors.grey,
                       child: const Icon(
                         Icons.image,
@@ -57,11 +57,12 @@ class ProductCard extends StatelessWidget {
                 Text(
                   name,
                   style: context.text.headline24White.copyWith(fontSize: 16),
+                  maxLines: 2, // Ограничиваем двумя строками
+                  overflow: TextOverflow.ellipsis, // Обрезаем и добавляем "..."
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  tr('store.price_from',
-                      namedArgs: {'count': price.toStringAsFixed(0)}),
+                  tr('store.price_from', namedArgs: {'count': price ?? '0'}),
                   // Локализованная строка
                   style: context.text.bodyText12Grey.copyWith(fontSize: 15),
                 ),
@@ -79,7 +80,7 @@ class ProductCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
+                            horizontal: 24, vertical: 2),
                       ),
                       onPressed: () {
                         productPagePopUp(context, product);

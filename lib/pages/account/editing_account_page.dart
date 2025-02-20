@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../bloc/avatar_cubit/avatar_cubit.dart';
 import '../../bloc/profile_bloc/profile_bloc.dart';
 import '../../provider/profile_repository.dart';
+import '../../utilities/language_swich.dart';
 import '../../widgets/account/account_information_widget.dart';
 import '../../widgets/account/profile_avatar.dart';
 import '../../widgets/auth/custom_registration_button.dart';
@@ -28,12 +29,23 @@ class _EditingAccountPageState extends State<EditingAccountPage> {
   final ImagePicker _picker = ImagePicker();
   String? _savedImagePath;
   late final ProfileBloc _profileBloc;
+  String _language = 'rus';
 
   @override
   void initState() {
     super.initState();
     _profileBloc = ProfileBloc(ProfileRepository());
     _profileBloc.add(FetchProfile());
+    _loadLanguage();
+  }
+
+  Future<void> _loadLanguage() async {
+    final language = await LanguageService.getLanguage();
+    if (mounted) {
+      setState(() {
+        _language = language;
+      });
+    }
   }
 
   // Функция для уменьшения размера изображения
@@ -49,6 +61,17 @@ class _EditingAccountPageState extends State<EditingAccountPage> {
       ..writeAsBytesSync(img.encodeJpg(resizedImage, quality: 70));
 
     return resizedFile;
+  }
+
+  String getLocalizedGender(String gender) {
+    switch (gender.toLowerCase()) {
+      case 'male':
+        return _language == 'rus' ? 'Мужчина' : 'Male';
+      case 'female':
+        return _language == 'rus' ? 'Женщина' : 'Female';
+      default:
+        return gender;
+    }
   }
 
   // Функция для выбора изображения с камеры или галереи
@@ -90,8 +113,7 @@ class _EditingAccountPageState extends State<EditingAccountPage> {
                 child: ProfileAvatar(),
               ),
               const SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 100.0),
+              IntrinsicWidth(
                 child: CustomRegistrationButton(
                   text: tr('edit_profile_page.upload_photo'),
                   // Локализованная строка "Загрузить фото"
@@ -144,7 +166,7 @@ class _EditingAccountPageState extends State<EditingAccountPage> {
                       AccountInformationWidget(
                         labelText: tr('edit_profile_page.gender'),
                         // Локализованная строка "Пол"
-                        infoText: gender,
+                        infoText: getLocalizedGender(gender),
                         joinPosition: JoinPosition.none,
                         isJoined: true,
                       ),

@@ -29,7 +29,7 @@ class IngredientsListCard extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 14.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -96,6 +98,7 @@ class AuthRepository {
     required String dateOfBirth,
     required String password,
     required String email,
+    String refCode = "", // Новый параметр для кода реферала
   }) async {
     try {
       print('Registering with data:');
@@ -106,6 +109,10 @@ class AuthRepository {
       print('Date of Birth: $dateOfBirth');
       print('Password: $password');
       print('Email: $email');
+      print('Ref Code: $refCode');
+
+      // Определяем операционную систему
+      final os = Platform.isAndroid ? "Android" : "ios";
 
       final response = await _dio.post(
         'http://109.71.246.251:8000/api/auth/auth/register/',
@@ -117,6 +124,8 @@ class AuthRepository {
           "date_of_birth": dateOfBirth,
           "password": password,
           "email": email,
+          "os": os, // Добавляем поле для операционной системы
+          "ref_code": refCode, // Добавляем поле для кода реферала
         },
         options: Options(
           headers: {

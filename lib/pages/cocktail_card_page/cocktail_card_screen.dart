@@ -14,6 +14,7 @@ import '../../widgets/catalog_widgets/bonus_pop_up.dart';
 import '../../widgets/coctail_card_widgets/cocktail_instruction_builder.dart';
 import '../../widgets/coctail_card_widgets/tool_list_builder.dart';
 import '../../widgets/pure_custom_arrow_back.dart';
+import '../../widgets/share_button.dart';
 import '../../widgets/store/expandable_text.dart';
 
 class CocktailCardScreen extends StatefulWidget {
@@ -205,11 +206,6 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                                         context, currentCocktail.name);
                                   }),
                             const SizedBox(height: 24.0),
-                            CustomButton(
-                              text: 'Share Recipe',
-                              onPressed: _shareRecipe,
-                              single: true, // Trigger share
-                            ),
                           ],
                         ),
                       )
@@ -221,6 +217,12 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                   left: 26.0,
                   child: PureCustomArrowBack(
                       isFromDeepLink: state is CocktailByIdLoaded)),
+              Positioned(
+                  top: 26.0,
+                  right: 26.0,
+                  child: ShareButton(
+                    onPressed: _shareRecipe,
+                  )),
               if (state is CocktailLoading)
                 const Center(child: CircularProgressIndicator()),
               Positioned(

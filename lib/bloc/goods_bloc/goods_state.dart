@@ -14,11 +14,12 @@ class GoodsLoading extends GoodsState {}
 
 class GoodsLoaded extends GoodsState {
   final List<Product> goods;
+  final String? next;
 
-  const GoodsLoaded(this.goods);
+  const GoodsLoaded({required this.goods, this.next});
 
   @override
-  List<Object?> get props => [goods];
+  List<Object?> get props => [goods, next];
 }
 
 class GoodsError extends GoodsState {

@@ -124,7 +124,7 @@ class _BonusScreenState extends State<BonusScreen> {
                                           ? promo.code!
                                           : tr(
                                               'bonus_screen.redeem_points_button'),
-                                      buttonHeight: 46,
+                                      buttonHeight: 50,
                                       single: true,
                                       haveIcon:
                                           promo.code != null ? true : false,

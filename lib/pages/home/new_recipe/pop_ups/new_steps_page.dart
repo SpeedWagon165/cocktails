@@ -56,7 +56,7 @@ class NewStepsPageState extends State<NewStepsPage> {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
                   child: CustomButton(
                     text: tr("buttons.confirm"),
                     onPressed: () {

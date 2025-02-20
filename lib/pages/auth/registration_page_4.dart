@@ -16,6 +16,7 @@ class RegistrationPage4 extends StatelessWidget {
   final String phone;
   final String gender;
   final String dateOfBirth;
+  final String referralCode;
 
   const RegistrationPage4({
     super.key,
@@ -26,6 +27,7 @@ class RegistrationPage4 extends StatelessWidget {
     required this.phone,
     required this.gender,
     required this.dateOfBirth,
+    required this.referralCode,
   });
 
   @override
@@ -123,6 +125,7 @@ class RegistrationPage4 extends StatelessWidget {
                                 dateOfBirth: dateOfBirth,
                                 password: password,
                                 email: email,
+                                refCode: referralCode,
                               ),
                             );
                         pageController.animateToPage(4,

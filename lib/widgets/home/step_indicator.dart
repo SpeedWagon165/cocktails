@@ -22,7 +22,7 @@ class StepIndicator extends StatelessWidget {
         lineWidth: 1,
         lineLength: thirdStep
             ? MediaQuery.of(context).size.width * 0.3
-            : MediaQuery.of(context).size.width * 0.6,
+            : MediaQuery.of(context).size.width * 0.5,
         finishedLineColor: const Color(0xff68C248),
         unreachedLineColor: Colors.white.withOpacity(0.2),
         activeLineColor: Colors.white,

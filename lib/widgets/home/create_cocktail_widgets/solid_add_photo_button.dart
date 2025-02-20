@@ -14,8 +14,8 @@ class SolidAddPhotoButton extends StatelessWidget {
         onTap();
       },
       child: Container(
-        height: 60, // Высота кнопки
-        width: 60, // Ширина кнопки (можно настроить под нужные размеры)
+        height: 70, // Высота кнопки
+        width: 70, // Ширина кнопки (можно настроить под нужные размеры)
         decoration: BoxDecoration(
           color: Colors.transparent, // Прозрачный фон
           borderRadius: BorderRadius.circular(12), // Закругленные углы

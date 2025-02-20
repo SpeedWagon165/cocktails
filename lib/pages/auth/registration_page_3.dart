@@ -23,6 +23,7 @@ class RegistrationPage3 extends StatefulWidget {
     String,
     String,
     String,
+    String,
   ) onPersonalInfoEntered;
 
   const RegistrationPage3({
@@ -41,6 +42,7 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _birthdateController = TextEditingController();
+  final TextEditingController _promoCodeController = TextEditingController();
   String _selectedGender = 'Male'; // Default gender value
 
   String? firstNameError;
@@ -79,6 +81,7 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
     final firstName = _firstNameController.text;
     final birthdate = _birthdateController.text;
     final phoneNumber = _phoneController.text;
+    final refCode = _promoCodeController.text;
 
     bool isValid = true;
 
@@ -116,12 +119,12 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
 
     if (isValid) {
       widget.onPersonalInfoEntered(
-        _firstNameController.text,
-        _lastNameController.text,
-        formatPhoneNumber(_phoneController.text),
-        _selectedGender,
-        formatDate(_birthdateController.text),
-      );
+          _firstNameController.text,
+          _lastNameController.text,
+          formatPhoneNumber(_phoneController.text),
+          _selectedGender,
+          formatDate(_birthdateController.text),
+          _promoCodeController.text);
       widget.pageController.animateToPage(3,
           duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     }
@@ -194,6 +197,7 @@ class _RegistrationPage3State extends State<RegistrationPage3> {
               ),
               CustomTextField(
                 labelText: tr('registration_page.referral_code_label'),
+                controller: _promoCodeController,
                 isJoined: true,
                 isReferral: true,
                 joinPosition: JoinPosition.bottom,

@@ -62,7 +62,11 @@ class BasePopup extends StatelessWidget {
                     text: text,
                     arrow: arrow,
                     onPressed: () {
-                      onPressed();
+                      if (onPressed != null) {
+                        onPressed();
+                      } else {
+                        Navigator.of(context).pop();
+                      }
                     },
                   ),
                   const SizedBox(

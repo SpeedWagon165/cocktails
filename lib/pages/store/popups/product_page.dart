@@ -12,16 +12,12 @@ void productPagePopUp(BuildContext context, Product product) {
   showCupertinoModalBottomSheet(
     context: context,
     isDismissible: true,
-    // Возможность закрытия свайпом вниз
     enableDrag: true,
-    // Включение возможности тянуть вниз
     expand: false,
-    // Не занимает весь экран сразу
     backgroundColor: Colors.transparent,
     builder: (context) {
       return BasePopup(
         text: product.name ?? tr('store.default_product_name'),
-        // Локализованная строка
         onPressed: () {
           Navigator.pop(context);
         },
@@ -48,62 +44,42 @@ void productPagePopUp(BuildContext context, Product product) {
                       ),
               ),
             ),
-            const SizedBox(
-              height: 24,
-            ),
+            const SizedBox(height: 24),
             ExpandableTextWidget(
               text: product.description ?? "Нет описания",
-              titleText: tr('store.description'), // Локализованная строка
+              titleText: tr('store.description'),
             ),
-            const SizedBox(
-              height: 24,
-            ),
-            // Создание кнопок для маркетплейсов
-            if (product.links != null)
-              ...product.links!.entries.map((entry) {
-                String marketplaceName;
-                switch (entry.key) {
-                  case 'wildberries':
-                    marketplaceName = 'Wildberries';
-                    break;
-                  case 'ozon':
-                    marketplaceName = 'Ozon';
-                    break;
-                  case 'yandex':
-                    marketplaceName = tr('store.marketplace_yandex');
-                    break;
-                  default:
-                    marketplaceName = entry.key;
-                }
-                final price = entry.value != null &&
-                        entry.value is Map &&
-                        entry.value['price'] != null
-                    ? entry.value['price'].toString()
-                    : 'N/A';
-
-                return Column(
-                  children: [
-                    RegistrationServicesButton(
-                      text: tr('store.buy_on',
-                          namedArgs: {'count': marketplaceName}),
-                      trailingText: '  $price ₽',
-                      onPressed: () {
-                        final url = entry.value['link'];
-                        if (url != null) {
-                          launchUrl(Uri.parse(url));
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                  ],
-                );
-              }).toList(),
-            const SizedBox(
-              height: 24,
-            ),
+            const SizedBox(height: 24),
+            if (product.link != null && product.link!.isNotEmpty)
+              Column(
+                children: [
+                  RegistrationServicesButton(
+                    text: tr('store.buy_on', namedArgs: {
+                      'count': _detectMarketplace(product.link!)
+                    }),
+                    trailingText: '',
+                    onPressed: () {
+                      launchUrl(Uri.parse(product.link!));
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                ],
+              ),
+            const SizedBox(height: 24),
           ],
         ),
       );
     },
   );
+}
+
+String _detectMarketplace(String link) {
+  if (link.contains('wildberries')) {
+    return 'Wildberries';
+  } else if (link.contains('ozon')) {
+    return 'Ozon';
+  } else if (link.contains('yandex')) {
+    return tr('store.marketplace_yandex');
+  }
+  return 'Магазин';
 }

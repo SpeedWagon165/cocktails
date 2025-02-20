@@ -3,14 +3,16 @@ class Product {
   final String? name;
   final String? description;
   final String? photo;
-  final Map<String, dynamic>? links;
+  final String? link;
+  final String? price;
 
   Product({
     required this.id,
+    this.price,
     this.name,
     this.description,
     this.photo,
-    this.links,
+    this.link,
   });
 
   // Фабричный метод для создания экземпляра из JSON-данных
@@ -18,13 +20,14 @@ class Product {
     return Product(
       id: json['id'],
       // id обязательно
+      price: json['price'],
       name: json['name'],
       // может быть null
       description: json['description'],
       // может быть null
       photo: json['photo'],
       // может быть null
-      links: json['links'] ?? {}, // может быть null
+      link: json['link'], // может быть null
     );
   }
 }

@@ -30,6 +30,7 @@ class CocktailCard extends StatelessWidget {
         if (profileState is ProfileLoaded) {
           userId = profileState.profileData['id']; // Получаем id пользователя
         }
+        print(cocktail.user.toString() + 'fgh');
         return BlocBuilder<CocktailListBloc, CocktailListState>(
           builder: (context, state) {
             bool isLoading = false;

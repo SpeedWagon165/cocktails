@@ -2,22 +2,29 @@ import 'package:dio/dio.dart';
 
 import '../models/store_model.dart';
 
+class GoodsResponse {
+  final List<Product> goods;
+  final String? next;
+
+  GoodsResponse({required this.goods, this.next});
+}
+
 class GoodsRepository {
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: 'http://109.71.246.251:8000/api',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
     ),
   );
 
-  Future<List<Product>> fetchGoods() async {
+  Future<GoodsResponse> fetchGoods({String? url}) async {
     try {
-      final response = await dio.get('/goods/');
+      final response = await dio.get(url ?? '/goods/');
       if (response.statusCode == 200) {
         final List<dynamic> results = response.data['results'];
-        return results.map((json) => Product.fromJson(json)).toList();
+        final goods = results.map((json) => Product.fromJson(json)).toList();
+        final next = response.data['next'] as String?;
+        return GoodsResponse(goods: goods, next: next);
       } else {
         throw Exception('Failed to load goods');
       }
@@ -26,13 +33,17 @@ class GoodsRepository {
     }
   }
 
-  Future<List<Product>> searchGoods(String query) async {
+  Future<GoodsResponse> searchGoods(String query) async {
     try {
-      final response = await dio
-          .get('/goods/', queryParameters: {'q': query, 'page_size': 50});
+      final response = await dio.get(
+        '/goods/',
+        queryParameters: {'q': query, 'page_size': 50},
+      );
       if (response.statusCode == 200) {
         final List<dynamic> results = response.data['results'];
-        return results.map((json) => Product.fromJson(json)).toList();
+        final goods = results.map((json) => Product.fromJson(json)).toList();
+        final next = response.data['next'] as String?;
+        return GoodsResponse(goods: goods, next: next);
       } else {
         throw Exception('Failed to search goods');
       }

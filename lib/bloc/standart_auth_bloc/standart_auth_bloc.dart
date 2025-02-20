@@ -106,6 +106,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         dateOfBirth: event.dateOfBirth,
         password: event.password,
         email: event.email,
+        refCode: event.refCode, // Передаём реферальный код
       );
       final authResponse =
           await authRepository.signIn(event.email, event.password);
