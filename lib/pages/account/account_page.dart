@@ -14,6 +14,7 @@ import '../auth/popups/auth_pop_up.dart';
 import 'about_app_page.dart';
 import 'change_password/change_password_step_1.dart';
 import 'editing_account_page.dart';
+import 'invite_friends_page.dart';
 import 'language.dart';
 import 'notification_settings_page.dart';
 
@@ -165,6 +166,17 @@ class _AccountPageState extends State<AccountPage> {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
                                       const NotificationSetupPage()));
+                            },
+                          ),
+                          const Divider(color: Color(0xff343434), height: 1),
+                          InfoTileAccount(
+                            icon: 'assets/images/ion_mail-notification.svg',
+                            title: tr('account_page.invite_friends'),
+                            // Локализованная строка "Уведомления"
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      const InviteFriendsPage()));
                             },
                           ),
                           const Divider(color: Color(0xff343434), height: 1),

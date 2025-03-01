@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../models/message_model.dart';
+import '../../../utilities/language_swich.dart';
 import '../../../widgets/account/chat_bubble.dart';
 import '../../../widgets/custom_arrowback.dart';
 
@@ -139,8 +141,23 @@ class SupportServicePageState extends State<SupportServicePage> {
   }
 
   // Форматирование даты для разделителя (можно использовать intl или свою функцию)
-  String formatMessageDate(DateTime date) {
-    return DateFormat.yMMMMd().format(date); // пример: "12 мая 2025"
+  Future<String> getCurrentLanguage() async {
+    String lang = await LanguageService.getLanguage();
+    if (lang == 'eng') return 'en'; // Если язык 'eng', используем 'en' для intl
+    return 'ru'; // По умолчанию русский
+  }
+
+// Функция форматирования даты сообщений с учетом языка
+  Future<String> formatMessageDate(DateTime date) async {
+    String locale = await getCurrentLanguage();
+    final now = DateTime.now();
+
+    if (date.year == now.year) {
+      return DateFormat("d MMMM", locale).format(date); // "12 мая" или "May 12"
+    } else {
+      return DateFormat("d MMMM yyyy", locale)
+          .format(date); // "12 мая 2023" или "May 12, 2023"
+    }
   }
 
   @override
@@ -187,13 +204,24 @@ class SupportServicePageState extends State<SupportServicePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (showDateDivider)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(
-                              formatMessageDate(message.timestamp),
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.black54),
-                            ),
+                          FutureBuilder<String>(
+                            future: formatMessageDate(message.timestamp),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return SizedBox
+                                    .shrink(); // Ждем загрузки, скрываем элемент
+                              }
+                              return Center(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Text(
+                                    snapshot.data!,
+                                    style: context.text.bodyText16White,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ChatBubble(
                           message: message,

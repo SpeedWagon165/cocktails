@@ -74,6 +74,7 @@ class CocktailRepository {
         queryParameters: {
           'page': page,
           'page_size': pageSize,
+          'ordering': 'title',
         },
       );
 
@@ -329,7 +330,12 @@ class CocktailRepository {
 
   Future<List<Tool>> fetchTools() async {
     try {
-      final response = await dio.get('/recipe/tool/');
+      final response = await dio.get(
+        '/recipe/tool/',
+        queryParameters: {
+          'ordering': 'name',
+        },
+      );
       print(response.statusCode);
       print(response.data);
       if (response.statusCode == 200) {

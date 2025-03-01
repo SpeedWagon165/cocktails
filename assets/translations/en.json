@@ -22,6 +22,7 @@
     "language": "Language",
     "password": "Password",
     "notifications": "Notifications",
+    "invite_friends": "Invite friends",
     "support": "Contact Support",
     "about_app": "About the App"
   },
@@ -130,6 +131,7 @@
     "start_search": "Start searching for recipes",
     "description": "Description",
     "filter": "Filter",
+    "sort_by_popularity": "By popularity",
     "sort_alphabet_asc": "Alphabetically (A-Z)",
     "sort_alphabet_desc": "Alphabetically (Z-A)",
     "sort_by_video": "By video availability",

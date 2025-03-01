@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cocktails/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -21,22 +22,20 @@ class CocktailCardSlider extends StatefulWidget {
 
 class _CocktailCardSliderState extends State<CocktailCardSlider> {
   YoutubePlayerController? _controller;
+  bool _showControls = false;
+  Timer? _hideControlsTimer;
   double imageHeight = 340;
 
   @override
   void initState() {
     super.initState();
     if (widget.imageUrls.isNotEmpty) {
-      if (widget.isImageAvailable == true) {
-        imageHeight = 340;
-      } else {
-        imageHeight = 200;
-      }
+      imageHeight = widget.isImageAvailable ? 340 : 200;
     } else {
       imageHeight = 200;
     }
 
-    // Инициализируем контроллер только если есть videoUrl
+    // Инициализируем контроллер YouTube, если есть видео
     if (widget.videoUrl != null &&
         YoutubePlayer.convertUrlToId(widget.videoUrl!) != null) {
       final videoId = YoutubePlayer.convertUrlToId(widget.videoUrl!);
@@ -45,82 +44,67 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
         flags: const YoutubePlayerFlags(
           autoPlay: false,
           mute: false,
-          disableDragSeek: true, // Отключаем перетаскивание
+          disableDragSeek: true,
         ),
       );
     }
   }
 
-  // Метод для перемотки назад на 5 секунд
-  void rewind() {
-    final currentPosition = _controller?.value.position ?? Duration.zero;
-    final newPosition = currentPosition - const Duration(seconds: 5);
-    _controller
-        ?.seekTo(newPosition > Duration.zero ? newPosition : Duration.zero);
+  // Переключение воспроизведения (пауза/играет)
+  void _togglePlayPause() {
+    if (_controller == null) return;
+
+    if (_controller!.value.isPlaying) {
+      _controller!.pause();
+    } else {
+      _controller!.play();
+    }
+    setState(() {}); // Обновляем UI
   }
 
-  // Метод для перемотки вперед на 5 секунд
-  void fastForward() {
-    final currentPosition = _controller?.value.position ?? Duration.zero;
-    final videoDuration = _controller?.metadata.duration ?? Duration.zero;
-    final newPosition = currentPosition + const Duration(seconds: 5);
-    _controller
-        ?.seekTo(newPosition < videoDuration ? newPosition : videoDuration);
+  // Показываем кнопку паузы и скрываем через 3 секунды
+  void _showPauseButton() {
+    setState(() {
+      _showControls = true;
+    });
+
+    _hideControlsTimer?.cancel();
+    _hideControlsTimer = Timer(const Duration(seconds: 3), () {
+      setState(() {
+        _showControls = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Логика для отображения изображений и видео
     final List<Widget> mediaWidgets = [];
 
-    // Добавляем изображения в слайдер или заглушку, если изображений нет
+    // Добавляем изображения
     if (widget.imageUrls.isNotEmpty) {
       for (var url in widget.imageUrls) {
         mediaWidgets.add(
-          Stack(
-            children: [
-              Image.network(
-                url,
-                fit: BoxFit.cover,
+          Image.network(
+            url,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: 340,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
                 width: double.infinity,
                 height: 340,
-                errorBuilder: (context, error, stackTrace) {
-                  // Заглушка на случай ошибки загрузки изображения
-                  return Container(
-                    width: double.infinity,
-                    height: 340,
-                    color: Colors.grey,
-                    child: const Icon(
-                      Icons.image_not_supported,
-                      color: Colors.white,
-                      size: 50,
-                    ),
-                  );
-                },
-              ),
-              Positioned(
-                right: 16.0,
-                bottom: 10.0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 13.0, vertical: 6.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40.0),
-                    color: Colors.white,
-                  ),
-                  child: Text(
-                    "${mediaWidgets.length + 1}/${widget.imageUrls.length + (widget.videoUrl != null ? 1 : 0)}",
-                    style: context.text.bodyText12Grey
-                        .copyWith(fontSize: 13, color: Colors.black),
-                  ),
+                color: Colors.grey,
+                child: const Icon(
+                  Icons.image_not_supported,
+                  color: Colors.white,
+                  size: 50,
                 ),
-              ),
-            ],
+              );
+            },
           ),
         );
       }
     } else {
-      // Если изображений нет, добавляем заглушку
       mediaWidgets.add(
         Container(
           width: double.infinity,
@@ -135,35 +119,37 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
       );
     }
 
-    // Добавляем YouTube-видео, если URL присутствует
+    // Добавляем YouTube-видео
     if (widget.videoUrl != null && _controller != null) {
       mediaWidgets.add(
-        Stack(
-          children: [
-            YoutubePlayer(
-              controller: _controller!,
-              showVideoProgressIndicator: true,
-            ),
-            GestureDetector(
-              // Обработка двойного нажатия на левую часть экрана для перемотки назад
-              onDoubleTapDown: (details) {
-                final box = context.findRenderObject() as RenderBox?;
-                final localPosition =
-                    box?.globalToLocal(details.globalPosition);
-                if (localPosition != null &&
-                    localPosition.dx < MediaQuery.of(context).size.width / 2) {
-                  rewind();
-                } else {
-                  fastForward();
-                }
-              },
-              child: Container(
-                color: Colors.transparent,
-                width: double.infinity,
-                height: double.infinity,
+        GestureDetector(
+          onTap: _showPauseButton,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              YoutubePlayer(
+                controller: _controller!,
+                showVideoProgressIndicator: true,
               ),
-            ),
-          ],
+              if (_showControls)
+                Positioned(
+                  child: GestureDetector(
+                    onTap: _togglePlayPause,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.black54,
+                      radius: 30,
+                      child: Icon(
+                        _controller!.value.isPlaying
+                            ? Icons.pause
+                            : Icons.play_arrow,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       );
     }
@@ -186,8 +172,8 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
 
   @override
   void dispose() {
-    // Проверяем, инициализирован ли контроллер, перед его удалением
     _controller?.dispose();
+    _hideControlsTimer?.cancel();
     super.dispose();
   }
 }

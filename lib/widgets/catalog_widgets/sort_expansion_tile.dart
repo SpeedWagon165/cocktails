@@ -24,6 +24,10 @@ class SortExpansionTileState extends State<SortExpansionTile> {
   // Эти названия должны быть синхронизированы с API-параметрами
   final List<Map<String, String>> sortOptions = [
     {
+      'label': 'catalog_page.sort_by_popularity',
+      'apiField': '-popularity',
+    },
+    {
       'label': 'catalog_page.sort_alphabet_asc',
       'apiField': 'title',
     },

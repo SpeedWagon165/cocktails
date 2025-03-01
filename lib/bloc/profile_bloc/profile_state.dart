@@ -29,3 +29,10 @@ class ProfileError extends ProfileState {
   @override
   List<Object> get props => [message];
 }
+
+class ReferralCodeLoaded extends ProfileState {
+  // Новое состояние
+  final String referralCode;
+
+  ReferralCodeLoaded(this.referralCode);
+}

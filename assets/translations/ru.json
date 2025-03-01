@@ -22,6 +22,7 @@
     "language": "Язык",
     "password": "Пароль",
     "notifications": "Уведомления",
+    "invite_friends": "Пригласить друзей",
     "support": "Связаться с поддержкой",
     "about_app": "О приложении"
   },
@@ -130,6 +131,7 @@
     "start_search": "Начните поиск рецептов",
     "description": "Описание",
     "filter": "Фильтр",
+    "sort_by_popularity": "По популярности",
     "sort_alphabet_asc": "По алфавиту (А-Я)",
     "sort_alphabet_desc": "По алфавиту (Я-А)",
     "sort_by_video": "По наличию видео",

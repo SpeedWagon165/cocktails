@@ -91,6 +91,18 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
           });
           print(currentCocktail.moderationStatus);
         }
+        if (state is CocktailSearchLoaded) {
+          print("CocktailLoaded state received");
+          final updatedCocktail = state.cocktails.firstWhere(
+            (c) => c.id == widget.cocktail?.id,
+            orElse: () => widget.cocktail!,
+          );
+
+          setState(() {
+            currentCocktail = updatedCocktail;
+          });
+          print(currentCocktail.moderationStatus);
+        }
       }
     }, builder: (context, state) {
       return SafeArea(
@@ -99,7 +111,8 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
             children: [
               if (state is CocktailByIdLoaded ||
                   state is CocktailLoaded ||
-                  state is UserCocktailLoaded)
+                  state is UserCocktailLoaded ||
+                  state is CocktailSearchLoaded)
                 SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

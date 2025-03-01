@@ -17,6 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/avatar_cubit/avatar_cubit.dart';
 import '../bloc/goods_bloc/goods_bloc.dart';
+import '../bloc/referal_bloc/referal_bloc.dart';
 import '../provider/store_repository.dart';
 
 abstract class BlocProviders {
@@ -56,5 +57,8 @@ abstract class BlocProviders {
         BlocProvider<GoodsBloc>(
             create: (context) =>
                 GoodsBloc(GoodsRepository())..add(FetchGoods())),
+        BlocProvider<ReferralBloc>(
+          create: (context) => ReferralBloc(ProfileRepository()),
+        )
       ];
 }

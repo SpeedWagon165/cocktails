@@ -75,4 +75,31 @@ class ProfileRepository {
       throw Exception('Error fetching profile: $e');
     }
   }
+
+  Future<String> fetchReferralCode() async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        throw Exception('Token not found');
+      }
+      final response = await dio.get(
+        '/profile/referral/',
+        options: Options(
+          headers: {
+            'Authorization': 'Token $token',
+          },
+        ),
+      );
+      print(response.toString());
+      if (response.statusCode == 200) {
+        // Теперь ожидаем, что ответ имеет формат: {"code": "TsWKV6Oqgq6k"}
+        final referralCode = response.data['code'];
+        return referralCode;
+      } else {
+        throw Exception('Failed to load referral code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching referral code: $e');
+    }
+  }
 }
