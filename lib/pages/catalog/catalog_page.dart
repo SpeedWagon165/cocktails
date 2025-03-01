@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/cocktail_list_bloc/cocktail_list_bloc.dart';
+import '../../widgets/catalog_widgets/custom_tab_indicator.dart';
 import '../../widgets/custom_arrowback.dart';
 import '../../widgets/home/search_bar_widget.dart';
 
@@ -57,13 +58,18 @@ class _CatalogPageState extends State<CatalogPage> {
 
                 /// Вкладки
                 TabBar(
-                  labelColor: Colors.white, // Цвет активной вкладки
-                  unselectedLabelColor: Colors.grey, // Цвет неактивной вкладки
-                  indicatorColor: Colors.black, // Цвет линии под вкладкой
+                  labelColor: Colors.white,
+                  // Цвет активной вкладки
+                  unselectedLabelColor: Colors.grey,
+                  // Цвет неактивной вкладки
+                  indicator: CustomTabIndicator(),
+                  // Кастомный индикатор
+                  indicatorWeight: 0.0,
+                  dividerHeight: 0,
 
                   tabs: [
-                    Tab(text: tr('catalog_page.all')), // алко
-                    Tab(text: tr('catalog_page.favorites')), // безалко
+                    Tab(text: tr('catalog_page.all')), // Алко
+                    Tab(text: tr('catalog_page.favorites')), // Безалко
                   ],
                 ),
 

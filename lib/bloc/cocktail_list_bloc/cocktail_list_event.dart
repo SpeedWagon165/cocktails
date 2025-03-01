@@ -16,11 +16,12 @@ class FetchCocktailById extends CocktailListEvent {
 class FetchCocktails extends CocktailListEvent {
   final int page;
   final int pageSize;
+  final bool? alc; // Новый параметр
 
-  const FetchCocktails({this.page = 1, this.pageSize = 20});
+  const FetchCocktails({this.page = 1, this.pageSize = 20, this.alc});
 
   @override
-  List<Object> get props => [page, pageSize];
+  List<Object> get props => [page, pageSize, alc ?? ''];
 }
 
 // Событие для загрузки коктейлей пользователя

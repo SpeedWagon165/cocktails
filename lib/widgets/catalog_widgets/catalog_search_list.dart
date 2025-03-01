@@ -57,8 +57,7 @@ class _CatalogSearchListState extends State<CatalogSearchList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: ListView.builder(
+    return ListView.builder(
       controller: _scrollController,
       itemCount: widget.hasReachedMax
           ? widget.searchList.length
@@ -74,7 +73,7 @@ class _CatalogSearchListState extends State<CatalogSearchList> {
           );
         }
       },
-    ));
+    );
   }
 
   @override

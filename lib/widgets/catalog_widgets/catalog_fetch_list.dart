@@ -44,8 +44,7 @@ class _CatalogFetchListState extends State<CatalogFetchList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: ListView.builder(
+    return ListView.builder(
       controller: _scrollController,
       itemCount: widget.hasReachedMax
           ? widget.fetchList.length
@@ -61,7 +60,7 @@ class _CatalogFetchListState extends State<CatalogFetchList> {
           );
         }
       },
-    ));
+    );
   }
 
   @override

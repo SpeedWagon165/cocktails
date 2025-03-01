@@ -67,6 +67,7 @@ class CocktailRepository {
   Future<List<Cocktail>> fetchCocktails({
     int page = 1,
     int pageSize = 20,
+    bool? alc,
   }) async {
     try {
       final response = await dio.get(
@@ -75,6 +76,7 @@ class CocktailRepository {
           'page': page,
           'page_size': pageSize,
           'ordering': 'title',
+          if (alc != null) 'alc': alc ? 'True' : 'False',
         },
       );
 
@@ -135,6 +137,7 @@ class CocktailRepository {
     String? ordering,
     int? page,
     int? pageSize,
+    bool? alc,
   }) async {
     try {
       final Map<String, dynamic> queryParameters = {
@@ -144,6 +147,7 @@ class CocktailRepository {
         if (ordering != null) 'ordering': ordering,
         if (page != null) 'page': page,
         if (pageSize != null) 'page_size': pageSize,
+        if (alc != null) 'alc': alc ? 'True' : 'False',
       };
       final response =
           await dio.get('/recipe/', queryParameters: queryParameters);
