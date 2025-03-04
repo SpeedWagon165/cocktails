@@ -21,7 +21,7 @@ class FetchCocktails extends CocktailListEvent {
   const FetchCocktails({this.page = 1, this.pageSize = 20, this.alc});
 
   @override
-  List<Object> get props => [page, pageSize, alc ?? ''];
+  List<Object> get props => [page, pageSize, alc ?? false];
 }
 
 // Событие для загрузки коктейлей пользователя
@@ -50,15 +50,16 @@ class SearchCocktails extends CocktailListEvent {
   final String? ordering; // Sorting (optional)
   final int page; // Page number (optional)
   final int pageSize; // Page size (optional)
+  final bool? alc;
 
-  const SearchCocktails({
-    this.query,
-    this.ingredients,
-    this.tools,
-    this.ordering,
-    this.page = 1,
-    this.pageSize = 20,
-  });
+  const SearchCocktails(
+      {this.query,
+      this.ingredients,
+      this.tools,
+      this.ordering,
+      this.page = 1,
+      this.pageSize = 20,
+      this.alc});
 
   @override
   List<Object> get props => [
@@ -69,6 +70,7 @@ class SearchCocktails extends CocktailListEvent {
         // Заменяем null на пустую строку
         ordering ?? '',
         // Заменяем null на пустую строку
+        alc ?? false
       ];
 }
 
@@ -79,15 +81,16 @@ class SearchCocktailsLoadMore extends CocktailListEvent {
   final String? ordering; // Sorting (optional)
   final int page; // Page number (optional)
   final int pageSize; // Page size (optional)
+  final bool? alc;
 
-  const SearchCocktailsLoadMore({
-    this.query,
-    this.ingredients,
-    this.tools,
-    this.ordering,
-    this.page = 1,
-    this.pageSize = 20,
-  });
+  const SearchCocktailsLoadMore(
+      {this.query,
+      this.ingredients,
+      this.tools,
+      this.ordering,
+      this.page = 1,
+      this.pageSize = 20,
+      this.alc});
 
   @override
   List<Object> get props => [
@@ -98,6 +101,7 @@ class SearchCocktailsLoadMore extends CocktailListEvent {
         // Заменяем null на пустую строку
         ordering ?? '',
         // Заменяем null на пустую строку
+        alc ?? false,
       ];
 }
 

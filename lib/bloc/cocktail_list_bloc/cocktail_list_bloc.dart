@@ -53,6 +53,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         final newCocktails = await repository.fetchCocktails(
           page: event.page,
           pageSize: event.pageSize,
+          alc: event.alc,
         );
 
         if (newCocktails.isEmpty) {
@@ -80,9 +81,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
       emit(CocktailLoading());
       try {
         final cocktails = await repository.fetchCocktails(
-          page: event.page,
-          pageSize: event.pageSize,
-        );
+            page: event.page, pageSize: event.pageSize, alc: event.alc);
 
         if (cocktails.length < event.pageSize) {
           emit(CocktailLoaded(cocktails, 'title', hasReachedMax: true));
@@ -125,6 +124,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         ordering: event.ordering,
         page: event.page,
         pageSize: event.pageSize,
+        alc: event.alc,
       );
 
       emit(CocktailSearchLoaded(
@@ -153,6 +153,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
           ingredients: event.ingredients,
           page: event.page,
           pageSize: event.pageSize,
+          alc: event.alc,
         );
 
         if (newCocktails.cocktails.isEmpty) {
@@ -329,5 +330,17 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         emit(CocktailError('Не удалось опубликовать коктейль: $e'));
       }
     }
+  }
+}
+
+class AlcoholicCocktailBloc extends CocktailListBloc {
+  AlcoholicCocktailBloc(CocktailRepository repository) : super(repository) {
+    add(FetchCocktails(page: 1, pageSize: 20, alc: true));
+  }
+}
+
+class NonAlcoholicCocktailBloc extends CocktailListBloc {
+  NonAlcoholicCocktailBloc(CocktailRepository repository) : super(repository) {
+    add(FetchCocktails(page: 1, pageSize: 20, alc: false));
   }
 }
