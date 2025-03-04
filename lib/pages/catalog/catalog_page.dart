@@ -68,8 +68,8 @@ class _CatalogPageState extends State<CatalogPage> {
                   dividerHeight: 0,
 
                   tabs: [
-                    Tab(text: tr('catalog_page.alcoholic')), // Алко
-                    Tab(text: tr('catalog_page.nonAlcoholic')), // Безалко
+                    Tab(text: tr('catalog_page.alco')), // Алко
+                    Tab(text: tr('catalog_page.nonAlco')), // Безалко
                   ],
                 ),
 
@@ -77,8 +77,8 @@ class _CatalogPageState extends State<CatalogPage> {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      /// Вкладка 1: алко
-                      BlocBuilder<AlcoholicCocktailBloc, CocktailListState>(
+                      /// Вкладка 1: алкогольные
+                      BlocBuilder<CocktailListBloc, CocktailListState>(
                         builder: (context, state) {
                           if (state is CocktailLoading) {
                             return const Center(
@@ -106,8 +106,8 @@ class _CatalogPageState extends State<CatalogPage> {
                         },
                       ),
 
-                      /// Вкладка 2: безолкагольные
-                      BlocBuilder<NonAlcoholicCocktailBloc, CocktailListState>(
+                      /// Вкладка 2: безалкогольные
+                      BlocBuilder<CocktailListBloc, CocktailListState>(
                         builder: (context, state) {
                           if (state is CocktailLoading) {
                             return const Center(

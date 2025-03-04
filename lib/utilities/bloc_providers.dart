@@ -22,12 +22,6 @@ import '../provider/store_repository.dart';
 
 abstract class BlocProviders {
   static get getProviders => [
-        BlocProvider<AlcoholicCocktailBloc>(
-          create: (context) => AlcoholicCocktailBloc(CocktailRepository()),
-        ),
-        BlocProvider<NonAlcoholicCocktailBloc>(
-          create: (context) => NonAlcoholicCocktailBloc(CocktailRepository()),
-        ),
         BlocProvider(create: (context) => DeepLinkNavigationBloc()),
         BlocProvider(
           create: (context) => CocktailCreationBloc(CocktailRepository()),

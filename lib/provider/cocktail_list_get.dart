@@ -245,38 +245,35 @@ class CocktailRepository {
     try {
       Response response;
       if (isFavorite) {
-        // Удаление из избранного
         response = await dio.post(
           url,
           data: {'recipe': recipeId},
-          options: Options(
-            headers: {
-              'Authorization': 'Token $token',
-            },
-          ),
+          options: Options(headers: {'Authorization': 'Token $token'}),
         );
       } else {
-        // Добавление в избранное
         response = await dio.post(
           url,
           data: {'recipe': recipeId},
-          options: Options(
-            headers: {
-              'Authorization': 'Token $token',
-            },
-          ),
+          options: Options(headers: {'Authorization': 'Token $token'}),
         );
       }
 
-      // Проверяем коды статусов
       if (response.statusCode != 200 &&
           response.statusCode != 204 &&
           response.statusCode != 201) {
         throw Exception(
             'Failed to update favorite status: ${response.statusCode}');
       }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404 &&
+          e.response?.data['detail'] == "Recipe is not in favorites") {
+        log("Recipe is not in favorites, marking icon as inactive.");
+        return; // Просто выходим без ошибки
+      }
+      log('Error toggling favorite status', error: e);
+      throw Exception('Failed to update favorite status: $e');
     } catch (e, stacktrace) {
-      log('Error toggling favorite status', error: e, stackTrace: stacktrace);
+      log('Unexpected error', error: e, stackTrace: stacktrace);
       throw Exception('Failed to update favorite status: $e');
     }
   }
