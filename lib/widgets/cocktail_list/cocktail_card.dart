@@ -11,7 +11,8 @@ import '../../models/cocktail_list_model.dart';
 class CocktailCard extends StatelessWidget {
   final bool favoritePage;
   final bool myCocktailPage;
-
+  final bool catalogPage;
+  final bool alcoholPage;
   final Cocktail cocktail;
 
   const CocktailCard({
@@ -19,6 +20,8 @@ class CocktailCard extends StatelessWidget {
     required this.cocktail,
     this.favoritePage = false,
     this.myCocktailPage = false,
+    this.catalogPage = false,
+    this.alcoholPage = false,
   });
 
   @override
@@ -51,6 +54,8 @@ class CocktailCard extends StatelessWidget {
                     .push(
                   MaterialPageRoute(
                     builder: (context) => CocktailCardScreen(
+                      catalogPage: catalogPage,
+                      alcoholPage: alcoholPage,
                       cocktail: cocktail,
                       userId: userId,
                       myCocktails: myCocktailPage,
@@ -147,7 +152,17 @@ class CocktailCard extends StatelessWidget {
                         onTap: isLoading
                             ? null
                             : () async {
-                                context.read<CocktailListBloc>().add(
+                                if (favoritePage == true)
+                                  context.read<CocktailListBloc>().add(
+                                        ToggleFavoriteCocktail(cocktail.id,
+                                            cocktail.isFavorite, favoritePage),
+                                      );
+                                if (favoritePage == false)
+                                  context.read<AlcoholicCocktailBloc>().add(
+                                        ToggleFavoriteCocktail(cocktail.id,
+                                            cocktail.isFavorite, favoritePage),
+                                      );
+                                context.read<NonAlcoholicCocktailBloc>().add(
                                       ToggleFavoriteCocktail(cocktail.id,
                                           cocktail.isFavorite, favoritePage),
                                     );

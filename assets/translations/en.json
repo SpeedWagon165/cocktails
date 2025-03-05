@@ -139,7 +139,9 @@
     "prepared": "Prepared",
     "bonus_take_title": "You got 15 points!",
     "bonus_take_subtitle": "Congratulations! Now you know how to make a “{name}”",
-    "good": "Ok"
+    "good": "Ok",
+    "alco": "Alcoholic",
+    "nonAlco": "Non-alcoholic"
   },
   "my_cocktails_page": {
     "title": "My Recipes ({count})",

@@ -53,6 +53,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         final newCocktails = await repository.fetchCocktails(
           page: event.page,
           pageSize: event.pageSize,
+          alc: event.alc,
         );
 
         if (newCocktails.isEmpty) {
@@ -82,6 +83,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         final cocktails = await repository.fetchCocktails(
           page: event.page,
           pageSize: event.pageSize,
+          alc: event.alc,
         );
 
         if (cocktails.length < event.pageSize) {
@@ -125,6 +127,7 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         ordering: event.ordering,
         page: event.page,
         pageSize: event.pageSize,
+        alc: event.alc,
       );
 
       emit(CocktailSearchLoaded(
@@ -287,19 +290,33 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
     final currentState = state;
 
     if (currentState is CocktailLoaded) {
-      emit(CocktailLoading()); // Показать состояние загрузки
-
+      // Если мы в состоянии обычного списка
       try {
         await repository.claimRecipe(event.cocktailId);
 
-        // Обновляем состояние, чтобы показать, что рецепт отмечен как приготовленный
         final updatedCocktails = currentState.cocktails.map((cocktail) {
           return cocktail.id == event.cocktailId
-              ? cocktail.copyWith(claimed: true) // Обновляем статус claimed
+              ? cocktail.copyWith(claimed: true)
               : cocktail;
         }).toList();
 
         emit(CocktailLoaded(updatedCocktails, currentState.currentSortOption));
+      } catch (e) {
+        emit(
+            CocktailError('Не удалось отметить рецепт как приготовленный: $e'));
+      }
+    } else if (currentState is CocktailSearchLoaded) {
+      // Если мы в состоянии поиска
+      try {
+        await repository.claimRecipe(event.cocktailId);
+
+        final updatedCocktails = currentState.cocktails.map((cocktail) {
+          return cocktail.id == event.cocktailId
+              ? cocktail.copyWith(claimed: true)
+              : cocktail;
+        }).toList();
+
+        emit(currentState.copyWith(cocktails: updatedCocktails));
       } catch (e) {
         emit(
             CocktailError('Не удалось отметить рецепт как приготовленный: $e'));
@@ -329,5 +346,166 @@ class CocktailListBloc extends Bloc<CocktailListEvent, CocktailListState> {
         emit(CocktailError('Не удалось опубликовать коктейль: $e'));
       }
     }
+  }
+}
+
+class AlcoholicCocktailBloc extends CocktailListBloc {
+  AlcoholicCocktailBloc(CocktailRepository repository) : super(repository) {
+    add(FetchCocktails(page: 1, pageSize: 20, alc: true));
+  }
+
+  @override
+  void _onToggleFavoriteCocktail(
+      ToggleFavoriteCocktail event, Emitter<CocktailListState> emit) async {
+    final currentState = state;
+    if (currentState is CocktailLoaded) {
+      final updatedLoadingStates =
+          Map<int, bool>.from(currentState.loadingStates);
+      updatedLoadingStates[event.cocktailId] = true;
+      emit(CocktailLoaded(
+          currentState.cocktails, currentState.currentSortOption,
+          loadingStates: updatedLoadingStates));
+      try {
+        await repository.toggleFavorite(event.cocktailId, event.isFavorite);
+        updatedLoadingStates[event.cocktailId] = false;
+        if (event.favoritePage) {
+          add(const FetchFavoriteCocktails());
+        } else {
+          // Вызов с передачей alc: true для алкогольного блока
+          final updatedCocktails = currentState.cocktails.map((cocktail) {
+            if (cocktail.id == event.cocktailId) {
+              return cocktail.copyWith(
+                  isFavorite: !cocktail.isFavorite); // Инверсия значения
+            }
+            return cocktail;
+          }).toList();
+
+          emit(currentState.copyWith(
+            cocktails: updatedCocktails,
+            loadingStates: updatedLoadingStates,
+          ));
+        }
+      } catch (e) {
+        emit(CocktailError(
+            'Не удалось изменить статус избранного: ${e.toString()}'));
+      }
+    }
+    if (currentState is CocktailSearchLoaded) {
+      final updatedLoadingStates =
+          Map<int, bool>.from(currentState.loadingStates);
+      updatedLoadingStates[event.cocktailId] = true;
+
+      // Сначала эмитим состояние с флагом загрузки
+      emit(currentState.copyWith(loadingStates: updatedLoadingStates));
+
+      try {
+        await repository.toggleFavorite(event.cocktailId, event.isFavorite);
+
+        updatedLoadingStates[event.cocktailId] = false;
+
+        // Обновляем данные коктейлей в избранном
+        if (event.favoritePage) {
+          add(const FetchFavoriteCocktails());
+        } else {
+          // Обновляем локально коктейли, изменяя только `isFavorite`
+          final updatedCocktails = currentState.cocktails.map((cocktail) {
+            if (cocktail.id == event.cocktailId) {
+              return cocktail.copyWith(
+                  isFavorite: !cocktail.isFavorite); // Инверсия значения
+            }
+            return cocktail;
+          }).toList();
+
+          emit(currentState.copyWith(
+            cocktails: updatedCocktails,
+            loadingStates: updatedLoadingStates,
+          ));
+        }
+      } catch (e) {
+        emit(CocktailError(
+            'Не удалось изменить статус избранного: ${e.toString()}'));
+      }
+    }
+    // Аналогично обработать случай, если состояние — CocktailSearchLoaded
+  }
+}
+
+class NonAlcoholicCocktailBloc extends CocktailListBloc {
+  NonAlcoholicCocktailBloc(CocktailRepository repository) : super(repository) {
+    add(FetchCocktails(page: 1, pageSize: 20, alc: false));
+  }
+
+  @override
+  void _onToggleFavoriteCocktail(
+      ToggleFavoriteCocktail event, Emitter<CocktailListState> emit) async {
+    final currentState = state;
+    if (currentState is CocktailLoaded) {
+      final updatedLoadingStates =
+          Map<int, bool>.from(currentState.loadingStates);
+      updatedLoadingStates[event.cocktailId] = true;
+      emit(CocktailLoaded(
+          currentState.cocktails, currentState.currentSortOption,
+          loadingStates: updatedLoadingStates));
+      try {
+        await repository.toggleFavorite(event.cocktailId, event.isFavorite);
+        updatedLoadingStates[event.cocktailId] = false;
+        if (event.favoritePage) {
+          add(const FetchFavoriteCocktails());
+        } else {
+          final updatedCocktails = currentState.cocktails.map((cocktail) {
+            if (cocktail.id == event.cocktailId) {
+              return cocktail.copyWith(
+                  isFavorite: !cocktail.isFavorite); // Инверсия значения
+            }
+            return cocktail;
+          }).toList();
+
+          emit(currentState.copyWith(
+            cocktails: updatedCocktails,
+            loadingStates: updatedLoadingStates,
+          ));
+        }
+      } catch (e) {
+        emit(CocktailError(
+            'Не удалось изменить статус избранного: ${e.toString()}'));
+      }
+    }
+    if (currentState is CocktailSearchLoaded) {
+      final updatedLoadingStates =
+          Map<int, bool>.from(currentState.loadingStates);
+      updatedLoadingStates[event.cocktailId] = true;
+
+      // Сначала эмитим состояние с флагом загрузки
+      emit(currentState.copyWith(loadingStates: updatedLoadingStates));
+
+      try {
+        await repository.toggleFavorite(event.cocktailId, event.isFavorite);
+
+        updatedLoadingStates[event.cocktailId] = false;
+
+        // Обновляем данные коктейлей в избранном
+        if (event.favoritePage) {
+          add(const FetchFavoriteCocktails());
+        } else {
+          // Обновляем локально коктейли, изменяя только `isFavorite`
+          final updatedCocktails = currentState.cocktails.map((cocktail) {
+            if (cocktail.id == event.cocktailId) {
+              return cocktail.copyWith(
+                  isFavorite: !cocktail.isFavorite); // Инверсия значения
+            }
+            return cocktail;
+          }).toList();
+
+          emit(currentState.copyWith(
+            cocktails: updatedCocktails,
+            loadingStates: updatedLoadingStates,
+          ));
+        }
+      } catch (e) {
+        emit(CocktailError(
+            'Не удалось изменить статус избранного: ${e.toString()}'));
+      }
+    }
+    // Аналогично обработать случай, если состояние — CocktailSearchLoaded
   }
 }

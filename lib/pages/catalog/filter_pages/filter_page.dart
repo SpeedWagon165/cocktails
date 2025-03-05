@@ -14,7 +14,9 @@ import 'alcoholic_page.dart';
 import 'non_alcoholic_page.dart';
 
 class FilterMainPage extends StatelessWidget {
-  const FilterMainPage({super.key});
+  final bool catalogPage;
+
+  const FilterMainPage({super.key, required this.catalogPage});
 
   @override
   Widget build(BuildContext context) {
@@ -138,14 +140,30 @@ class FilterMainPage extends StatelessWidget {
                               context
                                   .read<IngredientSelectionBloc>()
                                   .state); // Получаем выбранные ингредиенты
-
-                          context.read<CocktailListBloc>().add(
-                                SearchCocktails(
-                                  ordering: currentSortOption,
-                                  ingredients:
-                                      selectedIngredients, // Передаем выбранные ингредиенты
-                                ),
-                              );
+                          if (catalogPage) {
+                            context.read<AlcoholicCocktailBloc>().add(
+                                  SearchCocktails(
+                                      ordering: currentSortOption,
+                                      ingredients: selectedIngredients,
+                                      // Передаем выбранные ингредиенты
+                                      alc: true),
+                                );
+                            context.read<NonAlcoholicCocktailBloc>().add(
+                                  SearchCocktails(
+                                      ordering: currentSortOption,
+                                      ingredients: selectedIngredients,
+                                      // Передаем выбранные ингредиенты
+                                      alc: false),
+                                );
+                          } else {
+                            context.read<CocktailListBloc>().add(
+                                  SearchCocktails(
+                                    ordering: currentSortOption,
+                                    ingredients:
+                                        selectedIngredients, // Передаем выбранные ингредиенты
+                                  ),
+                                );
+                          }
                           Navigator.of(context, rootNavigator: true).pop();
                         },
                         single: false,

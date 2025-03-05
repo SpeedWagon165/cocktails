@@ -105,11 +105,21 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
               ),
             );
       } else {
-        context.read<CocktailListBloc>().add(
+        // Если не для избранного и не для рецептов пользователя — ищем сразу в обоих bloc-ах:
+        context.read<AlcoholicCocktailBloc>().add(
               SearchCocktails(
                 query: query,
                 page: 1,
                 pageSize: 20,
+                alc: true,
+              ),
+            );
+        context.read<NonAlcoholicCocktailBloc>().add(
+              SearchCocktails(
+                query: query,
+                page: 1,
+                pageSize: 20,
+                alc: false,
               ),
             );
       }
@@ -119,7 +129,13 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       } else if (widget.userRecipes) {
         context.read<CocktailListBloc>().add(FetchUserCocktails());
       } else {
-        context.read<CocktailListBloc>().add(FetchCocktails());
+        // Если поле пустое — сбрасываем поиск для обоих bloc-ов:
+        context.read<AlcoholicCocktailBloc>().add(
+              const FetchCocktails(page: 1, pageSize: 20, alc: true),
+            );
+        context.read<NonAlcoholicCocktailBloc>().add(
+              const FetchCocktails(page: 1, pageSize: 20, alc: false),
+            );
       }
     }
   }

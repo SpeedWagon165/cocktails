@@ -85,30 +85,32 @@ class SearchCocktailPageState extends State<SearchCocktailPage> {
                 const SizedBox(height: 6),
                 const SelectedItemsCarousel(),
                 const SizedBox(height: 6),
-                BlocBuilder<CocktailListBloc, CocktailListState>(
-                    builder: (context, state) {
-                  if (state is CocktailLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is CocktailLoaded) {
-                    return CatalogFetchList(
-                        fetchList: state.cocktails,
-                        hasReachedMax: state.hasReachedMax);
-                  } else if (state is CocktailSearchLoaded) {
-                    return CatalogSearchList(
-                      searchList: state.cocktails,
-                      hasReachedMax: state.hasReachedMax,
-                      query: '',
-                      searchPage: false,
-                    );
-                  } else if (state is CocktailError) {
+                Expanded(
+                  child: BlocBuilder<CocktailListBloc, CocktailListState>(
+                      builder: (context, state) {
+                    if (state is CocktailLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is CocktailLoaded) {
+                      return CatalogFetchList(
+                          fetchList: state.cocktails,
+                          hasReachedMax: state.hasReachedMax);
+                    } else if (state is CocktailSearchLoaded) {
+                      return CatalogSearchList(
+                        searchList: state.cocktails,
+                        hasReachedMax: state.hasReachedMax,
+                        query: '',
+                        searchPage: false,
+                      );
+                    } else if (state is CocktailError) {
+                      return Center(
+                        child: Text(tr('errors.server_error')),
+                      );
+                    }
                     return Center(
-                      child: Text(tr('errors.server_error')),
+                      child: Text(tr('catalog_page.start_search')),
                     );
-                  }
-                  return Center(
-                    child: Text(tr('catalog_page.start_search')),
-                  );
-                }),
+                  }),
+                ),
               ],
             ),
           ),

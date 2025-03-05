@@ -10,10 +10,14 @@ class CatalogFetchList extends StatefulWidget {
     super.key,
     required this.fetchList,
     required this.hasReachedMax,
+    this.catalogPage = false,
+    this.alcoholPage = false,
   });
 
   final List<Cocktail> fetchList;
   final bool hasReachedMax;
+  final bool catalogPage;
+  final bool alcoholPage;
 
   @override
   State<CatalogFetchList> createState() => _CatalogFetchListState();
@@ -32,11 +36,20 @@ class _CatalogFetchListState extends State<CatalogFetchList> {
           _scrollController.position.maxScrollExtent) {
         _currentPage++;
         // Когда дошли до конца списка и если еще есть данные для загрузки
-        if (!(context.read<CocktailListBloc>().state as CocktailLoaded)
-            .hasReachedMax) {
-          context
-              .read<CocktailListBloc>()
-              .add(FetchCocktails(page: _currentPage));
+        if (widget.catalogPage) {
+          if (!(context.read<AlcoholicCocktailBloc>().state as CocktailLoaded)
+              .hasReachedMax) {
+            context
+                .read<AlcoholicCocktailBloc>()
+                .add(FetchCocktails(page: _currentPage));
+          }
+        } else {
+          if (!(context.read<CocktailListBloc>().state as CocktailLoaded)
+              .hasReachedMax) {
+            context
+                .read<CocktailListBloc>()
+                .add(FetchCocktails(page: _currentPage));
+          }
         }
       }
     });
@@ -56,6 +69,8 @@ class _CatalogFetchListState extends State<CatalogFetchList> {
           );
         } else {
           return CocktailCard(
+            catalogPage: widget.catalogPage,
+            alcoholPage: widget.alcoholPage,
             cocktail: widget.fetchList[index],
           );
         }

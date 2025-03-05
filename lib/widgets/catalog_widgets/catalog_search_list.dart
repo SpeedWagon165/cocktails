@@ -13,13 +13,16 @@ class CatalogSearchList extends StatefulWidget {
     required this.searchList,
     required this.hasReachedMax,
     required this.query,
+    this.catalogPage = false,
+    this.alcoholPage = false,
     this.searchPage = false,
   });
 
   final List<Cocktail> searchList;
   final bool hasReachedMax;
   final String query;
-
+  final bool catalogPage;
+  final bool alcoholPage;
   final bool searchPage;
 
   @override
@@ -38,19 +41,35 @@ class _CatalogSearchListState extends State<CatalogSearchList> {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         _currentPage++;
-        // Когда дошли до конца списка и если еще есть данные для загрузки
-        if (!(context.read<CocktailListBloc>().state as CocktailSearchLoaded)
-            .hasReachedMax) {
-          print("$_currentPage в серч листе");
-          context.read<CocktailListBloc>().add(SearchCocktailsLoadMore(
-              page: _currentPage,
-              query: widget.query,
-              ingredients: widget.searchPage != true
-                  ? _getSearchSelectedIngredients(
-                      context.read<CocktailSelectionBloc>())
-                  : _getSelectedIngredients(
-                      context.read<IngredientSelectionBloc>().state)));
+        if (widget.catalogPage) {
+          if (!(context.read<AlcoholicCocktailBloc>().state
+                  as CocktailSearchLoaded)
+              .hasReachedMax) {
+            print("$_currentPage в серч листе");
+            context.read<AlcoholicCocktailBloc>().add(SearchCocktailsLoadMore(
+                page: _currentPage,
+                query: widget.query,
+                ingredients: widget.searchPage != true
+                    ? _getSearchSelectedIngredients(
+                        context.read<CocktailSelectionBloc>())
+                    : _getSelectedIngredients(
+                        context.read<IngredientSelectionBloc>().state)));
+          }
+        } else {
+          if (!(context.read<CocktailListBloc>().state as CocktailSearchLoaded)
+              .hasReachedMax) {
+            print("$_currentPage в серч листе");
+            context.read<CocktailListBloc>().add(SearchCocktailsLoadMore(
+                page: _currentPage,
+                query: widget.query,
+                ingredients: widget.searchPage != true
+                    ? _getSearchSelectedIngredients(
+                        context.read<CocktailSelectionBloc>())
+                    : _getSelectedIngredients(
+                        context.read<IngredientSelectionBloc>().state)));
+          }
         }
+        // Когда дошли до конца списка и если еще есть данные для загрузки
       }
     });
   }
@@ -69,6 +88,8 @@ class _CatalogSearchListState extends State<CatalogSearchList> {
           );
         } else {
           return CocktailCard(
+            catalogPage: widget.catalogPage,
+            alcoholPage: widget.alcoholPage,
             cocktail: widget.searchList[index],
           );
         }

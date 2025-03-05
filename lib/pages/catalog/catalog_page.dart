@@ -45,7 +45,7 @@ class _CatalogPageState extends State<CatalogPage> {
                   secondIcon: true,
                   arrow: false,
                   onSecondIconTap: () {
-                    openFilterModal(context);
+                    openFilterModal(context, true);
                   },
                 ),
                 const SizedBox(height: 10),
@@ -78,18 +78,22 @@ class _CatalogPageState extends State<CatalogPage> {
                   child: TabBarView(
                     children: [
                       /// Вкладка 1: алкогольные
-                      BlocBuilder<CocktailListBloc, CocktailListState>(
+                      BlocBuilder<AlcoholicCocktailBloc, CocktailListState>(
                         builder: (context, state) {
                           if (state is CocktailLoading) {
                             return const Center(
                                 child: CircularProgressIndicator());
                           } else if (state is CocktailLoaded) {
                             return CatalogFetchList(
+                              catalogPage: true,
+                              alcoholPage: true,
                               fetchList: state.cocktails,
                               hasReachedMax: state.hasReachedMax,
                             );
                           } else if (state is CocktailSearchLoaded) {
                             return CatalogSearchList(
+                              catalogPage: true,
+                              alcoholPage: true,
                               searchList: state.cocktails,
                               hasReachedMax: state.hasReachedMax,
                               query: editingController.text,
@@ -107,18 +111,22 @@ class _CatalogPageState extends State<CatalogPage> {
                       ),
 
                       /// Вкладка 2: безалкогольные
-                      BlocBuilder<CocktailListBloc, CocktailListState>(
+                      BlocBuilder<NonAlcoholicCocktailBloc, CocktailListState>(
                         builder: (context, state) {
                           if (state is CocktailLoading) {
                             return const Center(
                                 child: CircularProgressIndicator());
                           } else if (state is CocktailLoaded) {
                             return CatalogFetchList(
+                              catalogPage: true,
+                              alcoholPage: false,
                               fetchList: state.cocktails,
                               hasReachedMax: state.hasReachedMax,
                             );
                           } else if (state is CocktailSearchLoaded) {
                             return CatalogSearchList(
+                              catalogPage: true,
+                              alcoholPage: false,
                               searchList: state.cocktails,
                               hasReachedMax: state.hasReachedMax,
                               query: editingController.text,
