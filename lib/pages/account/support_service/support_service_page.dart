@@ -47,7 +47,7 @@ class SupportServicePageState extends State<SupportServicePage> {
     try {
       _channel = WebSocketChannel.connect(
         Uri.parse(
-            'ws://109.71.246.251:8000/ws/support/?user_id=${widget.userId}'),
+            'wss://api.mrbarmister.pro/ws/support/?user_id=${widget.userId}'),
       );
       _isConnected = true;
       print("Соединение установлено");

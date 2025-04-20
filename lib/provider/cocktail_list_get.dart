@@ -13,7 +13,7 @@ class CocktailRepository {
   CocktailRepository()
       : dio = Dio(
           BaseOptions(
-            baseUrl: 'http://109.71.246.251:8000/api',
+            baseUrl: 'https://api.mrbarmister.pro/api/',
             headers: {
               'Content-Type': 'application/json',
             },

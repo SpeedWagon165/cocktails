@@ -4,10 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileRepository {
-  final String baseUrl = 'http://109.71.246.251:8000/api';
+  final String baseUrl = 'https://api.mrbarmister.pro/api/';
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: 'http://109.71.246.251:8000/api',
+      baseUrl: 'https://api.mrbarmister.pro/api/',
       headers: {
         'Content-Type': 'application/json',
       },

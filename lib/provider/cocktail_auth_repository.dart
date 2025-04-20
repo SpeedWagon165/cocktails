@@ -6,12 +6,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/cocktail_auth_response_model.dart';
 
 class AuthRepository {
-  final Dio _dio = Dio();
+  final Dio _dio = Dio(
+    BaseOptions(
+      baseUrl: 'https://api.mrbarmister.pro/api/',
+      headers: {'Content-Type': 'application/json'},
+    ),
+  );
 
   Future<AuthResponse> signIn(String username, String password) async {
     try {
       final response = await _dio.post(
-        'http://109.71.246.251:8000/api/auth/web/sign-in/',
+        '/auth/web/sign-in/',
         data: {'username': username, 'password': password},
         options: Options(
           headers: {
@@ -47,7 +52,7 @@ class AuthRepository {
   Future<void> verifyEmail(String email) async {
     try {
       final response = await _dio.post(
-        'http://109.71.246.251:8000/api/auth/auth/verify-email/',
+        '/auth/auth/verify-email/',
         data: {'email': email},
         options: Options(
           headers: {
@@ -76,7 +81,7 @@ class AuthRepository {
   Future<void> confirmCode(String email, String code) async {
     try {
       final response = await _dio.post(
-        'http://109.71.246.251:8000/api/auth/auth/confirm-code/',
+        '/auth/auth/confirm-code/',
         data: {'email': email, 'code': code},
       );
       if (response.statusCode == 200) {
@@ -115,7 +120,7 @@ class AuthRepository {
       final os = Platform.isAndroid ? "Android" : "ios";
 
       final response = await _dio.post(
-        'http://109.71.246.251:8000/api/auth/auth/register/',
+        '/auth/auth/register/',
         data: {
           "first_name": firstName,
           "last_name": lastName,
@@ -150,7 +155,7 @@ class AuthRepository {
   Future<void> requestPasswordReset(String email) async {
     try {
       final response = await _dio.post(
-        'http://109.71.246.251:8000/api/auth/password/reset/',
+        '/auth/password/reset/',
         data: {'email': email},
         options: Options(
           headers: {
@@ -172,7 +177,7 @@ class AuthRepository {
   Future<void> confirmPasswordResetCode(String email, String code) async {
     try {
       final response = await _dio.post(
-        'http://109.71.246.251:8000/api/auth/password/reset-code/',
+        '/auth/password/reset-code/',
         data: {'email': email, 'code': code},
         options: Options(
           headers: {
@@ -195,7 +200,7 @@ class AuthRepository {
       String repeatPassword, String code) async {
     try {
       final response = await _dio.post(
-        'http://109.71.246.251:8000/api/auth/password/confirm/',
+        '/auth/password/confirm/',
         data: {
           'email': email,
           'new_password': newPassword,
@@ -226,7 +231,7 @@ class AuthRepository {
       String idToken, String accessToken) async {
     try {
       final response = await _dio.post(
-        'http://109.71.246.251:8000/api/auth/social/google/',
+        '/auth/social/google/',
         data: {
           'id_token': idToken,
           'access_token': accessToken,
