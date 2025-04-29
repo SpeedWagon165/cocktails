@@ -11,24 +11,29 @@ class CocktailCreationState {
   final File? photo;
   final String title;
   final String description;
+  final File? videoFile;
+  final String? videoAwsKey;
   final String videoUrl;
   final bool isLoading;
   final String? errorMessage;
+  final File? videoThumbnailFile;
 
-  const CocktailCreationState({
-    required this.sections,
-    required this.selectedItems,
-    required this.ingredientItems,
-    required this.tools,
-    required this.selectedTools,
-    required this.steps,
-    this.title = '',
-    this.description = '',
-    this.videoUrl = '',
-    this.photo,
-    this.isLoading = false,
-    this.errorMessage,
-  });
+  const CocktailCreationState(
+      {required this.sections,
+      required this.selectedItems,
+      required this.ingredientItems,
+      required this.tools,
+      required this.selectedTools,
+      required this.steps,
+      this.title = '',
+      this.description = '',
+      this.videoFile,
+      this.videoAwsKey,
+      this.videoUrl = '',
+      this.photo,
+      this.isLoading = false,
+      this.errorMessage,
+      this.videoThumbnailFile});
 
   CocktailCreationState copyWith({
     List<Section>? sections,
@@ -40,9 +45,12 @@ class CocktailCreationState {
     File? photo,
     String? title,
     String? description,
+    File? videoFile,
+    String? videoAwsKey,
     String? videoUrl,
     bool? isLoading,
     String? errorMessage,
+    File? videoThumbnailFile,
   }) {
     return CocktailCreationState(
       sections: sections ?? this.sections,
@@ -54,9 +62,12 @@ class CocktailCreationState {
       photo: photo ?? this.photo,
       title: title ?? this.title,
       description: description ?? this.description,
-      videoUrl: videoUrl ?? this.videoUrl,
+      videoFile: videoFile ?? this.videoFile,
+      videoAwsKey: videoAwsKey ?? this.videoAwsKey,
+      videoUrl: videoFile != null ? '' : videoUrl ?? this.videoUrl,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
+      videoThumbnailFile: videoThumbnailFile ?? this.videoThumbnailFile,
     );
   }
 }

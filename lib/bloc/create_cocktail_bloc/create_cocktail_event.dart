@@ -87,4 +87,22 @@ class UpdateRecipeVideoUrlEvent extends CocktailCreationEvent {
   UpdateRecipeVideoUrlEvent(this.videoUrl);
 }
 
+class UpdateVideoThumbnailEvent extends CocktailCreationEvent {
+  final File thumbnailFile;
+
+  UpdateVideoThumbnailEvent(this.thumbnailFile);
+}
+
+class UpdateRecipeVideoFileEvent extends CocktailCreationEvent {
+  final File file;
+
+  UpdateRecipeVideoFileEvent(this.file);
+}
+
+class UpdateRecipeVideoAwsKeyEvent extends CocktailCreationEvent {
+  final String awsKey;
+
+  UpdateRecipeVideoAwsKeyEvent(this.awsKey);
+}
+
 class SubmitRecipeEvent extends CocktailCreationEvent {}

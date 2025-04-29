@@ -354,6 +354,20 @@ class CocktailRepository {
   Future<void> createRecipe(Map<String, dynamic> data) async {
     try {
       final formData = FormData.fromMap(data);
+      print('▶ formData.fields:');
+      formData.fields.forEach((field) {
+        print('  ${field.key}: ${field.value}');
+      });
+
+// 2) Выведем все файлы и их размеры
+      print('▶ formData.files:');
+      for (var entry in formData.files) {
+        final key = entry.key;
+        final mp = entry.value as MultipartFile;
+        final filename = mp.filename;
+        final length = mp.length; // вот здесь берем размер
+        print('  $key — $filename — $length bytes');
+      }
       print("Request data: $data");
       print(formData);
 

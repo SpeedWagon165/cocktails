@@ -42,7 +42,12 @@ class CocktailCreationBloc
     on<UpdateRecipeTitleEvent>(_onUpdateRecipeTitle);
     on<UpdateRecipeDescriptionEvent>(_onUpdateRecipeDescription);
     on<UpdateRecipeVideoUrlEvent>(_onUpdateRecipeVideoUrl);
+    on<UpdateRecipeVideoFileEvent>(_onUpdateVideoFile);
+    on<UpdateRecipeVideoAwsKeyEvent>(_onUpdateVideoAwsKey);
     on<SubmitRecipeEvent>(_onSubmitRecipe);
+    on<UpdateVideoThumbnailEvent>((e, emit) {
+      emit(state.copyWith(videoThumbnailFile: e.thumbnailFile));
+    });
   }
 
   // Загрузка категорий и секций
@@ -224,6 +229,17 @@ class CocktailCreationBloc
     emit(state.copyWith(videoUrl: event.videoUrl));
   }
 
+  void _onUpdateVideoFile(
+      UpdateRecipeVideoFileEvent e, Emitter<CocktailCreationState> emit) {
+    emit(state.copyWith(videoFile: e.file));
+  }
+
+  void _onUpdateVideoAwsKey(
+      UpdateRecipeVideoAwsKeyEvent e, Emitter<CocktailCreationState> emit) {
+    print('+++ Получен AWS ключ: ${e.awsKey}');
+    emit(state.copyWith(videoAwsKey: e.awsKey));
+  }
+
   void _onSubmitRecipe(
       SubmitRecipeEvent event, Emitter<CocktailCreationState> emit) async {
     try {
@@ -260,10 +276,14 @@ class CocktailCreationBloc
         "ingredients": ingredients, // Ингредиенты в виде строки
         "tools": tools, // Инструменты в виде строки
         "instruction": jsonEncode(instructions),
-        "video_url": state.videoUrl, // Используем данные из состояния
+        //"video_url": state.videoUrl, // Используем данные из состояния
         "user": userId,
       };
-
+      if (state.videoAwsKey != null) {
+        data['video_aws_key'] = state.videoAwsKey;
+      } else if (state.videoUrl.isNotEmpty) {
+        data['video_url'] = state.videoUrl;
+      }
       if (state.photo != null) {
         data['photo'] = await MultipartFile.fromFile(state.photo!.path);
       }

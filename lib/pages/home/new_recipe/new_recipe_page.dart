@@ -10,6 +10,7 @@ import '../../../widgets/custom_button.dart';
 import '../../../widgets/home/create_cocktail_widgets/change_cocktail_tile.dart';
 import '../../../widgets/home/create_cocktail_widgets/new_recipe_pop_up.dart';
 import '../../../widgets/home/create_cocktail_widgets/photo_picker_widget.dart';
+import '../../../widgets/home/create_cocktail_widgets/video_picker_widget.dart';
 
 class NewRecipePage extends StatelessWidget {
   const NewRecipePage({super.key});
@@ -34,20 +35,34 @@ class NewRecipePage extends StatelessWidget {
                     const SizedBox(
                       height: 24,
                     ),
-                    Text(
-                      tr('new_recipe.photo'), // локализованная строка
-                      style:
-                          context.text.bodyText14White.copyWith(fontSize: 18),
+                    Row(
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              tr('new_recipe.photo'), // локализованная строка
+                              style: context.text.bodyText14White
+                                  .copyWith(fontSize: 18),
+                            ),
+                            const SizedBox(height: 12),
+                            const PhotoPickerWidget(),
+                          ],
+                        ),
+                        const SizedBox(width: 20),
+                        Column(
+                          children: [
+                            Text(
+                              tr('new_recipe.video'), // локализованная строка
+                              style: context.text.bodyText14White
+                                  .copyWith(fontSize: 18),
+                            ),
+                            const SizedBox(height: 12),
+                            VideoPickerWidget(),
+                          ],
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    const PhotoPickerWidget(),
                     const SizedBox(height: 24),
-                    Text(
-                      tr('new_recipe.video'), // локализованная строка
-                      style:
-                          context.text.bodyText14White.copyWith(fontSize: 18),
-                    ),
-                    const SizedBox(height: 12),
                     CustomTextField(
                       labelText: tr('new_recipe.youtube_link'),
                       onChanged: (newValue) {
