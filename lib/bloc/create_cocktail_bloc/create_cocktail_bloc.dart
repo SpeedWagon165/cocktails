@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aws_s3_upload_lite/aws_s3_upload_lite.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../models/cocktail_list_model.dart';
 import '../../models/create_cocktail_model.dart';
@@ -240,47 +242,60 @@ class CocktailCreationBloc
     emit(state.copyWith(videoAwsKey: e.awsKey));
   }
 
-  void _onSubmitRecipe(
-      SubmitRecipeEvent event, Emitter<CocktailCreationState> emit) async {
+  Future<void> _onSubmitRecipe(
+    SubmitRecipeEvent event,
+    Emitter<CocktailCreationState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true, errorMessage: null));
+
     try {
-      // Устанавливаем состояние загрузки
-      emit(state.copyWith(isLoading: true));
+      String? awsKey;
+      // 1) Если видео выбрано — заливаем его в S3
+      if (state.videoFile != null) {
+        final String key = const Uuid().v4().substring(0, 12);
+        print('Uploading video to S3 with key $key...');
+        final String? uploadedUrl = await AwsS3.uploadFile(
+          accessKey: 'AKIA4XIHKZCO7KWHNPYN',
+          secretKey: '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',
+          region: 'us-east-2',
+          bucket: 'cocktails-video-bucket',
+          destDir: '',
+          filename: '$key.mp4',
+          file: state.videoFile!,
+          contentType: 'video/mp4',
+        );
+        if (uploadedUrl != null && uploadedUrl.isNotEmpty) {
+          awsKey = key;
+          print('Video uploaded: $uploadedUrl');
+        } else {
+          throw Exception('Video upload failed');
+        }
+      }
 
-      // Преобразуем ингредиенты в строку
-      final ingredients = state.ingredientItems.map((ingredient) {
-        return '{"ingredient":${ingredient.ingredient.id},"quantity":"${ingredient.quantity}","type":"${ingredient.type}"}';
-      }).join(',');
-
-      // Преобразуем список инструментов в строку, разделённую запятыми
-      final tools = state.selectedTools.map((tool) => tool.id).join(',');
-
+      // 2) Собираем данные для запроса
+      final ingredients = state.ingredientItems
+          .map((ing) =>
+              '{"ingredient":${ing.ingredient.id},"quantity":"${ing.quantity}","type":"${ing.type}"}')
+          .join(',');
+      final tools = state.selectedTools.map((t) => t.id).join(',');
       final instructions = <String, String>{};
       for (var step in state.steps) {
         instructions[step.number.toString()] = step.description;
       }
+      final profileData = await ProfileRepository().getProfileFromCache();
+      final userId = profileData?['id'] ?? (throw Exception('No user'));
 
-      final profileRepository = ProfileRepository();
-
-      // Получаем данные профиля из кэша через экземпляр
-      final profileData = await profileRepository.getProfileFromCache();
-      if (profileData == null) {
-        throw Exception('Profile not found in cache');
-      }
-
-      final userId = profileData['id'];
-
-      // Собираем все данные для отправки
-      final Map<String, dynamic> data = {
-        "title": state.title, // Используем данные из состояния
-        "description": state.description, // Используем данные из состояния
-        "ingredients": ingredients, // Ингредиенты в виде строки
-        "tools": tools, // Инструменты в виде строки
-        "instruction": jsonEncode(instructions),
-        //"video_url": state.videoUrl, // Используем данные из состояния
-        "user": userId,
+      final data = <String, dynamic>{
+        'title': state.title,
+        'description': state.description,
+        'ingredients': ingredients,
+        'tools': tools,
+        'instruction': jsonEncode(instructions),
+        'user': userId,
       };
-      if (state.videoAwsKey != null) {
-        data['video_aws_key'] = state.videoAwsKey;
+      // 3) Добавляем только видео-ключ, а не сам файл
+      if (awsKey != null) {
+        data['video_aws_key'] = awsKey;
       } else if (state.videoUrl.isNotEmpty) {
         data['video_url'] = state.videoUrl;
       }
@@ -288,13 +303,10 @@ class CocktailCreationBloc
         data['photo'] = await MultipartFile.fromFile(state.photo!.path);
       }
 
-      // Отправляем запрос на сервер через репозиторий
+      // 4) Отправляем рецепт
       await repository.createRecipe(data);
-
-      // Если запрос успешен, отключаем индикатор загрузки
       emit(state.copyWith(isLoading: false));
     } catch (e) {
-      // В случае ошибки сохраняем сообщение об ошибке
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
   }

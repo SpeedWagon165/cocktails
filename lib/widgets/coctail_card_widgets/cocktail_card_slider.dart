@@ -25,6 +25,8 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
   bool _showControls = false;
   Timer? _hideControlsTimer;
   double imageHeight = 340;
+  int _currentIndex = 0;
+  bool _hasShownVpnHint = false;
 
   @override
   void initState() {
@@ -48,6 +50,21 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
         ),
       );
     }
+  }
+
+  void _maybeShowVpnHint() {
+    if (_hasShownVpnHint || widget.videoUrl == null) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'Для корректного воспроизведения видео рекомендуется включить VPN'),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      _hasShownVpnHint = true;
+    });
   }
 
   // Переключение воспроизведения (пауза/играет)
@@ -163,6 +180,13 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
         aspectRatio: 1,
         viewportFraction: 1,
         initialPage: 0,
+        onPageChanged: (index, reason) {
+          setState(() => _currentIndex = index);
+          // Если пользователь перелистал на видео (видео всегда последний элемент)
+          if (index == mediaWidgets.length - 1 && widget.videoUrl != null) {
+            _maybeShowVpnHint();
+          }
+        },
       ),
       itemBuilder: (context, index, pageIndex) {
         return mediaWidgets[index];

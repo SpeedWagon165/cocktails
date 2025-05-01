@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:aws_s3_upload_lite/aws_s3_upload_lite.dart';
 import 'package:cocktails/widgets/home/create_cocktail_widgets/solid_add_photo_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +7,6 @@ import 'package:get_thumbnail_video/index.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:uuid/uuid.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../bloc/create_cocktail_bloc/create_cocktail_bloc.dart';
@@ -40,8 +38,6 @@ class VideoPickerWidget extends StatelessWidget {
       return;
     }
 
-    final String key = const Uuid().v4().substring(0, 12);
-
     context
         .read<CocktailCreationBloc>()
         .add(UpdateRecipeVideoFileEvent(videoFile));
@@ -56,31 +52,6 @@ class VideoPickerWidget extends StatelessWidget {
     );
     final File thumb = File(thumbFile.path);
     context.read<CocktailCreationBloc>().add(UpdateVideoThumbnailEvent(thumb));
-
-    try {
-      print('> Начинаю загрузку видео, ключ = $key, путь = ${videoFile.path}');
-      final String? uploadedUrl = await AwsS3.uploadFile(
-        accessKey: 'AKIA4XIHKZCO7KWHNPYN',
-        secretKey: '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',
-        region: 'us-east-2',
-        bucket: 'cocktails-video-bucket',
-        destDir: '',
-        filename: key,
-        file: videoFile,
-      );
-      print('> Ответ от AwsS3.uploadFile: $uploadedUrl');
-
-      if (uploadedUrl != null && uploadedUrl.isNotEmpty) {
-        print('Всё ок видео загружено');
-        context
-            .read<CocktailCreationBloc>()
-            .add(UpdateRecipeVideoAwsKeyEvent(key));
-      } else {
-        print('Ошибка загрузки видео');
-      }
-    } catch (e) {
-      print('Ошибка при загрузке: $e');
-    }
   }
 
   @override
