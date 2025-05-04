@@ -1,17 +1,18 @@
-import 'dart:async';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class CocktailCardSlider extends StatefulWidget {
   final List<String> imageUrls;
+  final String? videoAvsKey;
   final String? videoUrl;
   final bool isImageAvailable;
 
   const CocktailCardSlider({
     super.key,
     required this.imageUrls,
+    this.videoAvsKey,
     this.videoUrl,
     this.isImageAvailable = true,
   });
@@ -21,9 +22,11 @@ class CocktailCardSlider extends StatefulWidget {
 }
 
 class _CocktailCardSliderState extends State<CocktailCardSlider> {
-  YoutubePlayerController? _controller;
-  bool _showControls = false;
-  Timer? _hideControlsTimer;
+  static const _s3BaseUrl =
+      'https://cocktails-video-bucket.s3.us-east-2.amazonaws.com/';
+
+  VideoPlayerController? _videoController;
+  YoutubePlayerController? _ytController;
   double imageHeight = 340;
   int _currentIndex = 0;
   bool _hasShownVpnHint = false;
@@ -31,18 +34,24 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
   @override
   void initState() {
     super.initState();
-    if (widget.imageUrls.isNotEmpty) {
-      imageHeight = widget.isImageAvailable ? 340 : 200;
-    } else {
-      imageHeight = 200;
-    }
 
-    // Инициализируем контроллер YouTube, если есть видео
-    if (widget.videoUrl != null &&
+    // Высота слайдера
+    imageHeight = widget.imageUrls.isNotEmpty
+        ? (widget.isImageAvailable ? 340 : 200)
+        : 200;
+
+    // 1) Если есть ключ S3 — инициализируем video_player
+    if (widget.videoAvsKey != null) {
+      final uri = Uri.parse('$_s3BaseUrl${widget.videoAvsKey}.mp4');
+      _videoController = VideoPlayerController.networkUrl(uri)
+        ..initialize().then((_) => setState(() {}));
+    }
+    // 2) Иначе, если есть youtube URL — инициализируем youtube_player
+    else if (widget.videoUrl != null &&
         YoutubePlayer.convertUrlToId(widget.videoUrl!) != null) {
-      final videoId = YoutubePlayer.convertUrlToId(widget.videoUrl!);
-      _controller = YoutubePlayerController(
-        initialVideoId: videoId!,
+      final videoId = YoutubePlayer.convertUrlToId(widget.videoUrl!)!;
+      _ytController = YoutubePlayerController(
+        initialVideoId: videoId,
         flags: const YoutubePlayerFlags(
           autoPlay: false,
           mute: false,
@@ -53,13 +62,15 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
   }
 
   void _maybeShowVpnHint() {
-    if (_hasShownVpnHint || widget.videoUrl == null) return;
+    if (_hasShownVpnHint || (_videoController == null && _ytController == null))
+      return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Для корректного воспроизведения видео рекомендуется включить VPN'),
+            'Для корректного воспроизведения видео рекомендуется включить VPN',
+          ),
           duration: Duration(seconds: 3),
         ),
       );
@@ -67,137 +78,132 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
     });
   }
 
-  // Переключение воспроизведения (пауза/играет)
-  void _togglePlayPause() {
-    if (_controller == null) return;
-
-    if (_controller!.value.isPlaying) {
-      _controller!.pause();
-    } else {
-      _controller!.play();
-    }
-    setState(() {}); // Обновляем UI
-  }
-
-  // Показываем кнопку паузы и скрываем через 3 секунды
-  void _showPauseButton() {
-    setState(() {
-      _showControls = true;
-    });
-
-    _hideControlsTimer?.cancel();
-    _hideControlsTimer = Timer(const Duration(seconds: 3), () {
-      setState(() {
-        _showControls = false;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final List<Widget> mediaWidgets = [];
-
-    // Добавляем изображения
+    final mediaWidgets = <Widget>[];
+    debugPrint(widget.videoAvsKey);
+    // — картинки
     if (widget.imageUrls.isNotEmpty) {
-      for (var url in widget.imageUrls) {
+      for (final url in widget.imageUrls) {
         mediaWidgets.add(
           Image.network(
             url,
             fit: BoxFit.cover,
             width: double.infinity,
             height: 340,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                width: double.infinity,
-                height: 340,
-                color: Colors.grey,
-                child: const Icon(
-                  Icons.image_not_supported,
-                  color: Colors.white,
-                  size: 50,
-                ),
-              );
-            },
+            errorBuilder: (_, __, ___) => Container(
+              width: double.infinity,
+              height: 340,
+              color: Colors.grey,
+              child: const Icon(Icons.image_not_supported,
+                  color: Colors.white, size: 50),
+            ),
           ),
         );
       }
     } else {
-      mediaWidgets.add(
-        Container(
-          width: double.infinity,
-          height: 340,
-          color: Colors.grey,
-          child: const Icon(
-            Icons.image,
-            color: Colors.white,
-            size: 50,
-          ),
-        ),
-      );
+      mediaWidgets.add(Container(
+        width: double.infinity,
+        height: 340,
+        color: Colors.grey,
+        child: const Icon(Icons.image, color: Colors.white, size: 50),
+      ));
     }
 
-    // Добавляем YouTube-видео
-    if (widget.videoUrl != null && _controller != null) {
-      mediaWidgets.add(
-        GestureDetector(
-          onTap: _showPauseButton,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              YoutubePlayer(
-                controller: _controller!,
-                showVideoProgressIndicator: true,
-              ),
-              if (_showControls)
-                Positioned(
-                  child: GestureDetector(
-                    onTap: _togglePlayPause,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.black54,
-                      radius: 30,
-                      child: Icon(
-                        _controller!.value.isPlaying
-                            ? Icons.pause
-                            : Icons.play_arrow,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return CarouselSlider.builder(
-      itemCount: mediaWidgets.length,
-      options: CarouselOptions(
-        autoPlay: false,
-        enlargeCenterPage: true,
-        height: imageHeight,
-        aspectRatio: 1,
-        viewportFraction: 1,
-        initialPage: 0,
-        onPageChanged: (index, reason) {
-          setState(() => _currentIndex = index);
-          // Если пользователь перелистал на видео (видео всегда последний элемент)
-          if (index == mediaWidgets.length - 1 && widget.videoUrl != null) {
-            _maybeShowVpnHint();
-          }
+    // — видео S3
+    if (_videoController != null) {
+      mediaWidgets.add(GestureDetector(
+        onTap: () {
+          if (!_videoController!.value.isInitialized) return;
+          _videoController!.value.isPlaying
+              ? _videoController!.pause()
+              : _videoController!.play();
+          setState(() {});
         },
-      ),
-      itemBuilder: (context, index, pageIndex) {
-        return mediaWidgets[index];
-      },
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            if (_videoController!.value.isInitialized)
+              AspectRatio(
+                aspectRatio: _videoController!.value.aspectRatio,
+                child: VideoPlayer(_videoController!),
+              )
+            else
+              Container(
+                height: 340,
+                color: Colors.black,
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+            if (_videoController!.value.isInitialized)
+              CircleAvatar(
+                backgroundColor: Colors.black54,
+                radius: 30,
+                child: Icon(
+                  _videoController!.value.isPlaying
+                      ? Icons.pause
+                      : Icons.play_arrow,
+                  color: Colors.white,
+                  size: 40,
+                ),
+              ),
+          ],
+        ),
+      ));
+    }
+    // — или видео YouTube
+    else if (_ytController != null) {
+      mediaWidgets.add(GestureDetector(
+        onTap: _maybeShowVpnHint,
+        child: YoutubePlayer(
+          controller: _ytController!,
+          showVideoProgressIndicator: true,
+        ),
+      ));
+    }
+
+    // индикатор всего
+    debugPrint('⚡️ mediaWidgets.length = ${mediaWidgets.length}');
+
+    return Column(
+      children: [
+        CarouselSlider.builder(
+          itemCount: mediaWidgets.length,
+          itemBuilder: (ctx, idx, real) => mediaWidgets[idx],
+          options: CarouselOptions(
+            height: imageHeight,
+            viewportFraction: 0.9,
+            enlargeCenterPage: true,
+            onPageChanged: (i, _) {
+              setState(() => _currentIndex = i);
+              // показываем hint, если перелистан на последний слайд с видео
+              if (i == mediaWidgets.length - 1) _maybeShowVpnHint();
+            },
+          ),
+        ),
+        // точки
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+              mediaWidgets.length,
+              (i) => Container(
+                    width: 8,
+                    height: 8,
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: i == _currentIndex ? Colors.white : Colors.grey,
+                    ),
+                  )),
+        ),
+      ],
     );
   }
 
   @override
   void dispose() {
-    _controller?.dispose();
-    _hideControlsTimer?.cancel();
+    _videoController?.dispose();
+    _ytController?.dispose();
     super.dispose();
   }
 }

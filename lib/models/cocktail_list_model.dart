@@ -25,6 +25,7 @@ class Cocktail {
   String? videoUrl;
   int user;
   bool isImageAvailable;
+  String? video_aws_key;
 
   Cocktail({
     required this.id,
@@ -42,6 +43,7 @@ class Cocktail {
     required this.moderationStatus,
     required this.videoUrl,
     required this.user,
+    required this.video_aws_key,
     this.isImageAvailable = true,
   });
 
@@ -61,6 +63,7 @@ class Cocktail {
     String? moderationStatus,
     String? videoUrl,
     int? user,
+    String? video_aws_key,
   }) {
     return Cocktail(
       id: id ?? this.id,
@@ -78,6 +81,7 @@ class Cocktail {
       moderationStatus: moderationStatus ?? this.moderationStatus,
       videoUrl: videoUrl ?? this.videoUrl,
       user: user ?? this.user,
+      video_aws_key: video_aws_key ?? this.video_aws_key,
     );
   }
 
@@ -107,6 +111,7 @@ class Cocktail {
       moderationStatus: json["moderation_status"] ?? '',
       videoUrl: json["video_url"] as String?,
       user: json["user"],
+      video_aws_key: json["video_aws_key"] as String?,
     );
   }
 
@@ -126,6 +131,7 @@ class Cocktail {
         "moderation_status": moderationStatus,
         "video_url": videoUrl,
         "user": user,
+        "video_aws_key": video_aws_key,
       };
 }
 

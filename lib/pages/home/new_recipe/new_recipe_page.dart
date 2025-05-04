@@ -12,8 +12,29 @@ import '../../../widgets/home/create_cocktail_widgets/new_recipe_pop_up.dart';
 import '../../../widgets/home/create_cocktail_widgets/photo_picker_widget.dart';
 import '../../../widgets/home/create_cocktail_widgets/video_picker_widget.dart';
 
-class NewRecipePage extends StatelessWidget {
+class NewRecipePage extends StatefulWidget {
   const NewRecipePage({super.key});
+
+  @override
+  State<NewRecipePage> createState() => _NewRecipePageState();
+}
+
+class _NewRecipePageState extends State<NewRecipePage> {
+  late final CocktailCreationBloc _creationBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    // сохраним ссылку единожды
+    _creationBloc = context.read<CocktailCreationBloc>();
+  }
+
+  @override
+  void dispose() {
+    // теперь можно безопасно пользоваться _creationBloc
+    _creationBloc.add(ResetCreationEvent());
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,18 +78,41 @@ class NewRecipePage extends StatelessWidget {
                                   .copyWith(fontSize: 18),
                             ),
                             const SizedBox(height: 12),
-                            VideoPickerWidget(),
+                            BlocBuilder<CocktailCreationBloc,
+                                CocktailCreationState>(
+                              builder: (context, state) {
+                                final disabled = state.videoUrl.isNotEmpty;
+                                return Opacity(
+                                  opacity: disabled ? 0.5 : 1.0,
+                                  child: IgnorePointer(
+                                    ignoring: disabled,
+                                    child: const VideoPickerWidget(),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ],
                     ),
                     const SizedBox(height: 24),
-                    CustomTextField(
-                      labelText: tr('new_recipe.youtube_link'),
-                      onChanged: (newValue) {
-                        context
-                            .read<CocktailCreationBloc>()
-                            .add(UpdateRecipeVideoUrlEvent(newValue));
+                    BlocBuilder<CocktailCreationBloc, CocktailCreationState>(
+                      builder: (context, state) {
+                        final disabled = state.videoThumbnailFile != null;
+                        return Opacity(
+                          opacity: disabled ? 0.5 : 1.0,
+                          child: AbsorbPointer(
+                            absorbing: disabled,
+                            child: CustomTextField(
+                              labelText: tr('new_recipe.youtube_link'),
+                              onChanged: (newValue) {
+                                context
+                                    .read<CocktailCreationBloc>()
+                                    .add(UpdateRecipeVideoUrlEvent(newValue));
+                              },
+                            ),
+                          ),
+                        );
                       },
                     ),
                     const SizedBox(height: 24),
@@ -163,7 +207,8 @@ class NewRecipePage extends StatelessWidget {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 6.0),
                             child: CustomButton(
-                              text: tr('buttons.save'), // локализованная строка
+                              text: tr('buttons.save'),
+                              // локализованная строка
                               onPressed: () {
                                 if (state.title.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -189,6 +234,9 @@ class NewRecipePage extends StatelessWidget {
                                   context
                                       .read<CocktailCreationBloc>()
                                       .add(SubmitRecipeEvent());
+                                  context
+                                      .read<CocktailCreationBloc>()
+                                      .add(ResetCreationEvent());
                                   int count = 0;
                                   Navigator.of(context).popUntil((route) {
                                     return count++ == 2;

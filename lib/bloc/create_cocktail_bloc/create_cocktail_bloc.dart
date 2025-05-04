@@ -47,6 +47,26 @@ class CocktailCreationBloc
     on<UpdateRecipeVideoFileEvent>(_onUpdateVideoFile);
     on<UpdateRecipeVideoAwsKeyEvent>(_onUpdateVideoAwsKey);
     on<SubmitRecipeEvent>(_onSubmitRecipe);
+    on<ResetCreationEvent>((e, emit) {
+      emit(CocktailCreationState(
+        sections: [],
+        selectedItems: {},
+        ingredientItems: [],
+        tools: [],
+        selectedTools: [],
+        steps: [],
+        // обнуляем всё, что храним
+        photo: null,
+        videoFile: null,
+        videoThumbnailFile: null,
+        videoAwsKey: null,
+        videoUrl: '',
+        title: '',
+        description: '',
+        isLoading: false,
+        errorMessage: null,
+      ));
+    });
     on<UpdateVideoThumbnailEvent>((e, emit) {
       emit(state.copyWith(videoThumbnailFile: e.thumbnailFile));
     });

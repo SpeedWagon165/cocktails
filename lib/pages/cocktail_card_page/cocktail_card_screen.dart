@@ -143,6 +143,7 @@ class _CocktailCardScreenState extends State<CocktailCardScreen> {
                                     ? [currentCocktail.photo!]
                                     : [],
                             isImageAvailable: currentCocktail.isImageAvailable,
+                            videoAvsKey: currentCocktail.video_aws_key,
                           ),
                           const SizedBox(height: 12.0),
                           Padding(
