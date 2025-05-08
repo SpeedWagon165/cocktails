@@ -47,6 +47,10 @@ class CocktailCreationBloc
     on<UpdateRecipeVideoFileEvent>(_onUpdateVideoFile);
     on<UpdateRecipeVideoAwsKeyEvent>(_onUpdateVideoAwsKey);
     on<SubmitRecipeEvent>(_onSubmitRecipe);
+    on<UploadVideoToS3Event>(_onUploadVideoToS3);
+    on<ResetSubmissionSuccessEvent>((e, emit) {
+      emit(state.copyWith(submissionSuccess: false));
+    });
     on<ResetCreationEvent>((e, emit) {
       emit(CocktailCreationState(
         sections: [],
@@ -262,11 +266,36 @@ class CocktailCreationBloc
     emit(state.copyWith(videoAwsKey: e.awsKey));
   }
 
+  Future<void> _onUploadVideoToS3(
+    UploadVideoToS3Event e,
+    Emitter<CocktailCreationState> emit,
+  ) async {
+    try {
+      // 1) Генерим ключ
+      final s3Key = const Uuid().v4().substring(0, 12);
+
+      // 2) Получаем presigned URL
+      final uploadUrl = await repository.getVideoUploadUrl(s3Key);
+
+      // 3) Читаем байты
+      final bytes = await e.videoFile.readAsBytes();
+
+      // 4) Заливаем в S3
+      await repository.uploadVideoToS3(uploadUrl, bytes);
+
+      // 5) Сохраняем ключ в state
+      emit(state.copyWith(videoAwsKey: s3Key));
+    } catch (err) {
+      emit(state.copyWith(submissionError: err.toString()));
+    }
+  }
+
   Future<void> _onSubmitRecipe(
     SubmitRecipeEvent event,
     Emitter<CocktailCreationState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+    emit(state.copyWith(
+        isSubmitting: true, submissionSuccess: false, submissionError: null));
 
     try {
       String? awsKey;
@@ -280,7 +309,7 @@ class CocktailCreationBloc
           region: 'us-east-2',
           bucket: 'cocktails-video-bucket',
           destDir: '',
-          filename: '$key.mp4',
+          filename: '$key',
           file: state.videoFile!,
           contentType: 'video/mp4',
         );
@@ -325,9 +354,15 @@ class CocktailCreationBloc
 
       // 4) Отправляем рецепт
       await repository.createRecipe(data);
-      emit(state.copyWith(isLoading: false));
+      emit(state.copyWith(
+        isSubmitting: false,
+        submissionSuccess: true,
+      ));
     } catch (e) {
-      emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+      emit(state.copyWith(
+        isSubmitting: false,
+        submissionError: e.toString(),
+      ));
     }
   }
 }

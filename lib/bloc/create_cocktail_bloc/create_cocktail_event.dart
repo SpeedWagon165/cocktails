@@ -105,6 +105,14 @@ class UpdateRecipeVideoAwsKeyEvent extends CocktailCreationEvent {
   UpdateRecipeVideoAwsKeyEvent(this.awsKey);
 }
 
+class UploadVideoToS3Event extends CocktailCreationEvent {
+  final File videoFile;
+
+  UploadVideoToS3Event(this.videoFile);
+}
+
 class ResetCreationEvent extends CocktailCreationEvent {}
+
+class ResetSubmissionSuccessEvent extends CocktailCreationEvent {}
 
 class SubmitRecipeEvent extends CocktailCreationEvent {}

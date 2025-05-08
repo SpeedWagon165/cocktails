@@ -42,7 +42,7 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
 
     // 1) Если есть ключ S3 — инициализируем video_player
     if (widget.videoAvsKey != null) {
-      final uri = Uri.parse('$_s3BaseUrl${widget.videoAvsKey}.mp4');
+      final uri = Uri.parse('$_s3BaseUrl${widget.videoAvsKey}');
       _videoController = VideoPlayerController.networkUrl(uri)
         ..initialize().then((_) => setState(() {}));
     }
@@ -71,7 +71,7 @@ class _CocktailCardSliderState extends State<CocktailCardSlider> {
           content: Text(
             'Для корректного воспроизведения видео рекомендуется включить VPN',
           ),
-          duration: Duration(seconds: 3),
+          duration: Duration(seconds: 5),
         ),
       );
       _hasShownVpnHint = true;

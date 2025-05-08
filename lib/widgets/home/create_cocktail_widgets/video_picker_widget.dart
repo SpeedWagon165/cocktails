@@ -14,7 +14,7 @@ import '../../../bloc/create_cocktail_bloc/create_cocktail_bloc.dart';
 class VideoPickerWidget extends StatelessWidget {
   const VideoPickerWidget({super.key});
 
-  Future<void> _pickAndUploadVideo(BuildContext context) async {
+  Future<void> _pickAndUploadVideo(BuildContext ctx) async {
     final picker = ImagePicker();
 
     // 1) Выбираем видео из галереи
@@ -23,35 +23,50 @@ class VideoPickerWidget extends StatelessWidget {
 
     if (pickedVideo == null) return;
 
-    final File videoFile =
-        File(pickedVideo.path); // ⬅️ именно `videoFile`, как и дальше
+    final String path = pickedVideo.path;
 
-    final controller = VideoPlayerController.file(videoFile);
+    // Проверка расширения файла
+    if (!path.toLowerCase().endsWith('.mp4')) {
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        const SnackBar(
+            content: Text('Можно загрузить только видео в формате .mp4')),
+      );
+      return;
+    }
+
+    final File file = File(path);
+
+    // Проверка продолжительности
+    final controller = VideoPlayerController.file(file);
     await controller.initialize();
     final Duration duration = controller.value.duration;
     await controller.dispose();
 
     if (duration > const Duration(minutes: 1)) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(ctx).showSnackBar(
         const SnackBar(content: Text('Видео должно быть не длиннее 1 минуты')),
       );
       return;
     }
 
-    context
-        .read<CocktailCreationBloc>()
-        .add(UpdateRecipeVideoFileEvent(videoFile));
+    // Обновление состояния BLoC
+    ctx.read<CocktailCreationBloc>().add(UpdateRecipeVideoFileEvent(file));
 
-    // 2) Генерируем миниатюру
-    final XFile thumbFile = await VideoThumbnail.thumbnailFile(
-      video: videoFile.path,
+    final thumbX = await VideoThumbnail.thumbnailFile(
+      video: file.path,
       thumbnailPath: (await getTemporaryDirectory()).path,
       imageFormat: ImageFormat.JPEG,
       maxHeight: 128,
       quality: 75,
     );
-    final File thumb = File(thumbFile.path);
-    context.read<CocktailCreationBloc>().add(UpdateVideoThumbnailEvent(thumb));
+    ctx
+        .read<CocktailCreationBloc>()
+        .add(UpdateVideoThumbnailEvent(File(thumbX.path)));
+
+    // 2) И — главное! — шлём событие загрузки в S3
+    ctx.read<CocktailCreationBloc>().add(UploadVideoToS3Event(file));
+
+    final File thumb = File(thumbX.path);
   }
 
   @override

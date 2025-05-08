@@ -21,6 +21,7 @@ class NewRecipePage extends StatefulWidget {
 
 class _NewRecipePageState extends State<NewRecipePage> {
   late final CocktailCreationBloc _creationBloc;
+  BuildContext? _dialogContext;
 
   @override
   void initState() {
@@ -38,233 +39,265 @@ class _NewRecipePageState extends State<NewRecipePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
-          child: BlocBuilder<CocktailCreationBloc, CocktailCreationState>(
-            builder: (context, state) {
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomAppBar(
-                      text: tr('new_recipe.title'), // локализованная строка
-                      arrow: true,
-                      onPressed: null,
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    Row(
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              tr('new_recipe.photo'), // локализованная строка
-                              style: context.text.bodyText14White
-                                  .copyWith(fontSize: 18),
-                            ),
-                            const SizedBox(height: 12),
-                            const PhotoPickerWidget(),
-                          ],
-                        ),
-                        const SizedBox(width: 20),
-                        Column(
-                          children: [
-                            Text(
-                              tr('new_recipe.video'), // локализованная строка
-                              style: context.text.bodyText14White
-                                  .copyWith(fontSize: 18),
-                            ),
-                            const SizedBox(height: 12),
-                            BlocBuilder<CocktailCreationBloc,
-                                CocktailCreationState>(
-                              builder: (context, state) {
-                                final disabled = state.videoUrl.isNotEmpty;
-                                return Opacity(
-                                  opacity: disabled ? 0.5 : 1.0,
-                                  child: IgnorePointer(
-                                    ignoring: disabled,
-                                    child: const VideoPickerWidget(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    BlocBuilder<CocktailCreationBloc, CocktailCreationState>(
-                      builder: (context, state) {
-                        final disabled = state.videoThumbnailFile != null;
-                        return Opacity(
-                          opacity: disabled ? 0.5 : 1.0,
-                          child: AbsorbPointer(
-                            absorbing: disabled,
-                            child: CustomTextField(
-                              labelText: tr('new_recipe.youtube_link'),
-                              onChanged: (newValue) {
-                                context
-                                    .read<CocktailCreationBloc>()
-                                    .add(UpdateRecipeVideoUrlEvent(newValue));
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    CustomTextField(
-                      labelText: tr('new_recipe.name'),
-                      onChanged: (newValue) {
-                        context
-                            .read<CocktailCreationBloc>()
-                            .add(UpdateRecipeTitleEvent(newValue));
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    CustomTextField(
-                      labelText: tr('new_recipe.description'),
-                      expandText: true,
-                      onChanged: (newValue) {
-                        context
-                            .read<CocktailCreationBloc>()
-                            .add(UpdateRecipeDescriptionEvent(newValue));
-                      },
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: const Color(0xFF343434), width: 1.0),
-                          color: Colors.white.withOpacity(0.02),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child:
-                            Column(mainAxisSize: MainAxisSize.min, children: [
-                          ChangeCocktailTile(
-                            name: tr('new_recipe.alcoholic_drinks'),
-                            selectedCount: _getSelectedCount(state, 1),
-                            onTap: () {
-                              openAlcoholicModal(context);
-                            },
-                          ),
-                          ChangeCocktailTile(
-                            name: tr('new_recipe.non_alcoholic_drinks'),
-                            selectedCount: _getSelectedCount(state, 2),
-                            onTap: () {
-                              openNonAlcoholicModal(context);
-                            },
-                          ),
-                          ChangeCocktailTile(
-                            name: tr('new_recipe.ingredients'),
-                            selectedCount: _getSelectedCount(state, 3),
-                            onTap: () {
-                              openProductModal(context);
-                            },
-                          ),
-                          ChangeCocktailTile(
-                            name: tr('new_recipe.tools'),
-                            selectedCount: _getSelectedToolCount(state),
-                            onTap: () {
-                              openToolModal(context);
-                            },
-                          ),
-                          ChangeCocktailTile(
-                            name:
-                                '${tr('new_recipe.steps')} (${state.steps.length})',
-                            onTap: () {
-                              openStepsModal(context);
-                            },
-                            border: false,
-                          ),
-                        ])),
-                    const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 6.0),
-                            child: CustomButton(
-                              text: tr('buttons.cancel'),
-                              // локализованная строка
-                              grey: true,
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              single: false,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 6.0),
-                            child: CustomButton(
-                              text: tr('buttons.save'),
-                              // локализованная строка
-                              onPressed: () {
-                                if (state.title.isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content:
-                                            Text(tr('new_recipe.error_title'))),
-                                  );
-                                } else if (state.ingredientItems.isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(tr(
-                                            'new_recipe.error_ingredients'))),
-                                  );
-                                } else if (state.selectedTools.isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content:
-                                            Text(tr('new_recipe.error_tools'))),
-                                  );
-                                } else {
-                                  // Если все поля заполнены, отправляем запрос
-
-                                  context
-                                      .read<CocktailCreationBloc>()
-                                      .add(SubmitRecipeEvent());
-                                  context
-                                      .read<CocktailCreationBloc>()
-                                      .add(ResetCreationEvent());
-                                  int count = 0;
-                                  Navigator.of(context).popUntil((route) {
-                                    return count++ == 2;
-                                  });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(tr(
-                                            'new_recipe.cocktail_created'))), // Локализация
-                                  );
-                                }
-                              },
-                              single: false,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                  ],
-                ),
-              );
+    return BlocListener<CocktailCreationBloc, CocktailCreationState>(
+      listener: (context, state) {
+        // 1) если начался сабмит
+        if (state.isSubmitting && !state.submissionSuccess) {
+          // показываем глобальный loader один раз
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (dialogCtx) {
+              _dialogContext = dialogCtx; // сохраняем context диалога
+              return const Center(child: CircularProgressIndicator());
             },
+          );
+        }
+
+        // 2) если сабмит завершился (успех или ошибка)
+        if (!state.isSubmitting && state.submissionSuccess) {
+          // скрываем
+          if (_dialogContext != null) {
+            Navigator.of(_dialogContext!).pop();
+            _dialogContext = null;
+          }
+
+          if (state.submissionError != null) {
+            // на ошибку
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.submissionError!)));
+          } else if (state.submissionSuccess) {
+            // на успех
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(tr('new_recipe.cocktail_created'))));
+            // сбрасываем флаг, чтобы не показать дважды
+            context
+                .read<CocktailCreationBloc>()
+                .add(ResetSubmissionSuccessEvent());
+            // уходим назад
+            int count = 0;
+            Navigator.of(context).popUntil((route) {
+              return count++ == 2;
+            });
+          }
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15, left: 14, right: 16),
+            child: BlocBuilder<CocktailCreationBloc, CocktailCreationState>(
+              builder: (context, state) {
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomAppBar(
+                        text: tr('new_recipe.title'), // локализованная строка
+                        arrow: true,
+                        onPressed: null,
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                tr('new_recipe.photo'), // локализованная строка
+                                style: context.text.bodyText14White
+                                    .copyWith(fontSize: 18),
+                              ),
+                              const SizedBox(height: 12),
+                              const PhotoPickerWidget(),
+                            ],
+                          ),
+                          const SizedBox(width: 20),
+                          Column(
+                            children: [
+                              Text(
+                                tr('new_recipe.video'), // локализованная строка
+                                style: context.text.bodyText14White
+                                    .copyWith(fontSize: 18),
+                              ),
+                              const SizedBox(height: 12),
+                              BlocBuilder<CocktailCreationBloc,
+                                  CocktailCreationState>(
+                                builder: (context, state) {
+                                  final disabled = state.videoUrl.isNotEmpty;
+                                  return Opacity(
+                                    opacity: disabled ? 0.5 : 1.0,
+                                    child: IgnorePointer(
+                                      ignoring: disabled,
+                                      child: const VideoPickerWidget(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      BlocBuilder<CocktailCreationBloc, CocktailCreationState>(
+                        builder: (context, state) {
+                          final disabled = state.videoThumbnailFile != null;
+                          return Opacity(
+                            opacity: disabled ? 0.5 : 1.0,
+                            child: AbsorbPointer(
+                              absorbing: disabled,
+                              child: CustomTextField(
+                                labelText: tr('new_recipe.youtube_link'),
+                                onChanged: (newValue) {
+                                  context
+                                      .read<CocktailCreationBloc>()
+                                      .add(UpdateRecipeVideoUrlEvent(newValue));
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      CustomTextField(
+                        labelText: tr('new_recipe.name'),
+                        onChanged: (newValue) {
+                          context
+                              .read<CocktailCreationBloc>()
+                              .add(UpdateRecipeTitleEvent(newValue));
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      CustomTextField(
+                        labelText: tr('new_recipe.description'),
+                        expandText: true,
+                        onChanged: (newValue) {
+                          context
+                              .read<CocktailCreationBloc>()
+                              .add(UpdateRecipeDescriptionEvent(newValue));
+                        },
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: const Color(0xFF343434), width: 1.0),
+                            color: Colors.white.withOpacity(0.02),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child:
+                              Column(mainAxisSize: MainAxisSize.min, children: [
+                            ChangeCocktailTile(
+                              name: tr('new_recipe.alcoholic_drinks'),
+                              selectedCount: _getSelectedCount(state, 1),
+                              onTap: () {
+                                openAlcoholicModal(context);
+                              },
+                            ),
+                            ChangeCocktailTile(
+                              name: tr('new_recipe.non_alcoholic_drinks'),
+                              selectedCount: _getSelectedCount(state, 2),
+                              onTap: () {
+                                openNonAlcoholicModal(context);
+                              },
+                            ),
+                            ChangeCocktailTile(
+                              name: tr('new_recipe.ingredients'),
+                              selectedCount: _getSelectedCount(state, 3),
+                              onTap: () {
+                                openProductModal(context);
+                              },
+                            ),
+                            ChangeCocktailTile(
+                              name: tr('new_recipe.tools'),
+                              selectedCount: _getSelectedToolCount(state),
+                              onTap: () {
+                                openToolModal(context);
+                              },
+                            ),
+                            ChangeCocktailTile(
+                              name:
+                                  '${tr('new_recipe.steps')} (${state.steps.length})',
+                              onTap: () {
+                                openStepsModal(context);
+                              },
+                              border: false,
+                            ),
+                          ])),
+                      const SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 6.0),
+                              child: CustomButton(
+                                text: tr('buttons.cancel'),
+                                // локализованная строка
+                                grey: true,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                single: false,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 6.0),
+                              child: CustomButton(
+                                text: tr('buttons.save'),
+                                // локализованная строка
+                                onPressed: () {
+                                  if (state.title.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              tr('new_recipe.error_title'))),
+                                    );
+                                  } else if (state.ingredientItems.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(tr(
+                                              'new_recipe.error_ingredients'))),
+                                    );
+                                  } else if (state.selectedTools.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              tr('new_recipe.error_tools'))),
+                                    );
+                                  } else {
+                                    // Если все поля заполнены, отправляем запрос
+
+                                    context
+                                        .read<CocktailCreationBloc>()
+                                        .add(SubmitRecipeEvent());
+                                  }
+                                },
+                                single: false,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
+        backgroundColor: const Color(0xFF0B0B0B),
       ),
-      backgroundColor: const Color(0xFF0B0B0B),
     );
   }
 }

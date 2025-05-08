@@ -15,6 +15,9 @@ class CocktailCreationState {
   final String? videoAwsKey;
   final String videoUrl;
   final bool isLoading;
+  final bool isSubmitting;
+  final bool submissionSuccess;
+  final String? submissionError;
   final String? errorMessage;
   final File? videoThumbnailFile;
 
@@ -32,6 +35,9 @@ class CocktailCreationState {
       this.videoUrl = '',
       this.photo,
       this.isLoading = false,
+      this.isSubmitting = false,
+      this.submissionSuccess = false,
+      this.submissionError,
       this.errorMessage,
       this.videoThumbnailFile});
 
@@ -49,6 +55,9 @@ class CocktailCreationState {
     String? videoAwsKey,
     String? videoUrl,
     bool? isLoading,
+    bool? isSubmitting,
+    bool? submissionSuccess,
+    String? submissionError,
     String? errorMessage,
     File? videoThumbnailFile,
   }) {
@@ -66,6 +75,9 @@ class CocktailCreationState {
       videoAwsKey: videoAwsKey ?? this.videoAwsKey,
       videoUrl: videoFile != null ? '' : videoUrl ?? this.videoUrl,
       isLoading: isLoading ?? this.isLoading,
+      isSubmitting: isSubmitting ?? this.isSubmitting,
+      submissionSuccess: submissionSuccess ?? this.submissionSuccess,
+      submissionError: submissionError,
       errorMessage: errorMessage ?? this.errorMessage,
       videoThumbnailFile: videoThumbnailFile ?? this.videoThumbnailFile,
     );
