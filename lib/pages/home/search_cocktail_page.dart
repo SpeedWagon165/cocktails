@@ -96,6 +96,7 @@ class SearchCocktailPageState extends State<SearchCocktailPage> {
                           hasReachedMax: state.hasReachedMax);
                     } else if (state is CocktailSearchLoaded) {
                       return CatalogSearchList(
+                        catalogPage: true,
                         searchList: state.cocktails,
                         hasReachedMax: state.hasReachedMax,
                         query: '',

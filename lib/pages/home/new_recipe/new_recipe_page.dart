@@ -75,10 +75,8 @@ class _NewRecipePageState extends State<NewRecipePage> {
                 .read<CocktailCreationBloc>()
                 .add(ResetSubmissionSuccessEvent());
             // уходим назад
-            int count = 0;
-            Navigator.of(context).popUntil((route) {
-              return count++ == 2;
-            });
+            Navigator.of(context).pop(true);
+            Navigator.of(context).pop(true);
           }
         }
       },
