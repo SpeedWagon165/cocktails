@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DioService {
-  final String baseUrl = 'https://api.mrbarmister.pro/api/';
+  final String baseUrl = 'http://37.252.17.123:8000/api/';
   late Dio dio;
 
   DioService() {

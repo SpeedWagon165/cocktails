@@ -20,7 +20,7 @@ class WebSocketService {
   void connect(int userId) {
     try {
       _channel = WebSocketChannel.connect(
-        Uri.parse('wss://api.mrbarmister.pro//ws/support/?user_id=$userId'),
+        Uri.parse('wss://37.252.17.123:8000//ws/support/?user_id=$userId'),
       );
       _isConnected = true;
       _connectionStatusController.add(true);
